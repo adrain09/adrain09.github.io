@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://adrain09.github.io">
+  <title>drozer测试InsecureBankv2 | Hello Nosec World</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="测试app包名：com.android.insecurebankv2
+
+intent sniffer(数据嗅探)  
+
+
+利用app.broadcast.sniff 模块首先apktool获取manifest文件，查看receiver组件，获取触发该组件的intent-filter的action name利用run app.broadcast.sniff –action theBroadcast">
+<meta property="og:type" content="article">
+<meta property="og:title" content="drozer测试InsecureBankv2">
+<meta property="og:url" content="https://adrain09.github.io/2016/12/16/移动安全/drozer测试InsecureBankv2/index.html">
+<meta property="og:site_name" content="Hello Nosec World">
+<meta property="og:description" content="测试app包名：com.android.insecurebankv2
+
+intent sniffer(数据嗅探)  
+
+
+利用app.broadcast.sniff 模块首先apktool获取manifest文件，查看receiver组件，获取触发该组件的intent-filter的action name利用run app.broadcast.sniff –action theBroadcast">
+<meta property="og:updated_time" content="2016-12-21T03:00:53.177Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="drozer测试InsecureBankv2">
+<meta name="twitter:description" content="测试app包名：com.android.insecurebankv2
+
+intent sniffer(数据嗅探)  
+
+
+利用app.broadcast.sniff 模块首先apktool获取manifest文件，查看receiver组件，获取触发该组件的intent-filter的action name利用run app.broadcast.sniff –action theBroadcast">
+  
+    <link rel="alternative" href="/atom.xml" title="Hello Nosec World" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/main.css?v=4.0.0.css">
+  
+
+  
+
+</head>
+
+<body>
+  <div id="container" q-class="show:isCtnShow">
+    <canvas id="anm-canvas" class="anm-canvas"></canvas>
+    <div class="left-col" q-class="show:isShow">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			<img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/69ce6ae1jw1e8qgp5bmzyj2050050aa8.jpg" class="js-avatar">
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Adrain</a></h1>
+		</hgroup>
+
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/安全测试/">安全测试</a></li>
+	        
+				<li><a href="/tags/移动安全/">移动安全</a></li>
+	        
+				<li><a href="/tags/web安全/">web安全</a></li>
+	        
+				<li><a href="/tags/soft/">soft</a></li>
+	        
+				<li><a href="/tags/随笔/">碎片时间</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a data-idx="0" q-on="click: openSlider(e, 'innerArchive')" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a data-idx="1" q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
+		        
+					<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
+		        
+					<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col" q-class="show:isShow,hide:isShow|isFalse">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-sort"></i></div>
+  		<h1 class="header-author js-mobile-header hide">Adrain</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/69ce6ae1jw1e8qgp5bmzyj2050050aa8.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Adrain</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/tags/安全测试/">安全测试</a></li>
+		        
+					<li><a href="/tags/移动安全/">移动安全</a></li>
+		        
+					<li><a href="/tags/web安全/">web安全</a></li>
+		        
+					<li><a href="/tags/soft/">soft</a></li>
+		        
+					<li><a href="/tags/随笔/">碎片时间</a></li>
+		        
+		        
+		        	<li><a href="/archives/">所有文章</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div id="wrapper" class="body-wrap">
+        <div class="menu-l">
+          <div class="canvas-wrap">
+            <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
+          </div>
+          <div id="js-content" class="content-ll">
+            <article id="post-移动安全/drozer测试InsecureBankv2" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      drozer测试InsecureBankv2
+    </h1>
+  
+
+        <a href="/2016/12/16/移动安全/drozer测试InsecureBankv2/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>测试app包名：com.android.insecurebankv2</p>
+<ol>
+<li>intent sniffer(数据嗅探)  </li>
+</ol>
+<ul>
+<li><p>利用app.broadcast.sniff 模块<br>首先apktool获取manifest文件，查看receiver组件，获取触发该组件的intent-filter的action name<br>利用run app.broadcast.sniff –action theBroadcast 进行嗅探<br>结果获取到修改的密码信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Broadcast receiver registered to sniff matching intents</div><div class="line">[*] Output is updated once a second. Press Control+C to exit.</div><div class="line">Action: theBroadcast</div><div class="line">Raw: Intent &#123; act=theBroadcast flg=0x10 (has extras) &#125;</div><div class="line">Extra: newpass=Dinesh@123! (java.lang.String)</div><div class="line">Extra: phonenumber=15555215554 (java.lang.String)</div></pre></td></tr></table></figure>
+</li>
+<li><p>代码层次：获取到代码，查看注册recever的名称，这个是接受信息；可搜索sendBroadcast来查找谁发的广播</p>
+</li>
+</ul>
+<ol>
+<li>登入绕过</li>
+</ol>
+<ul>
+<li>可查看manifast文件查找exported=“true”的activity名称</li>
+<li>可以直接使用drozer activity模块查找暴露出的activity<br>测试：直接调用com.android.insecurebankv2.PostLogin 绕过登入，直接进入转帐等页面</li>
+</ul>
+<ol>
+<li>备份安全测试</li>
+</ol>
+<ul>
+<li>可查看manifast文件查看是否允许备份allowBackup=”true”</li>
+<li><p>可利用drozer模块：run app.package.backup -f insecurebankv2查看<br>测试：<br>在当前目录下备份，在当前目录下会产生backup.ab 文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb backup -apk-shared com.android.insecurebankv2</div></pre></td></tr></table></figure>
+</li>
+<li><p>读取该文件，后面可以看到登入账户的所有信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat backup.ab | (dd bs=24 count=0 skip=1; cat) | zlib-flate -uncompress &gt; backup_compressed.tar (ab的解压未成功)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol>
+<li>jdb调试app程序</li>
+</ol>
+<ul>
+<li>使用adb jdwp来查看那些app是可以被调试的，再次运行insecurebankv2，运行adb jdwp来查看最新增加的ID，记录<br>（注：也可以直接使用ddms来查看可以被调试的app的pid）</li>
+<li>使用adb forward tcp:1111 jdwp: pid 将调试端口转发到本地主机端口上</li>
+<li><p>使用jdb -attach localhost:1111 链接调试端口，进行调试<br>测试：<br>实验中主要是更改变量属性值，app会检查设备的root情况并且输出出来<br>本来为rooted，直接更改为 not rooted<br>可能用到的命令：  </p>
+<blockquote>
+<p>class：查看所有用到的包名<br>methods：进入到相应的函数中，这里是：methods com.android.insecurebankv2.PostLogin<br>直接在showRootStatus()方法上下断点，jdb主要命令<br>step – 执行当前行<br>step up – 执行到当前方法返回到其调用程序<br>stepi – 执行当前指令<br>next – 跳过一行（跨过调用）<br>cont – 从断点处继续执行  </p>
+</blockquote>
+<p>运行过程中，观察locals的本地变量<br>出现变量：isrooted=true，利用set isrooted=false进行变量设置<br>run运行，发现提示变为未root  </p>
+</li>
+</ul>
+<ol>
+<li>hack 广播接受者,恶意发送短信</li>
+</ol>
+<ul>
+<li><p>run app.broadcast.info 查看是否有暴露出的receiver，查看manifest文件，观察启动该接受者的action<br>在反编译代码中查找该reveicer</p>
+<p>本例中代码：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public void onReceive(Context paramContext, Intent paramIntent)</div><div class="line">&#123;</div><div class="line">Object localObject = paramIntent.getStringExtra(&quot;phonenumber&quot;);</div><div class="line">paramIntent = paramIntent.getStringExtra(&quot;newpass&quot;);</div><div class="line">并且在下面调用了 ((SmsManager)localObject).sendTextMessage(paramContext, null, paramIntent, null, null);发送短信</div></pre></td></tr></table></figure>
+<p>触发这个的reveicer的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">private void broadcastChangepasswordSMS(String paramString1, String paramString2)</div><div class="line">&#123;</div><div class="line">if (TextUtils.isEmpty(paramString1.toString().trim()))</div><div class="line">&#123;</div><div class="line">System.out.println(&quot;Phone number Invalid.&quot;);</div><div class="line">return;</div><div class="line">&#125;</div><div class="line">Intent localIntent = new Intent();</div><div class="line">localIntent.setAction(&quot;theBroadcast&quot;);</div><div class="line">localIntent.putExtra(&quot;phonenumber&quot;, paramString1);</div><div class="line">localIntent.putExtra(&quot;newpass&quot;, paramString2);</div><div class="line">sendBroadcast(localIntent);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li><p>直接调用am命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell am broadcast -a theBroadcast -n com.android.insecurebankv2/com.android.insecurebankv2.MyBroadCastReceiver --es phonenumber 15210601846 --es newpass Dinesh@123$ 可以直接启动一个广播</div></pre></td></tr></table></figure>
+</li>
+<li><p>可以使用drozer 启动：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">run app.broadcast.send --action theBroadcast --component com.android.insecurebankv2 com.android.insecurebankv2.MyBroadCastReceiver --extra string phonenumber 15210601846 --extra string newpass ddddsadsad</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol>
+<li>hack 数据库，provider</li>
+</ol>
+<ul>
+<li><p>drozer里面的命令<code>run scanner.provider.finduris -a com.android.insecurebankv2</code><br>扫描可以利用的provider</p>
+</li>
+<li><p>利用 <code>run app.provider.query</code> 进行查询  </p>
+</li>
+<li><p>在代码中主要是在manifest中查找可以用的provider，再在代码中查看provider的url链接</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell content query --uri content://com.android.insecurebankv2.TrackUserContentProvider/trackerusers 查看</div></pre></td></tr></table></figure>
+<ol>
+<li><p>攻击复制的数据<br><code>adb shell su u0_a51 service call clipboard 2 s16 包名</code></p>
+</li>
+<li><p>攻击数据库<br>若是数据库没有加密的话，直接pull下来，查看即可</p>
+</li>
+<li><p>不安全的log<br>直接ddms或者adb logcat读取敏感数据</p>
+</li>
+<li><p>导出内存数据（未测试）<br>ddms导出hprof ，利用platform-tools 工具：./hprof-conv com.android.insecurebankv2.hprof  SSSSS.hprof格式化，利用app的内存分析工具分析内存。</p>
+</li>
+<li><p>加密解密<br>在sharepreferen中可以看到用户名和密码信息，不过都是采用了加密的处理,但是在代码中可以看到采用了硬加密的处理方式,并且有明文的iv和密钥信息，采用的AES的cbc模式加密处理</p>
+</li>
+</ol>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
+	</div>
+
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2016/12/16/移动安全/drozer测试InsecureBankv2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          中间人攻击获取ssl数据
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">基于burp插件的安全测试</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 Adrain
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		mathjax: false,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js?v=4.0.0.js"></script>
+
+
+    
+<div class="tools-col" q-class="show:isShow,hide:isShow|isFalse" q-on="click:stop(e)">
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all" q-show="innerArchive">
+        <div class="search-wrap">
+          <input class="search-ipt" q-model="search" type="text" placeholder="find something…">
+          <i class="icon-search icon" q-show="search|isEmptyStr"></i>
+          <i class="icon-close icon" q-show="search|isNotEmptyStr" q-on="click:clearChose(e)"></i>
+        </div>
+        <div class="widget tagcloud search-tag">
+          <p class="search-tag-wording">tag:</p>
+          <label class="search-switch">
+            <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
+          </label>
+          <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">web安全</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">soft</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">安全测试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">移动安全</a>
+              </li>
+            
+            <div class="clearfix"></div>
+          </ul>
+        </div>
+        <ul class="search-ul">
+          <p q-show="jsonFail" style="padding: 20px; font-size: 12px;">
+            缺失模块。<br/>1、在博客根目录（注意不是yilia根目录）执行以下命令：<br/> npm i hexo-generator-json-content --save<br/><br/>
+            2、在根目录_config.yml里添加配置：
+<pre style="font-size: 12px;" q-show="jsonFail">
+  jsonContent:
+    meta: false
+    pages: false
+    posts:
+      title: true
+      date: true
+      path: true
+      text: true
+      raw: false
+      content: false
+      slug: false
+      updated: false
+      comments: false
+      link: false
+      permalink: false
+      excerpt: false
+      categories: false
+      tags: true
+</pre>
+          </p>
+          <li class="search-li" q-repeat="items" q-show="isShow">
+            <a q-attr="href:path|urlformat" class="search-title"><i class="icon-quo-left icon"></i><span q-text="title"></span></a>
+            <p class="search-time">
+              <i class="icon-calendar icon"></i>
+              <span q-text="date|dateformat"></span>
+            </p>
+            <p class="search-tag">
+              <i class="icon-price-tags icon"></i>
+              <span q-repeat="tags" q-on="click:choseTag(e, name)" q-text="name|tagformat"></span>
+            </p>
+          </li>
+        </ul>
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-me" q-show="aboutme">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">小小的安全从业人员</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
