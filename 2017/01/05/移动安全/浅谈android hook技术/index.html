@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://adrain09.github.io">
+  <title>浅谈android hook技术 | Hello Nosec World</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="浅谈android hook技术前言xposed框架xposed，主页：http://repo.xposed.info/module/de.robv.android.xposed.installer是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索
+通过替换/system/bin/a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈android hook技术">
+<meta property="og:url" content="https://adrain09.github.io/2017/01/05/移动安全/浅谈android hook技术/index.html">
+<meta property="og:site_name" content="Hello Nosec World">
+<meta property="og:description" content="浅谈android hook技术前言xposed框架xposed，主页：http://repo.xposed.info/module/de.robv.android.xposed.installer是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索
+通过替换/system/bin/a">
+<meta property="og:updated_time" content="2017-01-05T02:54:36.648Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浅谈android hook技术">
+<meta name="twitter:description" content="浅谈android hook技术前言xposed框架xposed，主页：http://repo.xposed.info/module/de.robv.android.xposed.installer是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索
+通过替换/system/bin/a">
+  
+    <link rel="alternative" href="/atom.xml" title="Hello Nosec World" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/main.css?v=4.0.0.css">
+  
+
+  
+
+</head>
+
+<body>
+  <div id="container" q-class="show:isCtnShow">
+    <canvas id="anm-canvas" class="anm-canvas"></canvas>
+    <div class="left-col" q-class="show:isShow">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			<img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/69ce6ae1jw1e8qgp5bmzyj2050050aa8.jpg" class="js-avatar">
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Adrain</a></h1>
+		</hgroup>
+
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/安全测试/">安全测试</a></li>
+	        
+				<li><a href="/tags/移动安全/">移动安全</a></li>
+	        
+				<li><a href="/tags/web安全/">web安全</a></li>
+	        
+				<li><a href="/tags/soft/">soft</a></li>
+	        
+				<li><a href="/tags/随笔/">碎片时间</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a data-idx="0" q-on="click: openSlider(e, 'innerArchive')" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a data-idx="1" q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
+		        
+					<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
+		        
+					<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col" q-class="show:isShow,hide:isShow|isFalse">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-sort"></i></div>
+  		<h1 class="header-author js-mobile-header hide">Adrain</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/69ce6ae1jw1e8qgp5bmzyj2050050aa8.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Adrain</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/tags/安全测试/">安全测试</a></li>
+		        
+					<li><a href="/tags/移动安全/">移动安全</a></li>
+		        
+					<li><a href="/tags/web安全/">web安全</a></li>
+		        
+					<li><a href="/tags/soft/">soft</a></li>
+		        
+					<li><a href="/tags/随笔/">碎片时间</a></li>
+		        
+		        
+		        	<li><a href="/archives/">所有文章</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div id="wrapper" class="body-wrap">
+        <div class="menu-l">
+          <div class="canvas-wrap">
+            <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
+          </div>
+          <div id="js-content" class="content-ll">
+            <article id="post-移动安全/浅谈android hook技术" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      浅谈android hook技术
+    </h1>
+  
+
+        <a href="/2017/01/05/移动安全/浅谈android hook技术/" class="archive-article-date">
+  	<time datetime="2017-01-05T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-05</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="浅谈android-hook技术"><a href="#浅谈android-hook技术" class="headerlink" title="浅谈android hook技术"></a>浅谈android hook技术</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="xposed框架"><a href="#xposed框架" class="headerlink" title="xposed框架"></a>xposed框架</h2><p>xposed，主页：<a href="http://repo.xposed.info/module/de.robv.android.xposed.installer" target="_blank" rel="external">http://repo.xposed.info/module/de.robv.android.xposed.installer</a><br>是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索</p>
+<p>通过替换/system/bin/app_process程序控制zygote进程，使得app_process在启动过程中会加载XposedBridge.jar这个jar包，从而完成对Zygote进程及其创建的Dalvik虚拟机的劫持。</p>
+<p>Xposed在开机的时候完成对所有的Hook Function的劫持，在原Function执行的前后加上自定义代码</p>
+<p>很多人将这个框架用在对android的私有化定制上面，其实在android安全测试方面这个框架提供了很大的便利，xposed主要是对方法的hook，在以往的重打包技术中，需要对smali代码的进行修改，修改起来比较麻烦。</p>
+<p>利用xposed框架可以很容易的获取到android应用中的信息，比如加密私钥、salt值等等，不需要饭编译获取密钥转换算法、不需要了解密钥保存机制，直接hook函数，获取输入输出就可以。</p>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>在Android系统中，应用程序进程都是由Zygote进程孵化出来的，而Zygote进程是由Init进程启动的。Zygote进程在启动时会创建一个Dalvik虚拟机实例，每当它孵化一个新的应用程序进程时，都会将这个Dalvik虚拟机实例复制到新的应用程序进程里面去，从而使得每一个应用程序进程都有一个独立的Dalvik虚拟机实例。这也是Xposed选择替换app_process的原因。<br>Zygote进程在启动的过程中，除了会创建一个Dalvik虚拟机实例之外，还会将Java运行时库加载到进程中来，以及注册一些Android核心类的JNI方法来前面创建的Dalvik虚拟机实例中去。注意，一个应用程序进程被Zygote进程孵化出来的时候，不仅会获得Zygote进程中的Dalvik虚拟机实例拷贝，还会与Zygote一起共享Java运行时库。这也就是可以将XposedBridge这个jar包加载到每一个Android应用程序中的原因。XposedBridge有一个私有的Native（JNI）方法hookMethodNative，这个方法也在app_process中使用。这个函数提供一个方法对象利用Java的Reflection机制来对内置方法覆写。有能力的可以针对xposed的源码进行分析，不得不说，作者对于android的机制和java的了解已经相当深入了。</p>
+<h4 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h4><p>很简单的一个android登入代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line"></div><div class="line">    private TextView accountView;</div><div class="line">    private TextView passwdView;</div><div class="line">    private Button loginBut;</div><div class="line">    private Button quitBut;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line"></div><div class="line">        accountView = (TextView) findViewById(R.id.account);</div><div class="line">        passwdView = (TextView) findViewById(R.id.pwd);</div><div class="line"></div><div class="line">        loginBut = (Button) findViewById(R.id.login);</div><div class="line">        quitBut = (Button) findViewById(R.id.quit);</div><div class="line"></div><div class="line">        loginBut.setOnClickListener(new View.OnClickListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onClick(View v) &#123;</div><div class="line">                String username = accountView.getText() + &quot;&quot;;</div><div class="line">                String password = passwdView.getText() + &quot;&quot;;</div><div class="line">                if(isCorrectInfo(username,password))&#123;</div><div class="line">                    Toast.makeText(MainActivity.this,&quot;登入成功&quot;,Toast.LENGTH_LONG).show();</div><div class="line">                &#125;</div><div class="line">                else&#123;</div><div class="line">                    Toast.makeText(MainActivity.this,&quot;登入失败&quot;,Toast.LENGTH_LONG).show();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public boolean isCorrectInfo(String username, String password) &#123;</div><div class="line">        if(username.equals(&quot;admin&quot;) &amp;&amp; password.equals(&quot;passwd&quot;))&#123;</div><div class="line">            return true;</div><div class="line">        &#125;</div><div class="line">        else&#123;</div><div class="line">            return false;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>很简单的就是判断下用户输入的用户名和密码是正确，这里做个简单的演示，将用户输入的用户名和密码信息hook出来不管正确与否</p>
+<p>简单说下xposed模块的开发，首先需要的是导入api，具体的可以参考：<a href="https://github.com/rovo89/XposedBridge/wiki/Using-the-Xposed-Framework-API" target="_blank" rel="external">https://github.com/rovo89/XposedBridge/wiki/Using-the-Xposed-Framework-API</a></p>
+<p>在manifest中定义</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">application</span> <span class="attr">android:label</span>=<span class="string">"xposed"</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">meta-data</span></span></div><div class="line">           <span class="attr">android:name</span>=<span class="string">"xposedmodule"</span></div><div class="line">           <span class="attr">android:value</span>=<span class="string">"true"</span> /&gt;</div><div class="line">       <span class="tag">&lt;<span class="name">meta-data</span></span></div><div class="line">           <span class="attr">android:name</span>=<span class="string">"xposeddescription"</span></div><div class="line">           <span class="attr">android:value</span>=<span class="string">"hook test"</span> /&gt;</div><div class="line">       <span class="tag">&lt;<span class="name">meta-data</span></span></div><div class="line">           <span class="attr">android:name</span>=<span class="string">"xposedminversion"</span></div><div class="line">           <span class="attr">android:value</span>=<span class="string">"82"</span> /&gt;</div><div class="line">   <span class="tag">&lt;/<span class="name">application</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>声明这个是xposed模块，名称为hook test 并且使用api版本号是82</p>
+<p>下面创建运行时候的hook代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.example.xposed;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="keyword">import</span> de.robv.android.xposed.IXposedHookLoadPackage;</div><div class="line"><span class="keyword">import</span> de.robv.android.xposed.XC_MethodHook;</div><div class="line"><span class="keyword">import</span> de.robv.android.xposed.XposedBridge;</div><div class="line"><span class="keyword">import</span> de.robv.android.xposed.callbacks.XC_LoadPackage;</div><div class="line"></div><div class="line"><span class="keyword">import</span> <span class="keyword">static</span> de.robv.android.xposed.XposedHelpers.findAndHookMethod;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> <span class="keyword">implements</span> <span class="title">IXposedHookLoadPackage</span> </span>&#123;</div><div class="line">    <span class="comment">// 包加载的时候回调</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleLoadPackage</span><span class="params">(<span class="keyword">final</span> XC_LoadPackage.LoadPackageParam lpparam)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        <span class="comment">//过滤掉不是com.example.logintest的应用</span></div><div class="line">        <span class="keyword">if</span> (!lpparam.packageName.equals(<span class="string">"com.example.logintest"</span>))</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        XposedBridge.log(<span class="string">"加载应用:"</span> + lpparam.packageName);</div><div class="line"></div><div class="line">        <span class="comment">// Hook MainActivity 中的判断方法</span></div><div class="line">        findAndHookMethod(<span class="string">"com.example.logintest.MainActivity"</span>, lpparam.classLoader, <span class="string">"isCorrectInfo"</span>, String.class,String.class <span class="keyword">new</span> XC_MethodHook() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">beforeHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">                <span class="keyword">super</span>.beforeHookedMethod(param);</div><div class="line">                <span class="comment">// XposedBridge.log("开始劫持~~~~");</span></div><div class="line">                <span class="comment">// XposedBridge.log("参数1:" + param.args[0]);</span></div><div class="line">               XposedBridge.log(<span class="string">"参数2:"</span> + param.args[<span class="number">1</span>]);</div><div class="line">               XposedBridge.log(<span class="string">"修改登入数据~~~~"</span>);<span class="comment">// 修改为正确的用户名密码</span></div><div class="line">               param.args[<span class="number">0</span>]=<span class="string">"admin"</span>;</div><div class="line">               param.args[<span class="number">1</span>]=<span class="string">"passwd"</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line"><span class="comment">//                super.afterHookedMethod(param);</span></div><div class="line">                XposedBridge.log(<span class="string">"劫持结束~~~~"</span>);</div><div class="line"><span class="comment">//                XposedBridge.log("参数1:" + param.args[0]);</span></div><div class="line"><span class="comment">//                XposedBridge.log("参数2:" + param.args[1]);</span></div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看代码中的注释，主要是三个方法的调用，handleLoadPackage，主要是获取到android包的相关信息，这里由于只是对logintest进行hook,做下简单的判断。</p>
+<p>findAndHookMethod 是主要的hook入口，里面几个参数分别为包名，classloader，hook的函数名，参数类型（这个比较容易出错，比如list类型写为List.class）,回调函数</p>
+<p>回调函数中比较重要的：beforeHookedMethod和afterHookedMethod，一个是在函数运行前劫持掉，一个是hook后放行，实例中对用户输入的字段进行劫持打印，后面将参数之改为正确登入用户名和密码，这样在app中输入任何字符都能登入成功</p>
+<h2 id="frida-Hook框架"><a href="#frida-Hook框架" class="headerlink" title="frida Hook框架"></a>frida Hook框架</h2><p>Frida是一款基于python + javascript 的hook框架，通杀android\ios\linux\win\osx等各平台，由于是基于脚本的交互，因此相比xposed和substrace cydia更加便捷，本文重点介绍Frida在android下面的使用。</p>
+<p>Frida的官网为：<a href="http://www.frida.re/" target="_blank" rel="external">http://www.frida.re/</a></p>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>安装Frida非常简单，在pc端直接执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install frida</div></pre></td></tr></table></figure></p>
+<p>即可</p>
+<p>在Android设备需要导入frida的服务端，需要root你的手机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl -O http://build.frida.re/frida/android/arm/bin/frida-server</div><div class="line">$ chmod+x frida-server</div><div class="line">$ adb push frida-server /data/local/tmp/</div></pre></td></tr></table></figure>
+<h4 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h4><p>设备上运行frida-server:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ adb shell</div><div class="line">root@android:/ # chmod 700 frida-server</div><div class="line">$ adb shell</div><div class="line">root@android:/ # /data/local/tmp/frida-server -t 0 (注意在root下运行)</div></pre></td></tr></table></figure>
+<p>电脑上运行adb forward tcp转发:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adb forward tcp:27042 tcp:27042</div><div class="line">adb forward tcp:27043 tcp:27043</div></pre></td></tr></table></figure>
+<p>27042端口用于与frida-server通信,之后的每个端口对应每个注入的进程.</p>
+<p>运行如下命令验证是否成功安装:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ frida-ps-R</div></pre></td></tr></table></figure>
+<p>正常情况应该输出进程列表如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">PID NAME</div><div class="line"> 1590 com.facebook.katana</div><div class="line">13194 com.facebook.katana:providers</div><div class="line">12326 com.facebook.orca</div><div class="line">13282 com.twitter.android</div><div class="line">…</div></pre></td></tr></table></figure>
+<h4 id="Hook模块的编写"><a href="#Hook模块的编写" class="headerlink" title="Hook模块的编写"></a>Hook模块的编写</h4><p>hook的主要模块是js编写的，利用javascript的api与server进行通信</p>
+<p>下面结合一个真实例子进行简单的介绍，首先是测试代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># -*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> frida, sys <span class="comment">#引入frida类</span></div><div class="line"><span class="keyword">import</span> logging</div><div class="line"></div><div class="line">logging.basicConfig(filename=<span class="string">'test.log'</span>, level=logging.INFO)</div><div class="line"></div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>) <span class="comment">#对输出进行utf8的编码</span></div><div class="line"><span class="keyword">print</span> sys.getdefaultencoding()</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_result</span><span class="params">(message)</span>:</span> <span class="comment">#对输出的信息进行打印</span></div><div class="line">    <span class="keyword">print</span> message</div><div class="line">    logging.info(message)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_message</span><span class="params">(message, data)</span>:</span> <span class="comment"># 反调函数，用来接受message的信息，message后面会说到</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        print_result(message=message)</div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line"></div><div class="line">did = <span class="string">"255601452"</span> <span class="comment"># 订单id</span></div><div class="line">time = <span class="string">"1472706588"</span> <span class="comment"># 时间戳</span></div><div class="line"></div><div class="line">jscode = <span class="string">""" # 核心代码，这段主要是调用app中的相应处理函数，后面会分析这段代码的来源</span></div><div class="line"></div><div class="line">Dalvik.perform(function () &#123; # 说明是Dalvik平台</div><div class="line">    var currentApplication = Dalvik.use("android.app.ActivityThread").currentApplication();</div><div class="line">    var context = currentApplication.getApplicationContext();</div><div class="line">    var signclass = Dalvik.use("com.ub.main.d.e");# 调用com.ub.main.d.e类</div><div class="line">    var signInstance=signclass.$new(context); # 反射创建一个新的对象</div><div class="line">    var sign=signInstance.a("255601452"); #调用对象的a函数</div><div class="line">    send(sign); #将调用函数的结果发送出来</div><div class="line">&#125;);</div><div class="line">"""</div><div class="line"><span class="comment">#print jscode</span></div><div class="line"></div><div class="line">process = frida.get_device_manager().enumerate_devices()[<span class="number">-1</span>].attach(<span class="string">"com.ub.main"</span>) <span class="comment"># 获取连接的设备并枚举取最后一个设备连接，并附到com.ub.main的进程上面</span></div><div class="line"></div><div class="line"><span class="keyword">print</span> process</div><div class="line"></div><div class="line">script = process.create_script(jscode) <span class="comment"># 调用相应的js函数，获取函数调用后的结果值</span></div><div class="line">script.on(<span class="string">'message'</span>, on_message) <span class="comment"># 利用回调，将message传递给on_message函数</span></div><div class="line"><span class="keyword">print</span> <span class="string">"done"</span></div><div class="line">script.load()</div></pre></td></tr></table></figure>
+<h4 id="反编译获取app中的核心函数"><a href="#反编译获取app中的核心函数" class="headerlink" title="反编译获取app中的核心函数"></a>反编译获取app中的核心函数</h4><p>对于上面的js代码，其实就是调用app中的某个函数，比如sign值生成函数，加密解密函数，不需要自己单独的去分析算法流程，分析key值在哪，直接调用app的相应函数，让app帮我们完成这些工作</p>
+<p>这里我们分析的app是友宝，这是一款饮料售货机，当时抓包看到提货的时候是只有个订单id的，猜想是不是遍历订单的id，支付成功但是没有取货的订单会不会响应请求，自己掉货出来</p>
+<p>下面对友宝的订单进行分析过程</p>
+<ol>
+<li>抓取支付订单成功链接</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">http://monk.uboxol.com/morder/shipping?clientversion=5.7.2&amp;machine_type=MI+5&amp;os=6.0.1&amp;channel_id=1&amp;device_no=02%3A00%3A00%3A00%3A00%3A00&amp;imei=869161021849708&amp;device_id=2&amp;u=32020&amp;wake_id=0&amp;net_type=1&amp;carrier_type=1&amp;s=4</div><div class="line"></div><div class="line">postdata：sign=et09HgkvWcNc%252FTLe3E7Qj4j6MZEPbnm2zbCzJ3esTi0n6qo6T2RE6Qggh3rYytoTbKHGC1O3ghNPPZqoXSF%252FlzsRK2BnkLouKdZ%252BLnyZgdGrYgOyRv2piGOHnUwAhz5%252BUOWbH5ljMvNBgvTJwWsTy200bW2FAA%252BRkqNCn%252F4qIvo%253D&amp;orderId=255601452&amp;timestamp=1472706588</div></pre></td></tr></table></figure>
+<p>分析：<br>sign是校验值，主要是防止订单伪造的，orderid是产生的支付订单id，这个主要是防止伪造用</p>
+<ol>
+<li>反编译友宝app</li>
+</ol>
+<p>找到morder/shipping所在的包为：com/ub/main/d/e.class</p>
+<p>其中localStringBuffer存储的就是url中的参数信息，该请求查找到的代码在a()</p>
+<p>生成签名的函数在com/ub/main/d/e.class中的b函数</p>
+<p>最后加上sign值，发送请求</p>
+<ol>
+<li>可以反编译出他的sign计算方法，也可以直接调用b函数来产生sign值，后来发现app会自动取时间戳，我们就不需要给他array型的参数</li>
+</ol>
+<p>直接调用a函数，把orderId给他，让他直接return一个值出来就好了，就有了上面的js代码</p>
+<ol>
+<li>自动化的批量处理</li>
+</ol>
+<p>看代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># __author__ = 'gaohe'</span></div><div class="line"><span class="comment"># -*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> frida, sys</div><div class="line"><span class="keyword">import</span> logging</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line">logging.basicConfig(filename=<span class="string">'test.log'</span>, level=logging.INFO)</div><div class="line"></div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># print sys.getdefaultencoding()</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ubox</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">request</span><span class="params">(self, payload)</span>:</span></div><div class="line">        <span class="comment"># print "requests"</span></div><div class="line">        dict = &#123;&#125;</div><div class="line">        url = <span class="string">"http://monk.uboxol.com/morder/shipping?clientversion=5.7.2&amp;machine_type=MI+5&amp;os=6.0.1&amp;channel_id=1&amp;device_no=02%3A00%3A00%3A00%3A00%3A00&amp;imei=869161021849708&amp;device_id=2&amp;u=41493965&amp;wake_id=0&amp;net_type=1&amp;carrier_type=1&amp;s=4"</span></div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> payload.split(<span class="string">"&amp;"</span>):</div><div class="line">            key = i.split(<span class="string">"="</span>)[<span class="number">0</span>]</div><div class="line">            value = i.split(<span class="string">"="</span>)[<span class="number">1</span>]</div><div class="line">            dict[key] = value</div><div class="line"></div><div class="line">        data=dict</div><div class="line"></div><div class="line">        r=requests.post(url=url,data=data)</div><div class="line"></div><div class="line">        <span class="keyword">print</span> r.text</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">print_result</span><span class="params">(self, message)</span>:</span></div><div class="line">        <span class="comment"># print message</span></div><div class="line">        payload = message[<span class="string">"payload"</span>]</div><div class="line">        <span class="keyword">print</span> payload</div><div class="line">        self.request(payload)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_message</span><span class="params">(self, message, data)</span>:</span></div><div class="line">        self.print_result(message=message)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fuzzing</span><span class="params">(self, did)</span>:</span></div><div class="line">        jscode = <span class="string">"""</span></div><div class="line">        Dalvik.perform(function () &#123;</div><div class="line">        var currentApplication = Dalvik.use("android.app.ActivityThread").currentApplication();</div><div class="line">        var context = currentApplication.getApplicationContext();</div><div class="line">        var signclass = Dalvik.use("com.ub.main.d.e");</div><div class="line">        var signInstance=signclass.$new(context);</div><div class="line">        var sign=signInstance.a("%s");</div><div class="line">        send(sign);</div><div class="line">        &#125;);</div><div class="line">        """ % did</div><div class="line">        <span class="comment"># print jscode</span></div><div class="line">        process = frida.get_device_manager().enumerate_devices()[<span class="number">-1</span>].attach(<span class="string">"com.ub.main"</span>)</div><div class="line">        <span class="comment"># print process</span></div><div class="line">        script = process.create_script(jscode)</div><div class="line">        script.on(<span class="string">'message'</span>, self.on_message)</div><div class="line">        <span class="comment"># print "done"</span></div><div class="line">        script.load()</div><div class="line">        <span class="comment"># sys.stdin.read()</span></div><div class="line"></div><div class="line">ub = ubox()</div><div class="line">ub.fuzzing(<span class="string">"255912964"</span>)</div></pre></td></tr></table></figure>
+<p>构造了一个类，后面直接fuzz uid就可以了，提取里面的sign值拼接到post数据中去</p>
+<p>可以产生的post请求和抓到的数据包的请求是完全一样的，但是并没有测试成功，分析原因有可能是订单id和用户的id有所绑定。</p>
+<p>不过学习到了怎样通过frida对app进行分析。</p>
+<h2 id="复杂参数的hook"><a href="#复杂参数的hook" class="headerlink" title="复杂参数的hook"></a>复杂参数的hook</h2><p>如果遇到函数的参数类型是数组、map、ArrayList类型的，首先目标MyClass类的fun1函数，声明如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">fun1</span><span class="params">(String[][] strAry, Map mp1, Map&lt;String,String&gt; mp2, Map&lt;Integer, String&gt; mp3,</span></span></div><div class="line">                      ArrayList&lt;String&gt; al1, ArrayList&lt;Integer&gt; al2, ArgClass ac)</div></pre></td></tr></table></figure>
+<p>解决方法：</p>
+<p>用Xposed自身提供的XposedHelpers的findClass方法加载每一个类，然后再将得到的类传递给hook函数作参数！</p>
+<p>实例代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">package aqcxbom.myxposed;</div><div class="line">import android.util.Log;</div><div class="line">import de.robv.android.xposed.IXposedHookLoadPackage;</div><div class="line">import de.robv.android.xposed.XC_MethodHook;</div><div class="line">import de.robv.android.xposed.XposedHelpers;</div><div class="line">import de.robv.android.xposed.callbacks.XC_LoadPackage;</div><div class="line">/**</div><div class="line"> * Created by AqCxBoM on 2016/12/24.</div><div class="line"> */</div><div class="line">public class XposedMain implements IXposedHookLoadPackage</div><div class="line">&#123;</div><div class="line">    public String TAG = &quot;AqCxBoM&quot; ;</div><div class="line">    private final String mStrPackageName = &quot;aqcxbom.xposedhooktarget&quot;; //HOOK APP目标的包名</div><div class="line">    private final String mStrClassPath = &quot;aqcxbom.xposedhooktarget.MyClass&quot;; //HOOK 目标类全路径</div><div class="line">    private final String mStrMethodName = &quot;fun1&quot;; //HOOK 目标函数名</div><div class="line">    private void LOGI(String ct)&#123; Log.d(TAG, ct); &#125;</div><div class="line">    @Override</div><div class="line">    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable &#123;</div><div class="line">            //判断包名是否一致</div><div class="line">        if (loadPackageParam.packageName.equals(mStrPackageName)) &#123;</div><div class="line">            LOGI(&quot;found target: &quot; + loadPackageParam.packageName);</div><div class="line">            final Class&lt;?&gt; ArgClass= XposedHelpers.findClass(&quot;aqcxbom.xposedhooktarget.ArgClass&quot;, loadPackageParam.classLoader);</div><div class="line">            final Class&lt;?&gt; ArrayList= XposedHelpers.findClass(&quot;java.util.ArrayList&quot;, loadPackageParam.classLoader);</div><div class="line">            final Class&lt;?&gt; Map= XposedHelpers.findClass(&quot;java.util.Map&quot;, loadPackageParam.classLoader);</div><div class="line">                        //包名一致时查找是否有匹配参数的类及函数</div><div class="line">            XposedHelpers.findAndHookMethod(mStrClassPath, //类路径</div><div class="line">                    loadPackageParam.classLoader, //ClassLoader</div><div class="line">                    mStrMethodName, //目标函数名</div><div class="line">                    &quot;[[Ljava.lang.String;&quot;, //参数1</div><div class="line">                    Map, //参数2</div><div class="line">                    Map, //参数3</div><div class="line">                    Map, //参数4</div><div class="line">                    ArrayList, //参数5</div><div class="line">                    ArrayList, //参数6</div><div class="line">                    ArgClass, //参数7</div><div class="line">                    new XC_MethodHook() &#123;</div><div class="line">                        @Override</div><div class="line">                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable &#123;</div><div class="line">                            super.beforeHookedMethod(param); //这个函数会在被hook的函数执行前执行</div><div class="line">                            LOGI(&quot;beforeHook&quot;);</div><div class="line">                        &#125;</div><div class="line">                        @Override</div><div class="line">                        protected void afterHookedMethod(MethodHookParam param) throws Throwable &#123;</div><div class="line">                            super.afterHookedMethod(param);//这个函数会在被hook的函数执行后执行</div><div class="line">                            LOGI(&quot;afterHooke param: &quot;);</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><p><a href="https://xianzhi.aliyun.com/forum/read/611.html" target="_blank" rel="external">https://xianzhi.aliyun.com/forum/read/611.html</a></p>
+<p><a href="http://www.freebuf.com/articles/terminal/56453.html" target="_blank" rel="external">http://www.freebuf.com/articles/terminal/56453.html</a></p>
+<p><a href="http://bbs.pediy.com/showthread.php?t=202147&amp;page=2" target="_blank" rel="external">http://bbs.pediy.com/showthread.php?t=202147&amp;page=2</a></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
+	</div>
+
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/01/05/移动安全/浅谈android hook技术/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2017/01/03/安全测试/常见端口安全测试/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">常见端口安全测试</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 Adrain
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		mathjax: false,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js?v=4.0.0.js"></script>
+
+
+    
+<div class="tools-col" q-class="show:isShow,hide:isShow|isFalse" q-on="click:stop(e)">
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all" q-show="innerArchive">
+        <div class="search-wrap">
+          <input class="search-ipt" q-model="search" type="text" placeholder="find something…">
+          <i class="icon-search icon" q-show="search|isEmptyStr"></i>
+          <i class="icon-close icon" q-show="search|isNotEmptyStr" q-on="click:clearChose(e)"></i>
+        </div>
+        <div class="widget tagcloud search-tag">
+          <p class="search-tag-wording">tag:</p>
+          <label class="search-switch">
+            <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
+          </label>
+          <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">web安全</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">soft</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">安全测试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">移动安全</a>
+              </li>
+            
+            <div class="clearfix"></div>
+          </ul>
+        </div>
+        <ul class="search-ul">
+          <p q-show="jsonFail" style="padding: 20px; font-size: 12px;">
+            缺失模块。<br/>1、在博客根目录（注意不是yilia根目录）执行以下命令：<br/> npm i hexo-generator-json-content --save<br/><br/>
+            2、在根目录_config.yml里添加配置：
+<pre style="font-size: 12px;" q-show="jsonFail">
+  jsonContent:
+    meta: false
+    pages: false
+    posts:
+      title: true
+      date: true
+      path: true
+      text: true
+      raw: false
+      content: false
+      slug: false
+      updated: false
+      comments: false
+      link: false
+      permalink: false
+      excerpt: false
+      categories: false
+      tags: true
+</pre>
+          </p>
+          <li class="search-li" q-repeat="items" q-show="isShow">
+            <a q-attr="href:path|urlformat" class="search-title"><i class="icon-quo-left icon"></i><span q-text="title"></span></a>
+            <p class="search-time">
+              <i class="icon-calendar icon"></i>
+              <span q-text="date|dateformat"></span>
+            </p>
+            <p class="search-tag">
+              <i class="icon-price-tags icon"></i>
+              <span q-repeat="tags" q-on="click:choseTag(e, name)" q-text="name|tagformat"></span>
+            </p>
+          </li>
+        </ul>
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-me" q-show="aboutme">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">小小的安全从业人员</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
