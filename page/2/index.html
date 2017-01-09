@@ -6,42 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://adrain09.github.io">
-  <title>跨域获取数据小结 | Hello Nosec World</title>
+  <title>Hello Nosec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="本文主要介绍几种跨域获取数据的方法，比较基础，但是在跨站漏洞的挖掘和利用上会起到很大的帮助。
-下面根据个例子简单的把遇到的跨域总结下
-场景：网站A获取网站B上的资源，需要跨域传输数据
-两种情况：
-1、B站资源可控，即可以更改B站资源内容
-
-2、B站资源不可控
-测试环境：
-我们这里设置简单点，为了下面的说明，统一设置到test.com域下，只是二级域名不相同。只要不设置document.domain">
-<meta property="og:type" content="article">
-<meta property="og:title" content="跨域获取数据小结">
-<meta property="og:url" content="https://adrain09.github.io/2016/12/16/web安全/跨域获取数据小结/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hello Nosec World">
+<meta property="og:url" content="https://adrain09.github.io/page/2/index.html">
 <meta property="og:site_name" content="Hello Nosec World">
-<meta property="og:description" content="本文主要介绍几种跨域获取数据的方法，比较基础，但是在跨站漏洞的挖掘和利用上会起到很大的帮助。
-下面根据个例子简单的把遇到的跨域总结下
-场景：网站A获取网站B上的资源，需要跨域传输数据
-两种情况：
-1、B站资源可控，即可以更改B站资源内容
-
-2、B站资源不可控
-测试环境：
-我们这里设置简单点，为了下面的说明，统一设置到test.com域下，只是二级域名不相同。只要不设置document.domain">
-<meta property="og:updated_time" content="2016-12-21T03:00:52.429Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="跨域获取数据小结">
-<meta name="twitter:description" content="本文主要介绍几种跨域获取数据的方法，比较基础，但是在跨站漏洞的挖掘和利用上会起到很大的帮助。
-下面根据个例子简单的把遇到的跨域总结下
-场景：网站A获取网站B上的资源，需要跨域传输数据
-两种情况：
-1、B站资源可控，即可以更改B站资源内容
-
-2、B站资源不可控
-测试环境：
-我们这里设置简单点，为了下面的说明，统一设置到test.com域下，只是二级域名不相同。只要不设置document.domain">
+<meta name="twitter:title" content="Hello Nosec World">
   
     <link rel="alternative" href="/atom.xml" title="Hello Nosec World" type="application/atom+xml">
   
@@ -178,14 +150,16 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-web安全/跨域获取数据小结" class="article article-type-post " itemscope itemprop="blogPost">
+            
+  
+    <article id="post-web安全/跨域获取数据小结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      跨域获取数据小结
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/web安全/跨域获取数据小结/">跨域获取数据小结</a>
     </h1>
   
 
@@ -313,27 +287,6 @@
       
 
       
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
     </div>
     <div class="article-info article-info-index">
       
@@ -346,85 +299,30 @@
       
 
       
-
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/web安全/跨域获取数据小结/">展开全文 >></a>
+        </p>
       
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
-        </div>
-      </div>
-    </span>
-  </div>
-</div>
 
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2016/12/16/web安全/跨域获取数据小结/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
 
-  
-<nav id="article-nav">
-  
-    <a href="/2016/12/16/web安全/xss向量/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          XSS向量
-        
-      </div>
-    </a>
+
+
+
+
+
+
+
   
   
-</nav>
-
-
-
-
-
-
-
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </nav>
+  
 
 
           </div>
@@ -446,8 +344,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: false,
-		isPost: true,
+		isHome: true,
+		isPost: false,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
