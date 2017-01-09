@@ -20,17 +20,17 @@
 攻击方式针对web的攻击，主要分为前端攻击方式和服务器端攻击方式
 前端的攻击方式比较常见的有XSS、CSRF、点击劫持等
 后端的攻">
-<meta property="og:image" content="https://adrain09.github.io/./581.jpg">
-<meta property="og:image" content="https://adrain09.github.io/./info1.jpg">
-<meta property="og:image" content="https://adrain09.github.io/./info2.jpg">
-<meta property="og:updated_time" content="2017-01-09T03:34:31.555Z">
+<meta property="og:image" content="https://adrain09.github.io/./安全编码/581.jpg">
+<meta property="og:image" content="https://adrain09.github.io/./安全编码/info1.jpg">
+<meta property="og:image" content="https://adrain09.github.io/./安全编码/info2.jpg">
+<meta property="og:updated_time" content="2017-01-09T03:41:40.365Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB安全基础">
 <meta name="twitter:description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。
 攻击方式针对web的攻击，主要分为前端攻击方式和服务器端攻击方式
 前端的攻击方式比较常见的有XSS、CSRF、点击劫持等
 后端的攻">
-<meta name="twitter:image" content="https://adrain09.github.io/./581.jpg">
+<meta name="twitter:image" content="https://adrain09.github.io/./安全编码/581.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Hello Nosec World" type="application/atom+xml">
   
@@ -327,8 +327,10 @@
 </ol>
 <p>案例：</p>
 <p>在发布二手买卖信息时候，在填写取货信息时有个对是否是本人手机的验证，</p>
-<p><img src="./581.jpg" alt="58"></p>
-<p>在这个时候拦截网址<a href="http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx，是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功" target="_blank" rel="external">http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx，是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功</a></p>
+<p><img src="./安全编码/581.jpg" alt="58"></p>
+<p>在这个时候拦截网址</p>
+<p><a href="http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx" target="_blank" rel="external">http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx</a></p>
+<p>是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功</p>
 <ol>
 <li>js限制登入</li>
 </ol>
@@ -338,9 +340,9 @@
 </ol>
 <p>只是做了个登入页面来做认证，后面的二级页面没有验证用户是否真的登入</p>
 <p>案例：</p>
-<p><img src="./info1.jpg" alt="info"></p>
+<p><img src="./安全编码/info1.jpg" alt="info"></p>
 <p>直接访问这些连接就能看到学生的所有信息</p>
-<p><img src="./info2.jpg" alt="info"></p>
+<p><img src="./安全编码/info2.jpg" alt="info"></p>
 <ol>
 <li>点击劫持</li>
 </ol>
@@ -442,9 +444,18 @@
   
 <nav id="article-nav">
   
+    <a href="/2017/01/09/soft/kafka命令操作/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          kafka 常用命令
+        
+      </div>
+    </a>
   
-    <a href="/2017/01/09/soft/kafka命令操作/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">kafka 常用命令</div>
+  
+    <a href="/2017/01/05/移动安全/浅谈android hook技术/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">浅谈android hook技术</div>
       <i class="icon-circle-right"></i>
     </a>
   
