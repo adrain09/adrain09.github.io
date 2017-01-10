@@ -6,14 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://adrain09.github.io">
-  <title>Archives: 2017 | Hello Nosec World</title>
+  <title>H5新增安全策略 | Hello Nosec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hello Nosec World">
-<meta property="og:url" content="https://adrain09.github.io/archives/2017/index.html">
+  <meta name="description" content="新标签下的xssHTML新定义了很多的标签，这些可能导致新的xss产生
+iframe中的sandbox&amp;lt;iframe&amp;gt; 一直被用来做挂马、XSS、点击劫持等攻击，这个sandbox可以限制iframe中的脚本执行
+&amp;lt;iframe&amp;gt;中的内容被视为独立的源，其中的及哦啊本将被禁止、表单禁止提交，插件禁止加载，指向其他浏览对象的链接也会禁止
+sandbox的属性可以通过参数来增加">
+<meta property="og:type" content="article">
+<meta property="og:title" content="H5新增安全策略">
+<meta property="og:url" content="https://adrain09.github.io/2017/01/10/web安全/H5安全策略/index.html">
 <meta property="og:site_name" content="Hello Nosec World">
+<meta property="og:description" content="新标签下的xssHTML新定义了很多的标签，这些可能导致新的xss产生
+iframe中的sandbox&amp;lt;iframe&amp;gt; 一直被用来做挂马、XSS、点击劫持等攻击，这个sandbox可以限制iframe中的脚本执行
+&amp;lt;iframe&amp;gt;中的内容被视为独立的源，其中的及哦啊本将被禁止、表单禁止提交，插件禁止加载，指向其他浏览对象的链接也会禁止
+sandbox的属性可以通过参数来增加">
+<meta property="og:updated_time" content="2017-01-10T07:12:49.746Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello Nosec World">
+<meta name="twitter:title" content="H5新增安全策略">
+<meta name="twitter:description" content="新标签下的xssHTML新定义了很多的标签，这些可能导致新的xss产生
+iframe中的sandbox&amp;lt;iframe&amp;gt; 一直被用来做挂马、XSS、点击劫持等攻击，这个sandbox可以限制iframe中的脚本执行
+&amp;lt;iframe&amp;gt;中的内容被视为独立的源，其中的及哦啊本将被禁止、表单禁止提交，插件禁止加载，指向其他浏览对象的链接也会禁止
+sandbox的属性可以通过参数来增加">
   
     <link rel="alternative" href="/atom.xml" title="Hello Nosec World" type="application/atom+xml">
   
@@ -154,214 +167,146 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-web安全/H5安全策略" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      H5新增安全策略
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/10/web安全/H5安全策略/" class="archive-article-date">
+
+        <a href="/2017/01/10/web安全/H5安全策略/" class="archive-article-date">
   	<time datetime="2017-01-10T07:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/10/web安全/H5安全策略/">H5新增安全策略</a>
-    </h1>
-  
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="新标签下的xss"><a href="#新标签下的xss" class="headerlink" title="新标签下的xss"></a>新标签下的xss</h4><p>HTML新定义了很多的标签，这些可能导致新的xss产生</p>
+<h4 id="iframe中的sandbox"><a href="#iframe中的sandbox" class="headerlink" title="iframe中的sandbox"></a>iframe中的sandbox</h4><p><code>&lt;iframe&gt;</code> 一直被用来做挂马、XSS、点击劫持等攻击，这个sandbox可以限制iframe中的脚本执行</p>
+<p><code>&lt;iframe&gt;</code>中的内容被视为独立的源，其中的及哦啊本将被禁止、表单禁止提交，插件禁止加载，指向其他浏览对象的链接也会禁止</p>
+<p>sandbox的属性可以通过参数来增加更为准确的控制</p>
+<blockquote>
+<p>allow-same-origin: 允许同源访问<br>  allow-top-navigation: 允许访问顶层窗口<br>  allow-forms: 允许提交表单<br>  allow-script: 允许执行脚本</p>
+</blockquote>
+<h4 id="Link-Types-noreferer"><a href="#Link-Types-noreferer" class="headerlink" title="Link Types:noreferer"></a>Link Types:noreferer</h4><p>标签指定了noreferer后，请求是将不会发送referer</p>
+<h4 id="CORS和postMessage"><a href="#CORS和postMessage" class="headerlink" title="CORS和postMessage"></a>CORS和postMessage</h4><p>跨域资源共享策略，保证了跨域访问的需求，详情见：”跨域获取数据小结“</p>
+<h4 id="web-Storage"><a href="#web-Storage" class="headerlink" title="web Storage"></a>web Storage</h4><p>水坑攻击原理</p>
 
-        <div class="article-info info-on-right">
-          
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/01/10/web安全/H5安全策略/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/10/智能硬件/物联网安全设计/" class="archive-article-date">
-  	<time datetime="2017-01-10T06:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/10/智能硬件/物联网安全设计/">物联网安全设计</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/智能硬件/">智能硬件</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/09/web安全/安全编码/" class="archive-article-date">
-  	<time datetime="2017-01-09T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/09/web安全/安全编码/">WEB安全基础</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/09/软件/kafka命令操作/" class="archive-article-date">
-  	<time datetime="2017-01-09T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/09/软件/kafka命令操作/">kafka 常用命令</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件/">软件</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/05/移动安全/浅谈android hook技术/" class="archive-article-date">
-  	<time datetime="2017-01-05T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/05/移动安全/浅谈android hook技术/">浅谈android hook技术</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/03/安全测试/常见端口安全测试/" class="archive-article-date">
-  	<time datetime="2017-01-03T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/03/安全测试/常见端口安全测试/">常见端口安全测试</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2017/01/10/智能硬件/物联网安全设计/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">物联网安全设计</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
+</nav>
 
-    
+
+
+
+
+
+
 
 
           </div>
@@ -384,8 +329,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
