@@ -572,6 +572,18 @@
 <p>针对sql注入的防御，规范的编码规范可以很好的进行防御</p>
 <p>其他数据库的sql注入问题：</p>
 <p>大部分的数据库大家都是使用的mysql，针对mysql的防护也是比较完善的，但是大家很少会注意到其他数据库导致的sql注入</p>
+<p>举个mongodb的例子：</p>
+<p>代码如下：<br><img src="./安全编码/mongodb代码.png" alt="info"></p>
+<p>由上图源代码可以知道，后台数据库的名字是security，集合名是users。u_id    是通过GET请求传到后台，然后传入一个数组变量中。然后进入MongoDB的查询。接下来，我们试试通过数组传入运算符号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/mongo/show.php?u_id[$ne]=2</div></pre></td></tr></table></figure>
+<p>传入后的MongoDB查询语句如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$qry= array(“id” =&gt; array(“$ne” =&gt; 2))</div></pre></td></tr></table></figure>
+<p>结果就是MongoDB返回了除了id=2的其他所有数据。</p>
+<p>看下MongoDB中的findOne方法：<br>db.collection.findOne(query, projection)</p>
+<p>代码：<br><img src="./安全编码/mongodb代码2.png" alt="info"></p>
+<p>利用代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/mongo/inject.php?u_name=dummy’&#125;);return&#123;something:1,something:2&#125;&#125;//&amp;u_pass=dummy</div></pre></td></tr></table></figure>
+<p>愿意还闭合前面的语句，注入自己的语句</p>
 <ul>
 <li>使用预编译语句</li>
 </ul>
@@ -1284,7 +1296,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全测试</a>
+                <a href="javascript:void(0)">智能硬件</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1292,7 +1304,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">智能硬件</a>
+                <a href="javascript:void(0)">安全测试</a>
               </li>
              
               <li class="article-tag-list-item">
