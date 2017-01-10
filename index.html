@@ -570,6 +570,8 @@
 <p>针对这种情况，攻击者研究出了盲注的方法，服务器没有错误回显，那么可以通过分析返回页面内容进行判断</p>
 <p>在现在的sql注入中用到的最多的就是基于时间的盲注技巧，通过sql语句的执行时间进行判断</p>
 <p>针对sql注入的防御，规范的编码规范可以很好的进行防御</p>
+<p>其他数据库的sql注入问题：</p>
+<p>大部分的数据库大家都是使用的mysql，针对mysql的防护也是比较完善的，但是大家很少会注意到其他数据库导致的sql注入</p>
 <ul>
 <li>使用预编译语句</li>
 </ul>
@@ -680,8 +682,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="查看topic"><a href="#查看topic" class="headerlink" title="查看topic"></a>查看topic</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./kafka-topics.sh --zookeeper 123.58.173.157:2181 --list（列出所有topic）</div></pre></td></tr></table></figure>
-<h4 id="控制台接收信息"><a href="#控制台接收信息" class="headerlink" title="控制台接收信息"></a>控制台接收信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/kafka-console-consumer.sh --zookeeper  192.168.197.170:2181,192.168.197.171:2181  --from-beginning --topic test</div></pre></td></tr></table></figure>
+        <h4 id="查看topic"><a href="#查看topic" class="headerlink" title="查看topic"></a>查看topic</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./kafka-topics.sh --zookeeper ip：2181 --list（列出所有topic）</div></pre></td></tr></table></figure>
+<h4 id="控制台接收信息"><a href="#控制台接收信息" class="headerlink" title="控制台接收信息"></a>控制台接收信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/kafka-console-consumer.sh --zookeeper  ip：2181  --from-beginning --topic test</div></pre></td></tr></table></figure>
 
       
 

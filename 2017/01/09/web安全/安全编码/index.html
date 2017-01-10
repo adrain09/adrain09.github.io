@@ -23,7 +23,7 @@
 <meta property="og:image" content="https://adrain09.github.io/./安全编码/581.jpg">
 <meta property="og:image" content="https://adrain09.github.io/./安全编码/info1.jpg">
 <meta property="og:image" content="https://adrain09.github.io/./安全编码/info2.jpg">
-<meta property="og:updated_time" content="2017-01-09T03:41:40.365Z">
+<meta property="og:updated_time" content="2017-01-10T09:25:26.626Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB安全基础">
 <meta name="twitter:description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。
@@ -293,6 +293,8 @@
 <p>针对这种情况，攻击者研究出了盲注的方法，服务器没有错误回显，那么可以通过分析返回页面内容进行判断</p>
 <p>在现在的sql注入中用到的最多的就是基于时间的盲注技巧，通过sql语句的执行时间进行判断</p>
 <p>针对sql注入的防御，规范的编码规范可以很好的进行防御</p>
+<p>其他数据库的sql注入问题：</p>
+<p>大部分的数据库大家都是使用的mysql，针对mysql的防护也是比较完善的，但是大家很少会注意到其他数据库导致的sql注入</p>
 <ul>
 <li>使用预编译语句</li>
 </ul>
