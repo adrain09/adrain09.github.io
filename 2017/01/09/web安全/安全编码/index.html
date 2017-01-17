@@ -20,11 +20,11 @@
 攻击方式针对web的攻击，主要分为前端攻击方式和服务器端攻击方式
 前端的攻击方式比较常见的有XSS、CSRF、点击劫持等
 后端的攻">
-<meta property="og:image" content="https://adrain09.github.io/./安全编码/mongodb代码.png">
-<meta property="og:image" content="https://adrain09.github.io/./安全编码/mongodb代码2.png">
-<meta property="og:image" content="https://adrain09.github.io/./安全编码/581.jpg">
-<meta property="og:image" content="https://adrain09.github.io/./安全编码/info1.jpg">
-<meta property="og:image" content="https://adrain09.github.io/./安全编码/info2.jpg">
+<meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/./安全编码/mongodb代码.png">
+<meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/./安全编码/mongodb代码2.png">
+<meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/./安全编码/581.jpg">
+<meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/./安全编码/info1.jpg">
+<meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/./安全编码/info2.jpg">
 <meta property="og:updated_time" content="2017-01-17T01:50:51.402Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB安全基础">
@@ -32,7 +32,7 @@
 攻击方式针对web的攻击，主要分为前端攻击方式和服务器端攻击方式
 前端的攻击方式比较常见的有XSS、CSRF、点击劫持等
 后端的攻">
-<meta name="twitter:image" content="https://adrain09.github.io/./安全编码/mongodb代码.png">
+<meta name="twitter:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/./安全编码/mongodb代码.png">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -298,14 +298,14 @@
 <p>其他数据库的sql注入问题：</p>
 <p>大部分的数据库大家都是使用的mysql，针对mysql的防护也是比较完善的，但是大家很少会注意到其他数据库导致的sql注入</p>
 <p>举个mongodb的例子：</p>
-<p>代码如下：<br><img src="./安全编码/mongodb代码.png" alt="info"></p>
+<p>代码如下：<br><img src="/2017/01/09/web安全/安全编码/./安全编码/mongodb代码.png" alt="info"></p>
 <p>由上图源代码可以知道，后台数据库的名字是security，集合名是users。u_id    是通过GET请求传到后台，然后传入一个数组变量中。然后进入MongoDB的查询。接下来，我们试试通过数组传入运算符号。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/mongo/show.php?u_id[$ne]=2</div></pre></td></tr></table></figure>
 <p>传入后的MongoDB查询语句如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$qry= array(“id” =&gt; array(“$ne” =&gt; 2))</div></pre></td></tr></table></figure>
 <p>结果就是MongoDB返回了除了id=2的其他所有数据。</p>
 <p>看下MongoDB中的findOne方法：<br>db.collection.findOne(query, projection)</p>
-<p>代码：<br><img src="./安全编码/mongodb代码2.png" alt="info"></p>
+<p>代码：<br><img src="/2017/01/09/web安全/安全编码/./安全编码/mongodb代码2.png" alt="info"></p>
 <p>利用代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/mongo/inject.php?u_name=dummy’&#125;);return&#123;something:1,something:2&#125;&#125;//&amp;u_pass=dummy</div></pre></td></tr></table></figure>
 <p>愿意还闭合前面的语句，注入自己的语句</p>
@@ -375,7 +375,7 @@
 </ol>
 <p>案例：</p>
 <p>在发布二手买卖信息时候，在填写取货信息时有个对是否是本人手机的验证，</p>
-<p><img src="./安全编码/581.jpg" alt="58"></p>
+<p><img src="/2017/01/09/web安全/安全编码/./安全编码/581.jpg" alt="58"></p>
 <p>在这个时候拦截网址</p>
 <p><a href="http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx" target="_blank" rel="external">http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx</a></p>
 <p>是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功</p>
@@ -388,9 +388,9 @@
 </ol>
 <p>只是做了个登入页面来做认证，后面的二级页面没有验证用户是否真的登入</p>
 <p>案例：</p>
-<p><img src="./安全编码/info1.jpg" alt="info"></p>
+<p><img src="/2017/01/09/web安全/安全编码/./安全编码/info1.jpg" alt="info"></p>
 <p>直接访问这些连接就能看到学生的所有信息</p>
-<p><img src="./安全编码/info2.jpg" alt="info"></p>
+<p><img src="/2017/01/09/web安全/安全编码/./安全编码/info2.jpg" alt="info"></p>
 <ol>
 <li>点击劫持</li>
 </ol>
@@ -500,11 +500,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/01/10/移动安全/mobSF架构分析/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/01/10/移动安全/加强版Smali Log注入/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          MobSF框架分析
+          加强版smail注入
         
       </div>
     </a>
@@ -584,11 +584,11 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">智能硬件</a>
+                <a href="javascript:void(0)">移动安全</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">移动安全</a>
+                <a href="javascript:void(0)">智能硬件</a>
               </li>
              
               <li class="article-tag-list-item">
