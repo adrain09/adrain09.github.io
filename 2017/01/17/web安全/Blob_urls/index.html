@@ -18,7 +18,7 @@ Object URL像个号码牌，凭着它可以向浏览器提领内容。
 <meta property="og:description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中
 Object URL像个号码牌，凭着它可以向浏览器提领内容。
 换个角度，http%3A//www.darkthrad.net/c94d498b-7818-49b3-8e79-d3959938ba0f的形式，有点像是跟http:">
-<meta property="og:updated_time" content="2017-01-17T07:38:37.261Z">
+<meta property="og:updated_time" content="2017-01-17T07:40:56.188Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="H5中的Object URL">
 <meta name="twitter:description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中
@@ -195,12 +195,10 @@ Object URL像个号码牌，凭着它可以向浏览器提领内容。
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var aFileParts = [&apos;&lt;script&gt;location.href=&quot;http://xxx.com/277634777&quot;;window.open(&quot;http://xxxx/wblocation.php&quot;, &quot;hello2&quot;);&lt;\/script&gt;&apos;];</div><div class="line"></div><div class="line">var blob=new Blob(aFileParts,&#123;type:&quot;text/html; charset=utf-8&quot;&#125;);</div><div class="line">var url=URL.createObjectURL(blob);</div><div class="line">window.open(url, &apos;hello&apos;);</div></pre></td></tr></table></figure>
 <p>new Blob 方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Blob Blob(</div><div class="line">  [optional] Array parts,</div><div class="line">  [optional] BlobPropertyBag properties</div><div class="line">);</div></pre></td></tr></table></figure></p>
 <blockquote>
-<blockquote>
 <p>parts:<br>一个数组，包含了将要添加到Blob对象中的数据。数组元素可以是任意多个的ArrayBuffer，ArrayBufferView (typed array)， Blob，或者 DOMString对象。</p>
 <p>properties:<br>一个对象，设置Blob对象的一些属性,包括:  type:设置该Blob对象的type属性。</p>
 <p>URL.createObjectURL方法:<br>创建一个本地的objectURL对象</p>
 <p>window.open打开本地的objectURL对象,由于同一个window,直接同源可以进行操作</p>
-</blockquote>
 </blockquote>
 
       
@@ -371,7 +369,11 @@ Object URL像个号码牌，凭着它可以向浏览器提领内容。
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">软件</a>
+                <a href="javascript:void(0)">安全测试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">智能硬件</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -379,11 +381,7 @@ Object URL像个号码牌，凭着它可以向浏览器提领内容。
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全测试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">智能硬件</a>
+                <a href="javascript:void(0)">软件</a>
               </li>
             
             <div class="clearfix"></div>
