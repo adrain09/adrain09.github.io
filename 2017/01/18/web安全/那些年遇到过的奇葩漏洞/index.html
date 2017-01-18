@@ -18,7 +18,7 @@
 <meta property="og:description" content="这些年做安全测试，遇到过很多奇葩的漏洞，包括了认证问题、上传漏洞、命令执行的漏洞，看到这些漏洞我只能说句：这还能这样做。。
 认证类漏洞：QQ微博任意账户发微博这个是QQ微博和sina微博在争天下的时候出现的，当时也算是个相当严重的漏洞，想象用马化腾的微博发一个微博内容，这个就是典型的认证漏洞，现在已经修复
 说起这个漏洞首先需要了解下cookie在认证方面的作用，现在大部分的站点都是一次登入在浏览器">
-<meta property="og:updated_time" content="2017-01-18T06:04:10.909Z">
+<meta property="og:updated_time" content="2017-01-18T06:05:48.974Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="那些年遇到的奇葩漏洞">
 <meta name="twitter:description" content="这些年做安全测试，遇到过很多奇葩的漏洞，包括了认证问题、上传漏洞、命令执行的漏洞，看到这些漏洞我只能说句：这还能这样做。。
@@ -189,7 +189,10 @@
 <p>两个漏洞的详情如下：</p>
 <p>微博获取QQ号：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">地址是这个：http://xxxx.t.qq.com/api/user/info.php?u=pony</div><div class="line"></div><div class="line">返回的数据为：</div><div class="line"></div><div class="line">UserInfoCallBack(&#123;</div><div class="line">    &quot;result&quot;: 0,</div><div class="line">    &quot;msg&quot;: &quot;&quot;,</div><div class="line">    &quot;info&quot;: &#123;</div><div class="line">        &quot;mini&quot;: &#123;</div><div class="line">            &quot;homepage&quot;: &quot;http:\/\/t.qq.com\/pony&quot;,</div><div class="line">            &quot;head&quot;: &quot;http:\/\/t1.qlogo.cn\/mbloghead\/d2663ace00000000ed74&quot;,</div><div class="line">            &quot;intro&quot;: &quot;\u9a6c\u5316\u817e\uff0c\u817e\u8baf\u516c\u53f8\u4e3b\u8981\u521b\u529e\u4eba\u4e4b\u4e00\uff0c\u8463\u4e8b\u4f1a\u4e3b\u5e2d\u3001\u6267\u884c\u8463\u4e8b\u517c\u9996\u5e2d\u6267\u884c\u5b98\u3002\n&gt;&gt;\u3010\u9a6c\u5316\u817e\u641c\u641c\u767e\u79d1\u3011&quot;</div><div class="line">        &#125;,</div><div class="line">        &quot;account&quot;: &#123;</div><div class="line">            &quot;name&quot;: &quot;pony&quot;,</div><div class="line">            &quot;nick&quot;: &quot;\u9a6c\u5316\u817e&quot;,</div><div class="line">            &quot;flag&quot;: &#123;</div><div class="line">                &quot;auth&quot;: true,</div><div class="line">                &quot;govCert&quot;: false,</div><div class="line">                &quot;passCert&quot;: true,</div><div class="line">                &quot;govAuthIcon&quot;: 1</div><div class="line">            &#125;,</div><div class="line">            &quot;vip&quot;: true,</div><div class="line">            &quot;vivi&quot;: &quot;&quot;,</div><div class="line">            &quot;uin&quot;: 711029,</div><div class="line">            &quot;chName&quot;: &quot;\u9a6c\u5316\u817e&quot;,</div><div class="line">            &quot;regTime&quot;: 1267512400</div><div class="line">        &#125;,</div><div class="line">        &quot;count&quot;: &#123;</div><div class="line">            &quot;following&quot;: 571,</div><div class="line">            &quot;follower&quot;: 3918226</div><div class="line">        &#125;,</div><div class="line">        &quot;messageTotal&quot;: 636</div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<p>这里面泄露不少用户的信息啊，其中重要的是uin，就是qq号。加qq的话做了限制加不上，不过我测试我朋友的几个账号都是正确的<br>再看下几个名人的：<br>&gt;<br>李开复：8628xxxxx<br>雷军：233xxx<br>方舟子:1509391xxx<br>当当李国庆：1829798xxx</p>
+<p>这里面泄露不少用户的信息啊，其中重要的是uin，就是qq号。加qq的话做了限制加不上，不过我测试我朋友的几个账号都是正确的<br>再看下几个名人的：</p>
+<blockquote>
+<p>李开复：8628xxxxx<br>雷军：233xxx<br>方舟子:1509391xxx<br>当当李国庆：1829798xxx</p>
+</blockquote>
 <p>任意帐号发微博（这个差点冲动的那马化腾的号实验，幸亏没有，庆幸，哈哈）：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">使用google搜site:xxx.qq.com</div><div class="line">接口地址：http://xxxx.xxx.qq.com/default/publish/</div><div class="line">这个时候需要更改截包的数据里面的cookie值，参数是：luin=</div><div class="line">后面加上qq号就好了。</div></pre></td></tr></table></figure>
 <h3 id="网易产品任意账户登入"><a href="#网易产品任意账户登入" class="headerlink" title="网易产品任意账户登入"></a>网易产品任意账户登入</h3><p>这个是在网易工作的时候遇到的，其实和QQ出现的问题是一样的，仅仅验证了cookie中的mail字段，所有可以改为任意的邮箱登入。</p>
@@ -406,7 +409,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">移动安全</a>
+                <a href="javascript:void(0)">安全测试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -414,7 +417,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全测试</a>
+                <a href="javascript:void(0)">移动安全</a>
               </li>
              
               <li class="article-tag-list-item">
