@@ -161,6 +161,122 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-智能硬件/破解智能灯泡" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/19/智能硬件/破解智能灯泡/">破解智能灯泡</a>
+    </h1>
+  
+
+        <a href="/2017/01/19/智能硬件/破解智能灯泡/" class="archive-article-date">
+  	<time datetime="2017-01-19T06:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-19</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>源地址：<a href="http://blog.attify.com/2017/01/17/exploiting-iot-enabled-ble-smart-bulb-security/" target="_blank" rel="external">http://blog.attify.com/2017/01/17/exploiting-iot-enabled-ble-smart-bulb-security/</a></p>
+<h3 id="设备需求"><a href="#设备需求" class="headerlink" title="设备需求"></a>设备需求</h3><ul>
+<li>笔记本电脑</li>
+<li>Ubertooth 蓝牙嗅探设备</li>
+<li>hcitool</li>
+<li>ubertooth-utils</li>
+<li>Gatttool</li>
+</ul>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><blockquote>
+<p>UUID, 就是用来唯一识别一个特征值的ID.</p>
+<p>handle，就是对应的attribute 的一个句柄</p>
+<p>所有对特征值的操作，都是通过对UUID 的搜索得到对应的handle之后，通过handle来操作特征值的。</p>
+</blockquote>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>连接智能灯泡，确保能正常工作，手机app端保证能正常开启关闭灯泡</p>
+<h5 id="Step1-获取灯泡蓝牙地址"><a href="#Step1-获取灯泡蓝牙地址" class="headerlink" title="Step1 获取灯泡蓝牙地址"></a>Step1 获取灯泡蓝牙地址</h5><p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hcitool lescan</div></pre></td></tr></table></figure>
+<p>扫描结果：</p>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/address.png" alt="info"></p>
+<p>从图中可以看到地址为：88:C2:55:CA:E9:4A，设备名称是：cnligh</p>
+<h5 id="Step2-获取设备运行服务"><a href="#Step2-获取设备运行服务" class="headerlink" title="Step2 获取设备运行服务"></a>Step2 获取设备运行服务</h5><p>命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">gatttool -I</div><div class="line">connect 88:C2:55:CA:E9:4A</div><div class="line">primary</div></pre></td></tr></table></figure>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/primary.png" alt="info"></p>
+<p>存在三个uuid值，其中00001800 和 00001801 是蓝牙标准中定义的服务器描述， UUID 0000f371 是私有定义的</p>
+<h5 id="Step3-列举私有uuid的handles"><a href="#Step3-列举私有uuid的handles" class="headerlink" title="Step3 列举私有uuid的handles"></a>Step3 列举私有uuid的handles</h5><p>使用在uuid 0000f371中的特殊的属性值和组结束handles来列举所有的handles</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">char-desc 0x0010 0xffff</div></pre></td></tr></table></figure>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/desc.png" alt="info"></p>
+<p>从上图可以看到所有的handles</p>
+<p>可以参考：<a href="https://www.bluetooth.com/specifications/gatt/services" target="_blank" rel="external">https://www.bluetooth.com/specifications/gatt/services</a> 了解每个handle的意义</p>
+<h5 id="获取可读写handle"><a href="#获取可读写handle" class="headerlink" title="获取可读写handle"></a>获取可读写handle</h5><p>有很多的handle，我们不知道那些是可写的，我们尝试读取他们的handle 值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">char-read-hnd 0x0012</div></pre></td></tr></table></figure>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/handle.png" alt="info"></p>
+<p>得到一个错误提示，这里还有个小问题，我们不知道蓝牙包的结构，这就需要使用ubertooth来获取蓝牙数据包</p>
+<h5 id="获取蓝牙数据包"><a href="#获取蓝牙数据包" class="headerlink" title="获取蓝牙数据包"></a>获取蓝牙数据包</h5><p>嗅探命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ubertooth-btle -f -t88:C2:55:CA:E9:4A</div></pre></td></tr></table></figure>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/ubertooth1.png" alt="info"></p>
+<p>为了获取数据包，可以使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ubertooth-btle -f -t88:C2:55:CA:E9:4A -c smartbulb_dump.pcap</div></pre></td></tr></table></figure>
+<p>-c是为了保存数据到pcap文件中</p>
+<p>这时候打开app连接灯泡，进行开关操作，这时候就会获取到数据包信息</p>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/ubertooth2.png" alt="info"></p>
+<p>从图中可以看出：</p>
+<blockquote>
+<p>接入地址为 0x8e89bed6<br>处于37频道<br>数据包PDU 为ADV_IND，意味着这个是已经连接的，可扫描的，有回复的<br>设备地址为：88:c2:55:ca:e9:4a</p>
+</blockquote>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/ubertooth3.png" alt="info"></p>
+<p>从上图可以看到，app的扫描请求和设备的回复</p>
+<h5 id="Wireshark分析数据包"><a href="#Wireshark分析数据包" class="headerlink" title="Wireshark分析数据包"></a>Wireshark分析数据包</h5><p>为了方便可以直接使用Wireshark来分析捕获到的数据包</p>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/wireshark.png" alt="info"></p>
+<p>过滤出ATT的数据包：<code>btl2cap.cid==0x004</code></p>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/wireshark2.png" alt="info"></p>
+<p>下面直接找写入操作的数据包</p>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/wireshark3.png" alt="info"></p>
+<p>可以看到写入的handle正是0x0012</p>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/wireshark4.png" alt="info"></p>
+<p>分析写操作，是可以找到地址、crc校验值、操作码，和uuid的</p>
+<blockquote>
+<p>access address:  0xaf9a9515<br>master and slave address<br>CRC: 0x6dcb5<br>handle:  0x0012<br>UUID: 0xfff1<br>value : 03c90006000a03000101000024ff000000006</p>
+</blockquote>
+<p><img src="/2017/01/19/智能硬件/破解智能灯泡/package.jpg" alt="info"></p>
+<h5 id="操作灯泡"><a href="#操作灯泡" class="headerlink" title="操作灯泡"></a>操作灯泡</h5><p>改变颜色</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">char-write-req 0x0012 03c90006000a03000101000024ff00000000 //bluish green</div><div class="line">char-write-req 0x0012 03c90006000a0300010100ff000000000000 // Red</div><div class="line">char-write-req 0x0012 03c90006000a030001010000ff0000000000 //Green</div><div class="line">char-write-req 0x0012 03c90006000a03000101000000ff00000000 // Blue</div></pre></td></tr></table></figure>
+<p>改变开关状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">char-write-req 0x0012 03c90006000a030101010000000000000000 //Off</div><div class="line">char-write-req 0x0012 03c90006000a0300010100ff000000000000 //On</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/智能硬件/">智能硬件</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/19/智能硬件/破解智能灯泡/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-安全测试/facebook命令执行" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -467,64 +583,6 @@
 
 
   
-    <article id="post-移动安全/加强版Smali Log注入" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/10/移动安全/加强版Smali Log注入/">加强版smail注入</a>
-    </h1>
-  
-
-        <a href="/2017/01/10/移动安全/加强版Smali Log注入/" class="archive-article-date">
-  	<time datetime="2017-01-10T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>可以自己建一个crack.smali文件，并定义自己的Log信息输出函数，如下：<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">.class</span><span class="keyword"> public</span> <span class="class">Lcrack;</span></div><div class="line"><span class="keyword">.super</span> <span class="class">Ljava/lang/Object;</span></div><div class="line"><span class="keyword">.source</span> <span class="string">"crack.java"</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log1(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 1字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 1"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log2(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 2字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 2"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log3(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 3字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 3"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> I(I)V   <span class="comment">#打印出int型值</span></div><div class="line"><span class="keyword">    .locals</span> 2</div><div class="line"></div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info_int"</span></div><div class="line"></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;p0&#125;, <span class="class">Ljava/lang/String;</span>-&gt;valueOf(I)<span class="class">Ljava/lang/String;</span></div><div class="line"></div><div class="line">   <span class="built_in"> move-result-object </span>v1</div><div class="line"></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, v1&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line"></div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> J(J)V <span class="comment">#打印出long类型的值</span></div><div class="line"><span class="keyword">.locals</span> 2</div><div class="line"></div><div class="line"><span class="keyword">.prologue</span></div><div class="line"><span class="built_in"></span></div><div class="line">const-string v0, <span class="string">"info_long"</span></div><div class="line"><span class="built_in"></span></div><div class="line">invoke-static &#123;p0, p1&#125;, <span class="class">Ljava/lang/String;</span>-&gt;valueOf(J)<span class="class">Ljava/lang/String;</span></div><div class="line"><span class="built_in"></span></div><div class="line">move-result-object v1</div><div class="line"><span class="built_in"></span></div><div class="line">invoke-static &#123;v0, v1&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line"><span class="built_in"></span></div><div class="line">return-void</div><div class="line"><span class="keyword">.end method</span></div></pre></td></tr></table></figure></p>
-<p>这个时候就只需要添加一行代码就行了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">invoke-static &#123;v1&#125;, Lcrack;-&gt;log1(Ljava/lang/String;)V</div></pre></td></tr></table></figure>
-<p>如果是int或者long类型的话，如下调用即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">invoke-static &#123;v0&#125;, Lcrack;-&gt;I(I)V</div><div class="line">invoke-static &#123;v1,v2&#125;, Lcrack;-&gt;J(J)V</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/01/10/移动安全/加强版Smali Log注入/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
     <article id="post-移动安全/mobSF架构分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -601,29 +659,29 @@
 
 
   
-    <article id="post-软件/kafka命令操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-移动安全/加强版Smali Log注入" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/09/软件/kafka命令操作/">kafka 常用命令</a>
+      <a class="article-title" href="/2017/01/10/移动安全/加强版Smali Log注入/">加强版smail注入</a>
     </h1>
   
 
-        <a href="/2017/01/09/软件/kafka命令操作/" class="archive-article-date">
-  	<time datetime="2017-01-09T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
+        <a href="/2017/01/10/移动安全/加强版Smali Log注入/" class="archive-article-date">
+  	<time datetime="2017-01-10T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="查看topic"><a href="#查看topic" class="headerlink" title="查看topic"></a>查看topic</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./kafka-topics.sh --zookeeper ip：2181 --list（列出所有topic）</div></pre></td></tr></table></figure>
-<h4 id="控制台接收信息"><a href="#控制台接收信息" class="headerlink" title="控制台接收信息"></a>控制台接收信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/kafka-console-consumer.sh --zookeeper  ip：2181  --from-beginning --topic test</div></pre></td></tr></table></figure>
-<h4 id="zookeeper命令"><a href="#zookeeper命令" class="headerlink" title="zookeeper命令"></a>zookeeper命令</h4><blockquote>
-<p>dump：列出未完成的会话和临时节点<br>  envi: 打印有关服务环境的详细信息<br>  reqs：列出未完成的请求<br>  ruok：测试服务器是否运行再非错误状态<br>  stat：列出有关性能和连接的客户端的统计信息</p>
-</blockquote>
+        <p>可以自己建一个crack.smali文件，并定义自己的Log信息输出函数，如下：<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">.class</span><span class="keyword"> public</span> <span class="class">Lcrack;</span></div><div class="line"><span class="keyword">.super</span> <span class="class">Ljava/lang/Object;</span></div><div class="line"><span class="keyword">.source</span> <span class="string">"crack.java"</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log1(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 1字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 1"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log2(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 2字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 2"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log3(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 3字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 3"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> I(I)V   <span class="comment">#打印出int型值</span></div><div class="line"><span class="keyword">    .locals</span> 2</div><div class="line"></div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info_int"</span></div><div class="line"></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;p0&#125;, <span class="class">Ljava/lang/String;</span>-&gt;valueOf(I)<span class="class">Ljava/lang/String;</span></div><div class="line"></div><div class="line">   <span class="built_in"> move-result-object </span>v1</div><div class="line"></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, v1&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line"></div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> J(J)V <span class="comment">#打印出long类型的值</span></div><div class="line"><span class="keyword">.locals</span> 2</div><div class="line"></div><div class="line"><span class="keyword">.prologue</span></div><div class="line"><span class="built_in"></span></div><div class="line">const-string v0, <span class="string">"info_long"</span></div><div class="line"><span class="built_in"></span></div><div class="line">invoke-static &#123;p0, p1&#125;, <span class="class">Ljava/lang/String;</span>-&gt;valueOf(J)<span class="class">Ljava/lang/String;</span></div><div class="line"><span class="built_in"></span></div><div class="line">move-result-object v1</div><div class="line"><span class="built_in"></span></div><div class="line">invoke-static &#123;v0, v1&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line"><span class="built_in"></span></div><div class="line">return-void</div><div class="line"><span class="keyword">.end method</span></div></pre></td></tr></table></figure></p>
+<p>这个时候就只需要添加一行代码就行了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">invoke-static &#123;v1&#125;, Lcrack;-&gt;log1(Ljava/lang/String;)V</div></pre></td></tr></table></figure>
+<p>如果是int或者long类型的话，如下调用即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">invoke-static &#123;v0&#125;, Lcrack;-&gt;I(I)V</div><div class="line">invoke-static &#123;v1,v2&#125;, Lcrack;-&gt;J(J)V</div></pre></td></tr></table></figure>
 
       
 
@@ -634,14 +692,14 @@
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件/">软件</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
 	</div>
 
       
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/01/09/软件/kafka命令操作/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/01/10/移动安全/加强版Smali Log注入/">展开全文 >></a>
         </p>
       
 
@@ -923,6 +981,64 @@
 
 
   
+    <article id="post-软件/kafka命令操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/09/软件/kafka命令操作/">kafka 常用命令</a>
+    </h1>
+  
+
+        <a href="/2017/01/09/软件/kafka命令操作/" class="archive-article-date">
+  	<time datetime="2017-01-09T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="查看topic"><a href="#查看topic" class="headerlink" title="查看topic"></a>查看topic</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./kafka-topics.sh --zookeeper ip：2181 --list（列出所有topic）</div></pre></td></tr></table></figure>
+<h4 id="控制台接收信息"><a href="#控制台接收信息" class="headerlink" title="控制台接收信息"></a>控制台接收信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/kafka-console-consumer.sh --zookeeper  ip：2181  --from-beginning --topic test</div></pre></td></tr></table></figure>
+<h4 id="zookeeper命令"><a href="#zookeeper命令" class="headerlink" title="zookeeper命令"></a>zookeeper命令</h4><blockquote>
+<p>dump：列出未完成的会话和临时节点<br>  envi: 打印有关服务环境的详细信息<br>  reqs：列出未完成的请求<br>  ruok：测试服务器是否运行再非错误状态<br>  stat：列出有关性能和连接的客户端的统计信息</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件/">软件</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/09/软件/kafka命令操作/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-移动安全/浅谈android hook技术" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1048,240 +1164,6 @@
 
 
   
-    <article id="post-安全测试/常见端口安全测试" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/03/安全测试/常见端口安全测试/">常见端口安全测试</a>
-    </h1>
-  
-
-        <a href="/2017/01/03/安全测试/常见端口安全测试/" class="archive-article-date">
-  	<time datetime="2017-01-03T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-03</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <table>
-<thead>
-<tr>
-<th>端口号</th>
-<th style="text-align:center">端口说明</th>
-<th style="text-align:right">攻击技巧</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>21/22/69</td>
-<td style="text-align:center">ftp/tftp</td>
-<td style="text-align:right">爆破、嗅探、溢出、后门</td>
-</tr>
-<tr>
-<td>22</td>
-<td style="text-align:center">ssh</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>23</td>
-<td style="text-align:center">telnet</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>25</td>
-<td style="text-align:center">smtp</td>
-<td style="text-align:right">邮件伪造</td>
-</tr>
-<tr>
-<td>53</td>
-<td style="text-align:center">DNS</td>
-<td style="text-align:right">DNS域传送、DNS劫持、DNS欺骗</td>
-</tr>
-<tr>
-<td>67、68</td>
-<td style="text-align:center">dhcp</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>110</td>
-<td style="text-align:center">pop3</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>139</td>
-<td style="text-align:center">samba</td>
-<td style="text-align:right">爆破、未授权访问、远程代码执行</td>
-</tr>
-<tr>
-<td>143</td>
-<td style="text-align:center">imap</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>161</td>
-<td style="text-align:center">snmp</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>389</td>
-<td style="text-align:center">ldap</td>
-<td style="text-align:right">注入攻击、未授权访问</td>
-</tr>
-<tr>
-<td>512/513/514</td>
-<td style="text-align:center">linux r</td>
-<td style="text-align:right">直接使用rlogin</td>
-</tr>
-<tr>
-<td>873</td>
-<td style="text-align:center">rsync</td>
-<td style="text-align:right">未授权访问</td>
-</tr>
-<tr>
-<td>1080</td>
-<td style="text-align:center">socket</td>
-<td style="text-align:right">爆破：进行内网渗透</td>
-</tr>
-<tr>
-<td>1352</td>
-<td style="text-align:center">lotus</td>
-<td style="text-align:right">爆破：弱口令 信息泄漏：源代码</td>
-</tr>
-<tr>
-<td>1433</td>
-<td style="text-align:center">mssql</td>
-<td style="text-align:right">爆破：使用系统用户登录 注入攻击</td>
-</tr>
-<tr>
-<td>1521</td>
-<td style="text-align:center">oracle</td>
-<td style="text-align:right">爆破：TNS 注入攻击</td>
-</tr>
-<tr>
-<td>2049</td>
-<td style="text-align:center">nfs</td>
-<td style="text-align:right">配置不当</td>
-</tr>
-<tr>
-<td>2181</td>
-<td style="text-align:center">zookeeper</td>
-<td style="text-align:right">未授权访问</td>
-</tr>
-<tr>
-<td>3306</td>
-<td style="text-align:center">mysql</td>
-<td style="text-align:right">爆破 拒绝服务 注入</td>
-</tr>
-<tr>
-<td>3389</td>
-<td style="text-align:center">rdp</td>
-<td style="text-align:right">爆破 Shift后门</td>
-</tr>
-<tr>
-<td>4848</td>
-<td style="text-align:center">glassfish</td>
-<td style="text-align:right">爆破：控制台弱口令 认证绕过</td>
-</tr>
-<tr>
-<td>5000</td>
-<td style="text-align:center">sybase/DB2</td>
-<td style="text-align:right">爆破 注入</td>
-</tr>
-<tr>
-<td>5432</td>
-<td style="text-align:center">postgresql</td>
-<td style="text-align:right">缓冲区溢出 注入攻击 爆破：弱口令</td>
-</tr>
-<tr>
-<td>5632</td>
-<td style="text-align:center">pcanywhere</td>
-<td style="text-align:right">拒绝服务 代码执行</td>
-</tr>
-<tr>
-<td>5900</td>
-<td style="text-align:center">vnc</td>
-<td style="text-align:right">爆破：弱口令 认证绕过</td>
-</tr>
-<tr>
-<td>6379</td>
-<td style="text-align:center">redis</td>
-<td style="text-align:right">未授权访问 爆破：弱口令</td>
-</tr>
-<tr>
-<td>7001</td>
-<td style="text-align:center">weblogic</td>
-<td style="text-align:right">Java反序列化 控制台弱口令 控制台部署webshell</td>
-</tr>
-<tr>
-<td>80/443/8080</td>
-<td style="text-align:center">web</td>
-<td style="text-align:right">常见web攻击 控制台爆破 对应服务器版本漏洞</td>
-</tr>
-<tr>
-<td>8069</td>
-<td style="text-align:center">zabbix</td>
-<td style="text-align:right">远程命令执行</td>
-</tr>
-<tr>
-<td>9090</td>
-<td style="text-align:center">websphere控制台</td>
-<td style="text-align:right">爆破：控制台弱口令 Java反序列</td>
-</tr>
-<tr>
-<td>9200/9300</td>
-<td style="text-align:center">elasticsearch</td>
-<td style="text-align:right">远程代码执行</td>
-</tr>
-<tr>
-<td>11211</td>
-<td style="text-align:center">memcacache</td>
-<td style="text-align:right">未授权访问</td>
-</tr>
-<tr>
-<td>27017</td>
-<td style="text-align:center">mongodb</td>
-<td style="text-align:right">爆破 未授权访问</td>
-</tr>
-</tbody>
-</table>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/01/03/安全测试/常见端口安全测试/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1340,15 +1222,11 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">web安全</a>
+                <a href="javascript:void(0)">安全测试</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)">智能硬件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全测试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1357,6 +1235,10 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)">软件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">web安全</a>
               </li>
             
             <div class="clearfix"></div>
