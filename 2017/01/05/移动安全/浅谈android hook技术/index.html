@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="NoSec World">
 <meta property="og:description" content="前言xposed框架xposed，主页：http://repo.xposed.info/module/de.robv.android.xposed.installer是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索
 通过替换/system/bin/app_process程序控制zy">
-<meta property="og:updated_time" content="2017-01-05T02:57:35.459Z">
+<meta property="og:updated_time" content="2017-01-20T01:51:02.187Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈android hook技术">
 <meta name="twitter:description" content="前言xposed框架xposed，主页：http://repo.xposed.info/module/de.robv.android.xposed.installer是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索
@@ -209,7 +209,7 @@
 <p>在Android设备需要导入frida的服务端，需要root你的手机</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl -O http://build.frida.re/frida/android/arm/bin/frida-server</div><div class="line">$ chmod+x frida-server</div><div class="line">$ adb push frida-server /data/local/tmp/</div></pre></td></tr></table></figure>
 <h4 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h4><p>设备上运行frida-server:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ adb shell</div><div class="line">root@android:/ # chmod 700 frida-server</div><div class="line">$ adb shell</div><div class="line">root@android:/ # /data/local/tmp/frida-server -t 0 (注意在root下运行)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ adb shell</div><div class="line">root@android:/ chmod 700 frida-server</div><div class="line">$ adb shell</div><div class="line">root@android:/ /data/local/tmp/frida-server -t 0 (注意在root下运行)</div></pre></td></tr></table></figure>
 <p>电脑上运行adb forward tcp转发:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adb forward tcp:27042 tcp:27042</div><div class="line">adb forward tcp:27043 tcp:27043</div></pre></td></tr></table></figure>
 <p>27042端口用于与frida-server通信,之后的每个端口对应每个注入的进程.</p>
@@ -435,6 +435,10 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)">web安全</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">安全测试</a>
               </li>
              
@@ -448,10 +452,6 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)">软件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">web安全</a>
               </li>
             
             <div class="clearfix"></div>
