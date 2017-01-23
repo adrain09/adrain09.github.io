@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://adrain09.github.io/2017/01/23/web安全/DNS REBINDING攻击/DNS.png">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/23/web安全/DNS REBINDING攻击/dns1.png">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/23/web安全/DNS REBINDING攻击/dns2.jpg">
-<meta property="og:updated_time" content="2017-01-23T02:33:15.656Z">
+<meta property="og:updated_time" content="2017-01-23T02:35:52.992Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DNS REBINDING">
 <meta name="twitter:description" content="DNS 重绑定概要DNS重绑定可以用来攻击同源策略，主要的原理就是控制dns的解析来做一些事情，简单步骤就是在提供了内容之后改变网址解析到的ip
@@ -208,6 +208,8 @@
 <p>这个解析服务每次返回的结果不同，第一次请求DNS查询，结果返回的是101.191.60.117，是一个合法的公网IP，但是第二次请求时，变成了私有IP 10.36.5.215。注意到，这两条记录的ttl都是0，这是为了防止有DNS服务器对解析结果进行缓存</p>
 <h4 id="几个测试用脚本"><a href="#几个测试用脚本" class="headerlink" title="几个测试用脚本"></a>几个测试用脚本</h4><p><img src="/2017/01/23/web安全/DNS REBINDING攻击/dns1.png" alt="info"></p>
 <p><img src="/2017/01/23/web安全/DNS REBINDING攻击/dns2.jpg" alt="info"></p>
+<h4 id="参考连接"><a href="#参考连接" class="headerlink" title="参考连接"></a>参考连接</h4><p><a href="http://blog.csdn.net/u011721501/article/details/54667714" target="_blank" rel="external">http://blog.csdn.net/u011721501/article/details/54667714</a></p>
+<p><a href="https://ricterz.me/posts/Use%20DNS%20Rebinding%20to%20Bypass%20IP%20Restriction?_=1485134878505" target="_blank" rel="external">https://ricterz.me/posts/Use%20DNS%20Rebinding%20to%20Bypass%20IP%20Restriction?_=1485134878505</a></p>
 
       
 
