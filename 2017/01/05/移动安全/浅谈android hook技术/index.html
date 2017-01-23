@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="https://adrain09.github.io">
   <title>浅谈android hook技术 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言xposed框架xposed，主页：http://repo.xposed.info/module/de.robv.android.xposed.installer是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索
-通过替换/system/bin/app_process程序控制zy">
+  <meta name="description" content="前言xposed框架xposed，主页：http://repo.xposed.info/module/de.robv.android.xposed.installer
+是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浅谈android hook技术">
 <meta property="og:url" content="https://adrain09.github.io/2017/01/05/移动安全/浅谈android hook技术/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="前言xposed框架xposed，主页：http://repo.xposed.info/module/de.robv.android.xposed.installer是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索
-通过替换/system/bin/app_process程序控制zy">
-<meta property="og:updated_time" content="2017-01-20T01:51:02.187Z">
+<meta property="og:description" content="前言xposed框架xposed，主页：http://repo.xposed.info/module/de.robv.android.xposed.installer
+是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索">
+<meta property="og:updated_time" content="2017-01-23T02:41:02.950Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈android hook技术">
-<meta name="twitter:description" content="前言xposed框架xposed，主页：http://repo.xposed.info/module/de.robv.android.xposed.installer是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索
-通过替换/system/bin/app_process程序控制zy">
+<meta name="twitter:description" content="前言xposed框架xposed，主页：http://repo.xposed.info/module/de.robv.android.xposed.installer
+是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -184,7 +184,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="xposed框架"><a href="#xposed框架" class="headerlink" title="xposed框架"></a>xposed框架</h2><p>xposed，主页：<a href="http://repo.xposed.info/module/de.robv.android.xposed.installer" target="_blank" rel="external">http://repo.xposed.info/module/de.robv.android.xposed.installer</a><br>是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="xposed框架"><a href="#xposed框架" class="headerlink" title="xposed框架"></a>xposed框架</h2><p>xposed，主页：<a href="http://repo.xposed.info/module/de.robv.android.xposed.installer" target="_blank" rel="external">http://repo.xposed.info/module/de.robv.android.xposed.installer</a></p>
+<p>是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索</p>
+<a id="more"></a>
 <p>通过替换/system/bin/app_process程序控制zygote进程，使得app_process在启动过程中会加载XposedBridge.jar这个jar包，从而完成对Zygote进程及其创建的Dalvik虚拟机的劫持。</p>
 <p>Xposed在开机的时候完成对所有的Hook Function的劫持，在原Function执行的前后加上自定义代码</p>
 <p>很多人将这个框架用在对android的私有化定制上面，其实在android安全测试方面这个框架提供了很大的便利，xposed主要是对方法的hook，在以往的重打包技术中，需要对smali代码的进行修改，修改起来比较麻烦。</p>

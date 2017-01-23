@@ -8,25 +8,16 @@
   <link rel="dns-prefetch" href="https://adrain09.github.io">
   <title>微信hook函数收集 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="主要搜集网上出现的微信函数，便于frida和exposed的插件编写
-微信骰子的判断函数判断函数为com.tencent.mm.sdk.platformtools.be类的tx函数。(Randon函数)
-frida hook代码：
-123456789101112131415scr = &amp;quot;&amp;quot;&amp;quot;Java.perform(function () &amp;#123;var be=">
+  <meta name="description" content="主要搜集网上出现的微信函数，便于frida和exposed的插件编写">
 <meta property="og:type" content="article">
 <meta property="og:title" content="微信hook函数收集">
 <meta property="og:url" content="https://adrain09.github.io/2017/01/20/移动安全/微信函数收集/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="主要搜集网上出现的微信函数，便于frida和exposed的插件编写
-微信骰子的判断函数判断函数为com.tencent.mm.sdk.platformtools.be类的tx函数。(Randon函数)
-frida hook代码：
-123456789101112131415scr = &amp;quot;&amp;quot;&amp;quot;Java.perform(function () &amp;#123;var be=">
-<meta property="og:updated_time" content="2017-01-20T02:31:59.159Z">
+<meta property="og:description" content="主要搜集网上出现的微信函数，便于frida和exposed的插件编写">
+<meta property="og:updated_time" content="2017-01-23T02:41:07.718Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微信hook函数收集">
-<meta name="twitter:description" content="主要搜集网上出现的微信函数，便于frida和exposed的插件编写
-微信骰子的判断函数判断函数为com.tencent.mm.sdk.platformtools.be类的tx函数。(Randon函数)
-frida hook代码：
-123456789101112131415scr = &amp;quot;&amp;quot;&amp;quot;Java.perform(function () &amp;#123;var be=">
+<meta name="twitter:description" content="主要搜集网上出现的微信函数，便于frida和exposed的插件编写">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -191,6 +182,7 @@ frida hook代码：
     <div class="article-entry" itemprop="articleBody">
       
         <p>主要搜集网上出现的微信函数，便于frida和exposed的插件编写</p>
+<a id="more"></a>
 <h5 id="微信骰子的判断函数"><a href="#微信骰子的判断函数" class="headerlink" title="微信骰子的判断函数"></a>微信骰子的判断函数</h5><p>判断函数为com.tencent.mm.sdk.platformtools.be类的tx函数。(Randon函数)</p>
 <p>frida hook代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">scr = &quot;&quot;&quot;</div><div class="line">Java.perform(function () &#123;</div><div class="line">var be= Java.use(&quot;com.tencent.mm.sdk.platformtools.be&quot;);</div><div class="line">send(typeof(be));</div><div class="line">send(typeof(be.tx));</div><div class="line">send(&quot;start&quot;)</div><div class="line">be.tx.implementation = function()&#123; //替换be类中的tx函数</div><div class="line">    var type = arguments[0];</div><div class="line">    send(&quot;start&quot;)</div><div class="line">    send(&quot;type=&quot;+type);</div><div class="line">    return 5;</div><div class="line">&#125;;</div><div class="line">send(&quot;end&quot;)</div><div class="line">&#125;);</div><div class="line">&quot;&quot;&quot;</div></pre></td></tr></table></figure>

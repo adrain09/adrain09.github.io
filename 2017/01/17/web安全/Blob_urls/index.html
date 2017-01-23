@@ -8,22 +8,16 @@
   <link rel="dns-prefetch" href="https://adrain09.github.io">
   <title>H5中的Object URL | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中
-Object URL像个号码牌，凭着它可以向浏览器提领内容。
-换个角度，http%3A//www.darkthrad.net/c94d498b-7818-49b3-8e79-d3959938ba0f的形式，有点像是跟http:">
+  <meta name="description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中">
 <meta property="og:type" content="article">
 <meta property="og:title" content="H5中的Object URL">
 <meta property="og:url" content="https://adrain09.github.io/2017/01/17/web安全/Blob_urls/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中
-Object URL像个号码牌，凭着它可以向浏览器提领内容。
-换个角度，http%3A//www.darkthrad.net/c94d498b-7818-49b3-8e79-d3959938ba0f的形式，有点像是跟http:">
-<meta property="og:updated_time" content="2017-01-17T07:40:56.188Z">
+<meta property="og:description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中">
+<meta property="og:updated_time" content="2017-01-23T02:39:53.672Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="H5中的Object URL">
-<meta name="twitter:description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中
-Object URL像个号码牌，凭着它可以向浏览器提领内容。
-换个角度，http%3A//www.darkthrad.net/c94d498b-7818-49b3-8e79-d3959938ba0f的形式，有点像是跟http:">
+<meta name="twitter:description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -188,6 +182,7 @@ Object URL像个号码牌，凭着它可以向浏览器提领内容。
     <div class="article-entry" itemprop="articleBody">
       
         <p>Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中</p>
+<a id="more"></a>
 <p>Object URL像个号码牌，凭着它可以向浏览器提领内容。</p>
 <p>换个角度，http%3A//www.darkthrad.net/c94d498b-7818-49b3-8e79-d3959938ba0f的形式，有点像是跟http: //www.darkthread.net网站取得名为c94d498b-7818-49b3-8e79-d3959938ba0f的资源，但读取时不需真的发出HTTP Request，直接由浏览器提取即可。</p>
 <p>由于物件内容被储存在浏览器记忆体，注定了Object URL的生命週期得紧紧地跟网页绑在一起，就像JavaScript变数一般，需等到网页载入后，透过URL.createObjectURL()为File或Blob物件建立Object URL，网页结束后自动失效，或是确定不要后呼叫URL.revokeObjectURL()主动将其注销节省记忆体</p>

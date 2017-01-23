@@ -8,25 +8,16 @@
   <link rel="dns-prefetch" href="https://adrain09.github.io">
   <title>MobSF框架分析 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="总体mobSF使用django框架开发，使用sqlite进行的存储，可以上传代码、app、zip进行扫描，可以进行静态分析和动态分析
-静态扫描静态扫描就是反编译apk的过程，对反编译后的代码进行四大组件的分析，在AndroidManifest中把所有能被调用的组建进行查找;后面对代码进行分析，通过工具获取到反编译后的代码，使用正则对代码提取关键子。
-过程：
-上传apk后，首先进行zip的解压，而后">
+  <meta name="description" content="总体mobSF使用django框架开发，使用sqlite进行的存储，可以上传代码、app、zip进行扫描，可以进行静态分析和动态分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MobSF框架分析">
 <meta property="og:url" content="https://adrain09.github.io/2017/01/10/移动安全/mobSF架构分析/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="总体mobSF使用django框架开发，使用sqlite进行的存储，可以上传代码、app、zip进行扫描，可以进行静态分析和动态分析
-静态扫描静态扫描就是反编译apk的过程，对反编译后的代码进行四大组件的分析，在AndroidManifest中把所有能被调用的组建进行查找;后面对代码进行分析，通过工具获取到反编译后的代码，使用正则对代码提取关键子。
-过程：
-上传apk后，首先进行zip的解压，而后">
-<meta property="og:updated_time" content="2017-01-10T09:39:06.164Z">
+<meta property="og:description" content="总体mobSF使用django框架开发，使用sqlite进行的存储，可以上传代码、app、zip进行扫描，可以进行静态分析和动态分析">
+<meta property="og:updated_time" content="2017-01-23T02:41:18.606Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MobSF框架分析">
-<meta name="twitter:description" content="总体mobSF使用django框架开发，使用sqlite进行的存储，可以上传代码、app、zip进行扫描，可以进行静态分析和动态分析
-静态扫描静态扫描就是反编译apk的过程，对反编译后的代码进行四大组件的分析，在AndroidManifest中把所有能被调用的组建进行查找;后面对代码进行分析，通过工具获取到反编译后的代码，使用正则对代码提取关键子。
-过程：
-上传apk后，首先进行zip的解压，而后">
+<meta name="twitter:description" content="总体mobSF使用django框架开发，使用sqlite进行的存储，可以上传代码、app、zip进行扫描，可以进行静态分析和动态分析">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -191,6 +182,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="总体"><a href="#总体" class="headerlink" title="总体"></a>总体</h3><p>mobSF使用django框架开发，使用sqlite进行的存储，可以上传代码、app、zip进行扫描，可以进行静态分析和动态分析</p>
+<a id="more"></a>
 <h3 id="静态扫描"><a href="#静态扫描" class="headerlink" title="静态扫描"></a>静态扫描</h3><p>静态扫描就是反编译apk的过程，对反编译后的代码进行四大组件的分析，在AndroidManifest中把所有能被调用的组建进行查找;后面对代码进行分析，通过工具获取到反编译后的代码，使用正则对代码提取关键子。</p>
 <p>过程：</p>
 <p>上传apk后，首先进行zip的解压，而后使用AXMLPrinter2.jar提取app中的AndroidManifest.xml文件，对AndroidManifest.xml进行分析，获取暴露出来的</p>

@@ -9,24 +9,18 @@
   <title>facebook 命令执行 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="文章地址：http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html
-对文章中的过程进行了简单的分析：
-分析在facebook分享页面会有个图像的链接地址:
-https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;amp;link=link.example.t">
+对文章中的过程进行了简单的分析：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="facebook 命令执行">
 <meta property="og:url" content="https://adrain09.github.io/2017/01/18/安全测试/facebook命令执行/index.html">
 <meta property="og:site_name" content="NoSec World">
 <meta property="og:description" content="文章地址：http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html
-对文章中的过程进行了简单的分析：
-分析在facebook分享页面会有个图像的链接地址:
-https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;amp;link=link.example.t">
-<meta property="og:updated_time" content="2017-01-18T03:32:46.423Z">
+对文章中的过程进行了简单的分析：">
+<meta property="og:updated_time" content="2017-01-23T02:42:27.121Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="facebook 命令执行">
 <meta name="twitter:description" content="文章地址：http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html
-对文章中的过程进行了简单的分析：
-分析在facebook分享页面会有个图像的链接地址:
-https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;amp;link=link.example.t">
+对文章中的过程进行了简单的分析：">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -192,6 +186,7 @@ https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;amp;link=link.example.t">
       
         <p>文章地址：<a href="http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html" target="_blank" rel="external">http://4lemon.ru/2017-01-17_facebook_imagetragick_remote_code_execution.html</a></p>
 <p>对文章中的过程进行了简单的分析：</p>
+<a id="more"></a>
 <h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>在facebook分享页面会有个图像的链接地址:</p>
 <p><a href="https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;link=link.example.tld&amp;picture=http%3A%2F%2Fattacker.tld%2Fexploit.png&amp;name=news_name&amp;caption=news_caption&amp;description=news_descriotion&amp;redirect_uri=http%3A%2F%2Fwww.facebook.com&amp;ext=1476569763&amp;hash=" target="_blank" rel="external">https://www.facebook.com/dialog/feed?app_id=APP_ID&amp;link=link.example.tld&amp;picture=http%3A%2F%2Fattacker.tld%2Fexploit.png&amp;name=news_name&amp;caption=news_caption&amp;description=news_descriotion&amp;redirect_uri=http%3A%2F%2Fwww.facebook.com&amp;ext=1476569763&amp;hash=</a></p>
 <p>在页面中会对图像进行处理，变成连接：</p>
