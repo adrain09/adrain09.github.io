@@ -161,6 +161,76 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-web安全/DNS REBINDING攻击" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/23/web安全/DNS REBINDING攻击/">DNS REBINDING</a>
+    </h1>
+  
+
+        <a href="/2017/01/23/web安全/DNS REBINDING攻击/" class="archive-article-date">
+  	<time datetime="2017-01-23T07:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-23</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="DNS-重绑定概要"><a href="#DNS-重绑定概要" class="headerlink" title="DNS 重绑定概要"></a>DNS 重绑定概要</h4><p>DNS重绑定可以用来攻击同源策略，主要的原理就是控制dns的解析来做一些事情，简单步骤就是在提供了内容之后改变网址解析到的ip</p>
+<h4 id="利用dns窃取密码"><a href="#利用dns窃取密码" class="headerlink" title="利用dns窃取密码"></a>利用dns窃取密码</h4><p>Bang&amp; Olufsen扬声器本身在本地有个未认证的页面呈现出来，<code>/1000/Bo_network_settings.asp</code>访问会出现密码。</p>
+<p>恶意网站：attacker.com用到很短的生存时间（TTL），比如60s来记录，页面上包含一个恶意的Javascript有效载荷，利用著名的WebRTC内部IP漏洞获取本机的内部IP地址，对内网进行B&amp;O设备扫描。</p>
+<p>可以自动创建并删除图像标记来寻找IP地址包含/images/BO_processing_grey.gif，找到扫描结束，DNS重绑定开始</p>
+<p>例如找到地址为：192.168.1.10，我们把这个ip发给攻击者，在客户端的JavaScript负载等待超过一分钟，一分钟之后，在试图得到<a href="http://attacker.com/1000/Bo_network_settings.asp。" target="_blank" rel="external">http://attacker.com/1000/Bo_network_settings.asp。</a></p>
+<p>DNS此时过期，我们将attacker.com解析到了192.168.1.10，此时仍然认为是同源。</p>
+<h4 id="绕过SSRF过滤"><a href="#绕过SSRF过滤" class="headerlink" title="绕过SSRF过滤"></a>绕过SSRF过滤</h4><p>传统的SSRF过滤步骤：</p>
+<blockquote>
+<p>   获取到输入的URL，从该URL中提取host<br>   对该host进行DNS解析，获取到解析的IP<br>   检测该IP是否是合法的，比如是否是私有IP等<br>   如果IP检测为合法的，则进入curl的阶段发包</p>
+</blockquote>
+<p>检查分为两次，一个对host进行dns解析，第二次Curl发包进行解析，这两次解析是有时间差的</p>
+<p>绕过：</p>
+<p>攻击者需要自己持有一个域名，然后将这个域名解析指向自己的DNS Server，在该server上写个解析服务，每次返回不同的解析结果。</p>
+<p><img src="/2017/01/23/web安全/DNS REBINDING攻击/DNS.png" alt="info"></p>
+<p>这个解析服务每次返回的结果不同，第一次请求DNS查询，结果返回的是101.191.60.117，是一个合法的公网IP，但是第二次请求时，变成了私有IP 10.36.5.215。注意到，这两条记录的ttl都是0，这是为了防止有DNS服务器对解析结果进行缓存</p>
+<h4 id="几个测试用脚本"><a href="#几个测试用脚本" class="headerlink" title="几个测试用脚本"></a>几个测试用脚本</h4><p><img src="/2017/01/23/web安全/DNS REBINDING攻击/dns1.png" alt="info"></p>
+<p><img src="/2017/01/23/web安全/DNS REBINDING攻击/dns2.jpg" alt="info"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/23/web安全/DNS REBINDING攻击/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-web安全/一道题目" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -707,6 +777,64 @@
 
 
   
+    <article id="post-移动安全/加强版Smali Log注入" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/10/移动安全/加强版Smali Log注入/">加强版smail注入</a>
+    </h1>
+  
+
+        <a href="/2017/01/10/移动安全/加强版Smali Log注入/" class="archive-article-date">
+  	<time datetime="2017-01-10T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>可以自己建一个crack.smali文件，并定义自己的Log信息输出函数，如下：<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">.class</span><span class="keyword"> public</span> <span class="class">Lcrack;</span></div><div class="line"><span class="keyword">.super</span> <span class="class">Ljava/lang/Object;</span></div><div class="line"><span class="keyword">.source</span> <span class="string">"crack.java"</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log1(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 1字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 1"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log2(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 2字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 2"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log3(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 3字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 3"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> I(I)V   <span class="comment">#打印出int型值</span></div><div class="line"><span class="keyword">    .locals</span> 2</div><div class="line"></div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info_int"</span></div><div class="line"></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;p0&#125;, <span class="class">Ljava/lang/String;</span>-&gt;valueOf(I)<span class="class">Ljava/lang/String;</span></div><div class="line"></div><div class="line">   <span class="built_in"> move-result-object </span>v1</div><div class="line"></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, v1&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line"></div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> J(J)V <span class="comment">#打印出long类型的值</span></div><div class="line"><span class="keyword">.locals</span> 2</div><div class="line"></div><div class="line"><span class="keyword">.prologue</span></div><div class="line"><span class="built_in"></span></div><div class="line">const-string v0, <span class="string">"info_long"</span></div><div class="line"><span class="built_in"></span></div><div class="line">invoke-static &#123;p0, p1&#125;, <span class="class">Ljava/lang/String;</span>-&gt;valueOf(J)<span class="class">Ljava/lang/String;</span></div><div class="line"><span class="built_in"></span></div><div class="line">move-result-object v1</div><div class="line"><span class="built_in"></span></div><div class="line">invoke-static &#123;v0, v1&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line"><span class="built_in"></span></div><div class="line">return-void</div><div class="line"><span class="keyword">.end method</span></div></pre></td></tr></table></figure></p>
+<p>这个时候就只需要添加一行代码就行了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">invoke-static &#123;v1&#125;, Lcrack;-&gt;log1(Ljava/lang/String;)V</div></pre></td></tr></table></figure>
+<p>如果是int或者long类型的话，如下调用即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">invoke-static &#123;v0&#125;, Lcrack;-&gt;I(I)V</div><div class="line">invoke-static &#123;v1,v2&#125;, Lcrack;-&gt;J(J)V</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/10/移动安全/加强版Smali Log注入/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-移动安全/mobSF架构分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -766,328 +894,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/01/10/移动安全/mobSF架构分析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-移动安全/加强版Smali Log注入" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/10/移动安全/加强版Smali Log注入/">加强版smail注入</a>
-    </h1>
-  
-
-        <a href="/2017/01/10/移动安全/加强版Smali Log注入/" class="archive-article-date">
-  	<time datetime="2017-01-10T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>可以自己建一个crack.smali文件，并定义自己的Log信息输出函数，如下：<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">.class</span><span class="keyword"> public</span> <span class="class">Lcrack;</span></div><div class="line"><span class="keyword">.super</span> <span class="class">Ljava/lang/Object;</span></div><div class="line"><span class="keyword">.source</span> <span class="string">"crack.java"</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log1(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 1字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 1"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log2(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 2字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 2"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log3(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 3字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 3"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> I(I)V   <span class="comment">#打印出int型值</span></div><div class="line"><span class="keyword">    .locals</span> 2</div><div class="line"></div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info_int"</span></div><div class="line"></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;p0&#125;, <span class="class">Ljava/lang/String;</span>-&gt;valueOf(I)<span class="class">Ljava/lang/String;</span></div><div class="line"></div><div class="line">   <span class="built_in"> move-result-object </span>v1</div><div class="line"></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, v1&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line"></div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> J(J)V <span class="comment">#打印出long类型的值</span></div><div class="line"><span class="keyword">.locals</span> 2</div><div class="line"></div><div class="line"><span class="keyword">.prologue</span></div><div class="line"><span class="built_in"></span></div><div class="line">const-string v0, <span class="string">"info_long"</span></div><div class="line"><span class="built_in"></span></div><div class="line">invoke-static &#123;p0, p1&#125;, <span class="class">Ljava/lang/String;</span>-&gt;valueOf(J)<span class="class">Ljava/lang/String;</span></div><div class="line"><span class="built_in"></span></div><div class="line">move-result-object v1</div><div class="line"><span class="built_in"></span></div><div class="line">invoke-static &#123;v0, v1&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line"><span class="built_in"></span></div><div class="line">return-void</div><div class="line"><span class="keyword">.end method</span></div></pre></td></tr></table></figure></p>
-<p>这个时候就只需要添加一行代码就行了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">invoke-static &#123;v1&#125;, Lcrack;-&gt;log1(Ljava/lang/String;)V</div></pre></td></tr></table></figure>
-<p>如果是int或者long类型的话，如下调用即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">invoke-static &#123;v0&#125;, Lcrack;-&gt;I(I)V</div><div class="line">invoke-static &#123;v1,v2&#125;, Lcrack;-&gt;J(J)V</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/01/10/移动安全/加强版Smali Log注入/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-web安全/安全编码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/09/web安全/安全编码/">WEB安全基础</a>
-    </h1>
-  
-
-        <a href="/2017/01/09/web安全/安全编码/" class="archive-article-date">
-  	<time datetime="2017-01-09T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。</p>
-<h3 id="攻击方式"><a href="#攻击方式" class="headerlink" title="攻击方式"></a>攻击方式</h3><p>针对web的攻击，主要分为前端攻击方式和服务器端攻击方式</p>
-<p>前端的攻击方式比较常见的有XSS、CSRF、点击劫持等</p>
-<p>后端的攻击方式比较常见的是注入类攻击、上传类攻击、认证攻击</p>
-<p>下面分别对出现比较多的漏洞一一做下介绍</p>
-<h4 id="跨站攻击"><a href="#跨站攻击" class="headerlink" title="跨站攻击"></a>跨站攻击</h4><p>在介绍这些漏洞之前，首先说一下最重要也是最基本的安全功能——同源策略</p>
-<blockquote>
-<p>浏览器的同源策略、限制了来自不同源的document或脚本，对当前的document读取或设置某些属性</p>
-</blockquote>
-<p>同源的几个因素：host、子域名、端口、协议</p>
-<p>在web开发中经常会用到第三方域的资源，标签<code>&lt;script&gt;、&lt;img&gt;、&lt;iframe&gt;、&lt;link&gt;</code>等都是可以跨域加载资源的，而不受同源策略的限制。当然也是可以用来绕过同源策略。</p>
-<p>现在跨站攻击并不单单是xss攻击，还有其他很多形式的跨站攻击类型</p>
-<p>跨站里面最多的就是跨站脚本也就是XSS，这个不管是多大的站点都会遇到，XSS大家都知道分为三种：反射、存储、DOM型，之间的差别大家应该都知道了，下面说下在代码方面形成漏洞的原因</p>
-<p>最根本的原因就是没有对用户的输入进行过滤，在防护安全方面，大家记住一点就是：永远不要相信用户输入的内容</p>
-<p>最简单的漏洞代码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$input =$_GET[<span class="string">"param"</span>];</div><div class="line"><span class="keyword">echo</span> <span class="string">"&lt;div&gt;"</span>.$input.<span class="string">"&lt;/div&gt;"</span>;</div></pre></td></tr></table></figure>
-<p>用户只要向param提交数据就可以展示到页面上，那要是提交<code>&lt;script&gt;</code>脚本,那么就能利用这个js脚本去做一些危害性的操作了</p>
-<p>其实所有的xss归根到底就是上面这段代码，不管怎么变化，用户输入的信息能展示到页面上来</p>
-<p>这里我们从xsspayload入手，看代码如何防范xss漏洞的发生</p>
-<p>xsspayload 链接地址：<a href="https://html5sec.org/，里面包括了大部分的xss利用代码" target="_blank" rel="external">https://html5sec.org/，里面包括了大部分的xss利用代码</a></p>
-<p>这种开发遇到的最多，对于这个也是有成熟的修复方案——转义、编码处理，对于常见的不再过多关注，但是要注意不同地方的xss是有不同的处理方式的，修复方案我们放到了wiki上面，大家可以参考：<a href="http://wiki.n.miui.com/pages/viewpage.action?pageId=18999359。" target="_blank" rel="external">http://wiki.n.miui.com/pages/viewpage.action?pageId=18999359。</a></p>
-<p>下面介绍一些不常见的跨域漏洞</p>
-<ol>
-<li>flash跨域</li>
-</ol>
-<p>这个在很多网站都是被忽视的，flash有个跨域策略文件crossdomain.xml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;cross-domain-policy&gt;</div><div class="line">&lt;allow-access-from domain=&quot;www.friendOfFoo.com&quot; /&gt;</div><div class="line">&lt;allow-access-from domain=&quot;*.foo.com&quot; /&gt;</div><div class="line">&lt;allow-access-from domain=&quot;105.216.0.40&quot; /&gt;</div><div class="line">&lt;/cross-domain-policy&gt;</div></pre></td></tr></table></figure>
-<p>但是很多开发是很喜欢直接用成*的</p>
-<p>来看个例子：</p>
-<p><a href="http://c.mi.com/crossdomain.xml" target="_blank" rel="external">http://c.mi.com/crossdomain.xml</a> 这个直接设置成了*</p>
-<p>我们利用flash中的as脚本，有个现成的工具可以使用：<a href="https://15.rs/ContentHijacking/ContentHijackingLoader.html，取请求：http://c.mi.com" target="_blank" rel="external">https://15.rs/ContentHijacking/ContentHijackingLoader.html，取请求：http://c.mi.com</a></p>
-<p>可以看到是可以完全获取到页面的内容的。要是账户在登入的情况下，那么可以获取到用户的一些敏感信息的，把这些信息传递出去，就造成了用户的信息泄漏</p>
-<ol>
-<li>jsonp跨域</li>
-</ol>
-<p>这个产生的问题也是很多的，很多直接参用callback来回调函数名，但是直接访问这个jsonp链接，返回的http头部信息是html，并且没有对参数值做任何限制，导致直接使用callback=<script src="ssss"></script>嵌入了第三方的js，产生了跨域</p>
-<p>还有一种做了特殊符号的处理，但是返回的响应形式是：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$callback = $_GET[<span class="string">'callback'</span>];</div><div class="line">$callback=preg_replace(<span class="string">"/[')(&lt;&gt;&#123;&#125;]|\]|\[|\/|\\\|\"|\|/"</span>,<span class="string">""</span>,$callback);</div><div class="line"><span class="keyword">echo</span> <span class="string">"&lt;script&gt;"</span>.$callback.<span class="string">"()&lt;/script&gt;"</span>;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
-<p>这个也是会产生漏洞的，这个带给大家思考下，这个会产生什么样的漏洞</p>
-<p>jsonp还有个问题也是经常出现的，就是json劫持漏洞，看个代码：</p>
-<p>B站的json连接<a href="http://b.test.com/json/data.php?callback=call：" target="_blank" rel="external">http://b.test.com/json/data.php?callback=call：</a></p>
-<p>返回的页面内容：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">call("data":"I am secret data!!!")</div></pre></td></tr></table></figure>
-<p>A站的get代码：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">function hijack(data)&#123;console.log(data.data);&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://b.test.com/json/data.php?callback=hijack"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>这样通过jsonp传递个人敏感信息的话，利用json劫持就能获取到，导致个人敏感信息泄漏</p>
-<ol>
-<li>CORS</li>
-</ol>
-<p>这个是h5最新的一个头，主要就是通过设置相应头中的 Access-Control-Allow-Origin 字段。。</p>
-<p>Access-Control-Allow-Origin 响应字段说明了该资源或网站所允许被非同源站点访问的站点列表，当 Access-Control-Allow-Origin 中包含网站 A 或者设置为 * 时，网站 A 即可对网站 B 上的资源进行任意访问。</p>
-<p>也就是利用ajax请求可以获取到数据信息的。对于这个头部信息对于防御xss是很有效的，作为开发可以研究下这个</p>
-<ol>
-<li>postMessage</li>
-</ol>
-<p>这里用这个的时候，看代码所示：</p>
-<p>B站的data数据：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">window.onload=function()&#123;</div><div class="line">  parent.postMessage(&apos;I am secret data!!&apos;,&apos;*&apos;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>获取数据代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;iframe src=&quot;http://b.test.com/H5/data.html&quot;&gt;&lt;/iframe&gt;</div><div class="line">&lt;script&gt;</div><div class="line">window.addEventListener(&apos;message&apos;,function(e)&#123;</div><div class="line">  alert(e.data);</div><div class="line">&#125;)</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
-<p>这样就能直接获取到传递的敏感数据，所以在设置这个的时候不要直接设置成*,限制到自己的域下面</p>
-<ol>
-<li>iframe挂马</li>
-</ol>
-<p>很多站点，比如富文本的一些输入允许iframe的加载，iframe是无法对宿主域进行操作的，但是可以进行挂马，前段时间遇到一个需求，就是一个统一登入站点的背景是iframe进来的其他站点，其他站点的安全性不能保证，并且里面有些内容是用户可以控制到的，这样怎么保证我们统一登入的这个站点不受影响？（sandbox属性）</p>
-<ol>
-<li>后台xss</li>
-</ol>
-<p>主要集中在后台接受用户的留言反馈等地方没有注意到防御xss，导致攻击者可以直接输入xss语句进入后台中，管理员在查看到这个留言时候触发xss，把自己的登入凭证通过第三方的xss传递给攻击者，若是后台有没有做访问限制，则攻击者就能登入后台</p>
-<ol>
-<li>水坑攻击、鱼叉攻击</li>
-</ol>
-<p>也不算是新型的攻击方式，这个攻击是攻击者将一些攻击字段放入了flash cookie、los中，需要用户在特定的情况下才能触发，算是留了个水坑等用户去踩</p>
-<h4 id="CSRF漏洞"><a href="#CSRF漏洞" class="headerlink" title="CSRF漏洞"></a>CSRF漏洞</h4><p>这里就需要了解浏览器的cookie策略，cookie的几个重要属性：domain、path、Expires、Secure、HttpOnly。</p>
-<p>其中domain和path保证了改cookie只能在特定的域下生效，cookie是有失效时间的，若是在失效时间之内访问domain的path就会发送改cookie，这样就是csrf能利用的根本原因</p>
-<p>CSRF就是对于某些操作行为的连接，攻击者将该链接利用<code>&lt;img&gt;\&lt;iframe&gt;</code>等标签嵌入页面中，受害者访问该链接后自动触发了改行为操作，也就是在你不知不觉中完成了某项操作</p>
-<p>产生的原因：</p>
-<ol>
-<li>GET or POST</li>
-</ol>
-<p>使用get请求完成某项的操作行为是比较危险的</p>
-<p>使用POST请求如果没有进行referer的验证，自己构造一个form页面也是可以进行攻击的</p>
-<p>这些都是使用的cookie的策略，访问某个网站，改网站的cookie会自动的发送过去</p>
-<ol>
-<li>无一次性认证token</li>
-</ol>
-<p>token保证了本次请求的一次性，即使攻击者获取到改连接。发送过去也是失效的</p>
-<ol>
-<li>验证码</li>
-</ol>
-<p>这个也能很好的防止CSRF攻击，但是牺牲的是用户的体验问题</p>
-<p>这里有个问题：</p>
-<p>怎样必须使用get请求而不会产生csrf呢？</p>
-<h4 id="注入类漏洞"><a href="#注入类漏洞" class="headerlink" title="注入类漏洞"></a>注入类漏洞</h4><ol>
-<li>SQL注入</li>
-</ol>
-<p>sql注入被誉为注入之王，不管安全技术、防御技术怎么发展，爆出被sql注入获取到的数据的新闻从来没有停止过，其中不乏比较大的公司</p>
-<p>sql注入最简单的一段代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var shipcity;</div><div class="line">shipcity = Request.from(&quot;shipcity&quot;);</div><div class="line">var sql=&quot;select * from OridersTable where shipcity=&apos;&quot;+Shipcity +&quot;&apos;&quot;;</div></pre></td></tr></table></figure>
-<p>SQL注入语句就不展示了，闭合单引号，插入sql语句。</p>
-<p>现在的sql注入很多情况下是会爆出sql错误的，这个相对分析起来很容易知道那个点存在sql注入，但是现在很多都会把错误信息屏蔽掉，而且现在的sql注入不仅仅是通过服务器sql报错等进行判断了</p>
-<p>针对这种情况，攻击者研究出了盲注的方法，服务器没有错误回显，那么可以通过分析返回页面内容进行判断</p>
-<p>在现在的sql注入中用到的最多的就是基于时间的盲注技巧，通过sql语句的执行时间进行判断</p>
-<p>针对sql注入的防御，规范的编码规范可以很好的进行防御</p>
-<p>其他数据库的sql注入问题：</p>
-<p>大部分的数据库大家都是使用的mysql，针对mysql的防护也是比较完善的，但是大家很少会注意到其他数据库导致的sql注入</p>
-<p>举个mongodb的例子：</p>
-<p>代码如下：<br><img src="/2017/01/09/web安全/安全编码/mongodb代码.png" alt="info"></p>
-<p>由上图源代码可以知道，后台数据库的名字是security，集合名是users。u_id    是通过GET请求传到后台，然后传入一个数组变量中。然后进入MongoDB的查询。接下来，我们试试通过数组传入运算符号。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/mongo/show.php?u_id[$ne]=2</div></pre></td></tr></table></figure>
-<p>传入后的MongoDB查询语句如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$qry= array(“id” =&gt; array(“$ne” =&gt; 2))</div></pre></td></tr></table></figure>
-<p>结果就是MongoDB返回了除了id=2的其他所有数据。</p>
-<p>看下MongoDB中的findOne方法：<br>db.collection.findOne(query, projection)</p>
-<p>代码：<br><img src="/2017/01/09/web安全/安全编码/mongodb代码2.png" alt="info"></p>
-<p>利用代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/mongo/inject.php?u_name=dummy’&#125;);return&#123;something:1,something:2&#125;&#125;//&amp;u_pass=dummy</div></pre></td></tr></table></figure>
-<p>愿意还闭合前面的语句，注入自己的语句</p>
-<ul>
-<li>使用预编译语句</li>
-</ul>
-<p>预防sql注入的最佳方式，使用预编译语句绑定变量</p>
-<p>再java中：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String query = <span class="string">"select account from user_data where user_name=?"</span>;</div><div class="line">PreparedStatement psmtm = connection.preparedStatement(query);</div><div class="line">psmtm.setString(<span class="number">1</span>,custname)</div></pre></td></tr></table></figure>
-<p>不同的语言都有不同的预编译的方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">java EE ： PreparedStatement()</div><div class="line">.NET : SqlCommand() or OleDbCommand()</div><div class="line">PHP: bindParam()</div><div class="line">Hibernate: createQuery()</div><div class="line">SQLite: sqlite3_prepare()</div></pre></td></tr></table></figure>
-<ul>
-<li><p>使用存储过程</p>
-</li>
-<li><p>检查数据类型</p>
-</li>
-<li><p>使用安全的函数</p>
-</li>
-</ul>
-<p>每个语言中都有一些编码的函数，可以帮助对抗sql注入</p>
-<ul>
-<li>最小权限原则</li>
-</ul>
-<ol>
-<li>xml注入</li>
-</ol>
-<p>现在遇到的xml注入并不是很多，但是这个也是输入注入攻击里面比较严重的一个</p>
-<p>xml注入有两种，一种实体注入，一种和sql万能密码一样，绕过登入</p>
-<ol>
-<li>代码注入</li>
-</ol>
-<p>QQ客户端的命令执行（实例）</p>
-<p>注入攻击其实是违背了“数据和代码分离的原则”，导致了用户输入的数据变为代码进行了执行。</p>
-<h4 id="SSRF"><a href="#SSRF" class="headerlink" title="SSRF"></a>SSRF</h4><p>SSRF也是现在很多开发不清楚的漏洞，这个漏洞出现的频率还是很高的</p>
-<p>引用网上的一段话来简单介绍下SSRF漏洞：</p>
-<blockquote>
-<p>SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。（正是因为它是由服务端发起的，所以它能够请求到与它相连而与外网隔离的内部系统）<br>SSRF 形成的原因大都是由于服务端提供了从其他服务器应用获取数据的功能且没有对目标地址做过滤与限制。比如从指定URL地址获取网页文本内容，加载指定地址的图片，下载等等。</p>
-</blockquote>
-<p>百度命令执行漏洞：</p>
-<p>某论坛SSRF获取服务器权限</p>
-<h4 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h4><p>文件上传这个很多时候是为了获取服务器操作权限上传php木马文件等，但是现在很多开放都会意识到这个问题，将上传后的目录设置未不可执行，但是会忽略另一个问题，就是html的文件上传</p>
-<p>网易app上传文件，导致存储xss</p>
-<p>还有个经常见到的上传方式如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">POST /v1/soc/post HTTP/1.1</div><div class="line">Host: sport-circle.mi-ae.cn</div><div class="line">image=data%3Atext%2Fhtml%3Bbase64%2CPD9waHAgcGhwaW5mbygpOyA/Pg==&amp;content=&lt;img src=x onerror=alert(21212)&gt;</div></pre></td></tr></table></figure>
-<p>直接使用的是data伪协议的方式+base64方式上传图片，开发的本意是data:image/jpeg;base64,图片的base64编码，但是这些数据都是可以被控制的，直接修改上传，就会在后端形成html页面，造成xss攻击，若是上传的域又是网站的主域，那么就会威胁到主站的安全</p>
-<p>这个比较保险的做法就是将上传的文件放到一个静态域下面，和主域没有任何联系</p>
-<h4 id="其他漏洞"><a href="#其他漏洞" class="headerlink" title="其他漏洞"></a>其他漏洞</h4><p>这些漏洞都是因为开发没有注意到的一个点导致了很严重的漏洞</p>
-<ol>
-<li>cookie认证漏洞</li>
-</ol>
-<p>腾讯微博任意账户发微博</p>
-<ol>
-<li>android泄漏信息</li>
-</ol>
-<p>腾讯文件上传漏洞</p>
-<ol>
-<li>cookie当ua传输</li>
-</ol>
-<p>网易大批量获取登入认证漏洞</p>
-<h4 id="H5里面的一些安全设置"><a href="#H5里面的一些安全设置" class="headerlink" title="H5里面的一些安全设置"></a>H5里面的一些安全设置</h4><ol>
-<li>iframe 中的sandbox</li>
-<li>Link Types中的noreferer</li>
-<li>webStorage</li>
-</ol>
-<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ol>
-<li>认证绕过<br>这个问题也是出现很多的，很多开放喜欢使用前端获取服务器的返回值来判断是否进行下一步操作或者是否认证成功。</li>
-</ol>
-<p>案例：</p>
-<p>在发布二手买卖信息时候，在填写取货信息时有个对是否是本人手机的验证，</p>
-<p><img src="/2017/01/09/web安全/安全编码/581.jpg" alt="58"></p>
-<p>在这个时候拦截网址</p>
-<p><a href="http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx" target="_blank" rel="external">http://post.58.com/ajax/?action=checkmobilecodeandblind&amp;phone=13945678910&amp;code=123123123&amp;userid=xxxxxx</a></p>
-<p>是服务器返回的值，一般验证码不对的话会返回-1或者0，修改值为1，通行，直接发布成功</p>
-<ol>
-<li>js限制登入</li>
-</ol>
-<p>在js中限制登入，删除js直接登入后台</p>
-<ol>
-<li>表面认证</li>
-</ol>
-<p>只是做了个登入页面来做认证，后面的二级页面没有验证用户是否真的登入</p>
-<p>案例：</p>
-<p><img src="/2017/01/09/web安全/安全编码/info1.jpg" alt="info"></p>
-<p>直接访问这些连接就能看到学生的所有信息</p>
-<p><img src="/2017/01/09/web安全/安全编码/info2.jpg" alt="info"><br><img src="/2017/01/09/web安全/安全编码/poc.png" alt="poc"></p>
-<ol>
-<li>点击劫持</li>
-</ol>
-<p>点击劫持，就是iframe的利用，iframe一个页面将其设置为透明或者相应的动作模式</p>
-<p>防御的方法利用：X-FRAME-OPTIONS</p>
-<p>X-FRAME-OPTIONS是微软提出的一个http头，专门用来防御利用iframe嵌套的点击劫持攻击。</p>
-<p>这个头有三个值：</p>
-<blockquote>
-<p>DENY // 拒绝任何域加载<br>SAMEORIGIN // 允许同源域下加载<br>ALLOW-FROM // 可以定义允许frame加载的页面地址<br>php中设置：</p>
-</blockquote>
-<p>header(“X-FRAME-OPTIONS:DENY”);</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/01/09/web安全/安全编码/">展开全文 >></a>
         </p>
       
 
