@@ -8,31 +8,22 @@
   <link rel="dns-prefetch" href="https://adrain09.github.io">
   <title>WEB安全基础 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。
-攻击方式针对web的攻击，主要分为前端攻击方式和服务器端攻击方式
-前端的攻击方式比较常见的有XSS、CSRF、点击劫持等
-后端的攻">
+  <meta name="description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WEB安全基础">
 <meta property="og:url" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。
-攻击方式针对web的攻击，主要分为前端攻击方式和服务器端攻击方式
-前端的攻击方式比较常见的有XSS、CSRF、点击劫持等
-后端的攻">
+<meta property="og:description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/mongodb代码.png">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/mongodb代码2.png">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/581.jpg">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/info1.jpg">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/info2.jpg">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/poc.png">
-<meta property="og:updated_time" content="2017-01-18T03:08:35.240Z">
+<meta property="og:updated_time" content="2017-01-23T02:38:00.209Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB安全基础">
-<meta name="twitter:description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。
-攻击方式针对web的攻击，主要分为前端攻击方式和服务器端攻击方式
-前端的攻击方式比较常见的有XSS、CSRF、点击劫持等
-后端的攻">
+<meta name="twitter:description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。">
 <meta name="twitter:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/mongodb代码.png">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
@@ -198,6 +189,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。</p>
+<a id="more"></a>
 <h3 id="攻击方式"><a href="#攻击方式" class="headerlink" title="攻击方式"></a>攻击方式</h3><p>针对web的攻击，主要分为前端攻击方式和服务器端攻击方式</p>
 <p>前端的攻击方式比较常见的有XSS、CSRF、点击劫持等</p>
 <p>后端的攻击方式比较常见的是注入类攻击、上传类攻击、认证攻击</p>

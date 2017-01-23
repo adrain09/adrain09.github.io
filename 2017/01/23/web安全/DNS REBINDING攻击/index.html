@@ -8,25 +8,19 @@
   <link rel="dns-prefetch" href="https://adrain09.github.io">
   <title>DNS REBINDING | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="DNS 重绑定概要DNS重绑定可以用来攻击同源策略，主要的原理就是控制dns的解析来做一些事情，简单步骤就是在提供了内容之后改变网址解析到的ip
-利用dns窃取密码Bang&amp;amp; Olufsen扬声器本身在本地有个未认证的页面呈现出来，/1000/Bo_network_settings.asp访问会出现密码。
-恶意网站：attacker.com用到很短的生存时间（TTL），比如60s来记录，页">
+  <meta name="description" content="DNS 重绑定概要DNS重绑定可以用来攻击同源策略，主要的原理就是控制dns的解析来做一些事情，简单步骤就是在提供了内容之后改变网址解析到的ip">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DNS REBINDING">
 <meta property="og:url" content="https://adrain09.github.io/2017/01/23/web安全/DNS REBINDING攻击/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="DNS 重绑定概要DNS重绑定可以用来攻击同源策略，主要的原理就是控制dns的解析来做一些事情，简单步骤就是在提供了内容之后改变网址解析到的ip
-利用dns窃取密码Bang&amp;amp; Olufsen扬声器本身在本地有个未认证的页面呈现出来，/1000/Bo_network_settings.asp访问会出现密码。
-恶意网站：attacker.com用到很短的生存时间（TTL），比如60s来记录，页">
+<meta property="og:description" content="DNS 重绑定概要DNS重绑定可以用来攻击同源策略，主要的原理就是控制dns的解析来做一些事情，简单步骤就是在提供了内容之后改变网址解析到的ip">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/23/web安全/DNS REBINDING攻击/DNS.png">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/23/web安全/DNS REBINDING攻击/dns1.png">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/23/web安全/DNS REBINDING攻击/dns2.jpg">
-<meta property="og:updated_time" content="2017-01-23T02:35:52.992Z">
+<meta property="og:updated_time" content="2017-01-23T02:37:50.254Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DNS REBINDING">
-<meta name="twitter:description" content="DNS 重绑定概要DNS重绑定可以用来攻击同源策略，主要的原理就是控制dns的解析来做一些事情，简单步骤就是在提供了内容之后改变网址解析到的ip
-利用dns窃取密码Bang&amp;amp; Olufsen扬声器本身在本地有个未认证的页面呈现出来，/1000/Bo_network_settings.asp访问会出现密码。
-恶意网站：attacker.com用到很短的生存时间（TTL），比如60s来记录，页">
+<meta name="twitter:description" content="DNS 重绑定概要DNS重绑定可以用来攻击同源策略，主要的原理就是控制dns的解析来做一些事情，简单步骤就是在提供了内容之后改变网址解析到的ip">
 <meta name="twitter:image" content="https://adrain09.github.io/2017/01/23/web安全/DNS REBINDING攻击/DNS.png">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
@@ -192,6 +186,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="DNS-重绑定概要"><a href="#DNS-重绑定概要" class="headerlink" title="DNS 重绑定概要"></a>DNS 重绑定概要</h4><p>DNS重绑定可以用来攻击同源策略，主要的原理就是控制dns的解析来做一些事情，简单步骤就是在提供了内容之后改变网址解析到的ip</p>
+<a id="more"></a>
 <h4 id="利用dns窃取密码"><a href="#利用dns窃取密码" class="headerlink" title="利用dns窃取密码"></a>利用dns窃取密码</h4><p>Bang&amp; Olufsen扬声器本身在本地有个未认证的页面呈现出来，<code>/1000/Bo_network_settings.asp</code>访问会出现密码。</p>
 <p>恶意网站：attacker.com用到很短的生存时间（TTL），比如60s来记录，页面上包含一个恶意的Javascript有效载荷，利用著名的WebRTC内部IP漏洞获取本机的内部IP地址，对内网进行B&amp;O设备扫描。</p>
 <p>可以自动创建并删除图像标记来寻找IP地址包含/images/BO_processing_grey.gif，找到扫描结束，DNS重绑定开始</p>

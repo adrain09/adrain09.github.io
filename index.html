@@ -180,25 +180,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="DNS-重绑定概要"><a href="#DNS-重绑定概要" class="headerlink" title="DNS 重绑定概要"></a>DNS 重绑定概要</h4><p>DNS重绑定可以用来攻击同源策略，主要的原理就是控制dns的解析来做一些事情，简单步骤就是在提供了内容之后改变网址解析到的ip</p>
-<h4 id="利用dns窃取密码"><a href="#利用dns窃取密码" class="headerlink" title="利用dns窃取密码"></a>利用dns窃取密码</h4><p>Bang&amp; Olufsen扬声器本身在本地有个未认证的页面呈现出来，<code>/1000/Bo_network_settings.asp</code>访问会出现密码。</p>
-<p>恶意网站：attacker.com用到很短的生存时间（TTL），比如60s来记录，页面上包含一个恶意的Javascript有效载荷，利用著名的WebRTC内部IP漏洞获取本机的内部IP地址，对内网进行B&amp;O设备扫描。</p>
-<p>可以自动创建并删除图像标记来寻找IP地址包含/images/BO_processing_grey.gif，找到扫描结束，DNS重绑定开始</p>
-<p>例如找到地址为：192.168.1.10，我们把这个ip发给攻击者，在客户端的JavaScript负载等待超过一分钟，一分钟之后，在试图得到<a href="http://attacker.com/1000/Bo_network_settings.asp。" target="_blank" rel="external">http://attacker.com/1000/Bo_network_settings.asp。</a></p>
-<p>DNS此时过期，我们将attacker.com解析到了192.168.1.10，此时仍然认为是同源。</p>
-<h4 id="绕过SSRF过滤"><a href="#绕过SSRF过滤" class="headerlink" title="绕过SSRF过滤"></a>绕过SSRF过滤</h4><p>传统的SSRF过滤步骤：</p>
-<blockquote>
-<p>   获取到输入的URL，从该URL中提取host<br>   对该host进行DNS解析，获取到解析的IP<br>   检测该IP是否是合法的，比如是否是私有IP等<br>   如果IP检测为合法的，则进入curl的阶段发包</p>
-</blockquote>
-<p>检查分为两次，一个对host进行dns解析，第二次Curl发包进行解析，这两次解析是有时间差的</p>
-<p>绕过：</p>
-<p>攻击者需要自己持有一个域名，然后将这个域名解析指向自己的DNS Server，在该server上写个解析服务，每次返回不同的解析结果。</p>
-<p><img src="/2017/01/23/web安全/DNS REBINDING攻击/DNS.png" alt="info"></p>
-<p>这个解析服务每次返回的结果不同，第一次请求DNS查询，结果返回的是101.191.60.117，是一个合法的公网IP，但是第二次请求时，变成了私有IP 10.36.5.215。注意到，这两条记录的ttl都是0，这是为了防止有DNS服务器对解析结果进行缓存</p>
-<h4 id="几个测试用脚本"><a href="#几个测试用脚本" class="headerlink" title="几个测试用脚本"></a>几个测试用脚本</h4><p><img src="/2017/01/23/web安全/DNS REBINDING攻击/dns1.png" alt="info"></p>
-<p><img src="/2017/01/23/web安全/DNS REBINDING攻击/dns2.jpg" alt="info"></p>
-<h4 id="参考连接"><a href="#参考连接" class="headerlink" title="参考连接"></a>参考连接</h4><p><a href="http://blog.csdn.net/u011721501/article/details/54667714" target="_blank" rel="external">http://blog.csdn.net/u011721501/article/details/54667714</a></p>
-<p><a href="https://ricterz.me/posts/Use%20DNS%20Rebinding%20to%20Bypass%20IP%20Restriction?_=1485134878505" target="_blank" rel="external">https://ricterz.me/posts/Use%20DNS%20Rebinding%20to%20Bypass%20IP%20Restriction?_=1485134878505</a></p>
-
+        
+          <a class="article-more-a" href="/2017/01/23/web安全/DNS REBINDING攻击/#more">more >></a>
+        
       
 
       
