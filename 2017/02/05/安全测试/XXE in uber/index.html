@@ -6,18 +6,29 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://adrain09.github.io">
-  <title>一些有趣的数学 | NoSec World</title>
+  <title>Uber xxe漏洞 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0.999…=1？">
+  <meta name="description" content="源地址：https://httpsonly.blogspot.in/2017/01/0day-writeup-xxe-in-ubercom.html?m=1
+在参与uber的漏洞奖励计划时候，找到了uber的一个系统地址：
+https://backup.uberinternal.com:4285/login/
+通过查看api地址：https://backup.uberinternal.com:42">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一些有趣的数学">
-<meta property="og:url" content="https://adrain09.github.io/2017/02/03/数学/一些有意思的数学/index.html">
+<meta property="og:title" content="Uber xxe漏洞">
+<meta property="og:url" content="https://adrain09.github.io/2017/02/05/安全测试/XXE in uber/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="0.999…=1？">
-<meta property="og:updated_time" content="2017-02-03T01:49:40.415Z">
+<meta property="og:description" content="源地址：https://httpsonly.blogspot.in/2017/01/0day-writeup-xxe-in-ubercom.html?m=1
+在参与uber的漏洞奖励计划时候，找到了uber的一个系统地址：
+https://backup.uberinternal.com:4285/login/
+通过查看api地址：https://backup.uberinternal.com:42">
+<meta property="og:image" content="https://1.bp.blogspot.com/-uwHUzJmbkzo/WIdD1VI_DbI/AAAAAAAAACc/as9vR9mAgyosrqeIi0c1ZmC5mIxIcMb2QCLcB/s1600/4.jpg">
+<meta property="og:updated_time" content="2017-02-06T04:11:09.640Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一些有趣的数学">
-<meta name="twitter:description" content="0.999…=1？">
+<meta name="twitter:title" content="Uber xxe漏洞">
+<meta name="twitter:description" content="源地址：https://httpsonly.blogspot.in/2017/01/0day-writeup-xxe-in-ubercom.html?m=1
+在参与uber的漏洞奖励计划时候，找到了uber的一个系统地址：
+https://backup.uberinternal.com:4285/login/
+通过查看api地址：https://backup.uberinternal.com:42">
+<meta name="twitter:image" content="https://1.bp.blogspot.com/-uwHUzJmbkzo/WIdD1VI_DbI/AAAAAAAAACc/as9vR9mAgyosrqeIi0c1ZmC5mIxIcMb2QCLcB/s1600/4.jpg">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -163,30 +174,36 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-数学/一些有意思的数学" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-安全测试/XXE in uber" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      一些有趣的数学
+      Uber xxe漏洞
     </h1>
   
 
-        <a href="/2017/02/03/数学/一些有意思的数学/" class="archive-article-date">
-  	<time datetime="2017-02-03T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-03</time>
+        <a href="/2017/02/05/安全测试/XXE in uber/" class="archive-article-date">
+  	<time datetime="2017-02-05T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-05</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="0-999…-1？"><a href="#0-999…-1？" class="headerlink" title="0.999…=1？"></a>0.999…=1？</h4><a id="more"></a>
-<p>有许多的证法都可以证明这个等式，但仍然有很多的人纠结这个概念，下面就是一个很好的证明：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">x=0.999...</div><div class="line">10x=9.999...</div><div class="line">10x-x=9.999...-0.999...</div><div class="line">9x=9</div><div class="line">x=1</div></pre></td></tr></table></figure>
-<h4 id="偶数和自然数一样多"><a href="#偶数和自然数一样多" class="headerlink" title="偶数和自然数一样多"></a>偶数和自然数一样多</h4><p>每个自然数都有一个等于它两倍的偶数，而每个偶数也都有一个等于它一半的自然数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">1&lt;----&gt;2</div><div class="line">2&lt;----&gt;4</div><div class="line">3&lt;----&gt;6</div><div class="line">4&lt;----&gt;8</div><div class="line">5&lt;----&gt;10</div><div class="line">6&lt;----&gt;12</div><div class="line">7&lt;----&gt;14</div><div class="line">8&lt;----&gt;16</div></pre></td></tr></table></figure>
-<p>就是说，每一个自然数，都有一个与之对应的偶数。</p>
+        <p>源地址：<a href="https://httpsonly.blogspot.in/2017/01/0day-writeup-xxe-in-ubercom.html?m=1" target="_blank" rel="external">https://httpsonly.blogspot.in/2017/01/0day-writeup-xxe-in-ubercom.html?m=1</a></p>
+<p>在参与uber的漏洞奖励计划时候，找到了uber的一个系统地址：</p>
+<p><a href="https://backup.uberinternal.com:4285/login/" target="_blank" rel="external">https://backup.uberinternal.com:4285/login/</a></p>
+<p>通过查看api地址：<a href="https://backup.uberinternal.com:4285/api/serverEnv" target="_blank" rel="external">https://backup.uberinternal.com:4285/api/serverEnv</a> 可以看到用的code42的版本信息，通过查找cve并没有发现漏洞</p>
+<p>再查看说明文档测试api信息，在地址：</p>
+<p><a href="https://www.crashplan.com/apidocviewer/#SsoAuthLoginResponse" target="_blank" rel="external">https://www.crashplan.com/apidocviewer/#SsoAuthLoginResponse</a></p>
+<p>可以接受外部数据的输入</p>
+<p>api<code>/api/SsoAuthLoginResponse</code>接受参数SAMLResponse，参数值是个base64加密后的xml认证数据，构造传统的xxe攻击代码，服务器返回UA为java 1.8+</p>
+<p>在java1.7+ 是存在xxe命令执行漏洞的</p>
+<p>利用的poc：</p>
+<p><img src="https://1.bp.blogspot.com/-uwHUzJmbkzo/WIdD1VI_DbI/AAAAAAAAACc/as9vR9mAgyosrqeIi0c1ZmC5mIxIcMb2QCLcB/s1600/4.jpg" alt="uber"></p>
+<p>利用ftp服务器把数据传递出来，详细见：《java 1.7+ xxe入侵》</p>
 
       
 
@@ -223,7 +240,7 @@
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
 	</div>
 
       
@@ -276,7 +293,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/02/03/数学/一些有意思的数学/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/02/05/安全测试/XXE in uber/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -290,18 +307,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/02/05/安全测试/JAVA1.7+ XXE实体入侵/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          java 1.7+ xxe入侵
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/01/23/web安全/DNS REBINDING攻击/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">DNS REBINDING</div>
+    <a href="/2017/02/05/安全测试/JAVA1.7+ XXE实体入侵/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">java 1.7+ xxe入侵</div>
       <i class="icon-circle-right"></i>
     </a>
   
