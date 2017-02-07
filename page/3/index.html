@@ -49,6 +49,8 @@
 			
 				<li><a href="/">主页</a></li>
 	        
+				<li><a href="/tags/漏洞记录/">漏洞记录</a></li>
+	        
 				<li><a href="/tags/安全测试/">安全测试</a></li>
 	        
 				<li><a href="/tags/安全管理/">安全管理</a></li>
@@ -121,6 +123,8 @@
 				
 					<li><a href="/">主页</a></li>
 		        
+					<li><a href="/tags/漏洞记录/">漏洞记录</a></li>
+		        
 					<li><a href="/tags/安全测试/">安全测试</a></li>
 		        
 					<li><a href="/tags/安全管理/">安全管理</a></li>
@@ -164,6 +168,63 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-安全测试/brupsuite/基于burp插件的安全测试" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/">基于burp插件的安全测试</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="基于burp插件的安全测试"><a href="#基于burp插件的安全测试" class="headerlink" title="基于burp插件的安全测试"></a>基于burp插件的安全测试</h3><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>burp是很多web安全爱好者都会用到的神器，burp专业版集成了代理、fuzzing、重放、扫描等功能，对于自动化扫描功能来说，里面的poc都是官方集成好的，很难增加自己的特殊poc代码，最新版开放了burp的开发api，利用api可以很简单的集成自己的扫描poc，针对特定的站点进行针对性的扫描</p>
+<p>相对于其他扫描器，基于burp的自动化扫描可以不用考虑登入、cookie的处理问题，以及不用考虑爬虫爬不到的链接，只要你点击站点所有的页面后，burp的代理功能都会记录下请求来，设置不用考虑poc的插入位置问题，burp默认会对所有的位置进行poc的插入测试，连url里面的path路径都会涉及到。</p>
+        
+          <a class="article-more-a" href="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/安全测试/brupsuite/基于burp插件的安全测试/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
   
     <article id="post-安全测试/中间人攻击获取ssl-tsl数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -209,118 +270,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2016/12/16/安全测试/中间人攻击获取ssl-tsl数据/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-web安全/绕过csp发送cookie" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/web安全/绕过csp发送cookie/">CSP bypass</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/web安全/绕过csp发送cookie/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>绕过CSP发送cookie</p>
-        
-          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-web安全/跨域获取数据小结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/16/web安全/跨域获取数据小结/">跨域获取数据小结</a>
-    </h1>
-  
-
-        <a href="/2016/12/16/web安全/跨域获取数据小结/" class="archive-article-date">
-  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本文主要介绍几种跨域获取数据的方法，比较基础，但是在跨站漏洞的挖掘和利用上会起到很大的帮助。</p>
-        
-          <a class="article-more-a" href="/2016/12/16/web安全/跨域获取数据小结/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/12/16/web安全/跨域获取数据小结/">展开全文 >></a>
         </p>
       
 
@@ -394,6 +343,62 @@
 
 
   
+    <article id="post-web安全/跨域获取数据小结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/web安全/跨域获取数据小结/">跨域获取数据小结</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/web安全/跨域获取数据小结/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文主要介绍几种跨域获取数据的方法，比较基础，但是在跨站漏洞的挖掘和利用上会起到很大的帮助。</p>
+        
+          <a class="article-more-a" href="/2016/12/16/web安全/跨域获取数据小结/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/web安全/跨域获取数据小结/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-移动安全/drozer测试InsecureBankv2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -433,6 +438,62 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2016/12/16/移动安全/drozer测试InsecureBankv2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-web安全/绕过csp发送cookie" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/web安全/绕过csp发送cookie/">CSP bypass</a>
+    </h1>
+  
+
+        <a href="/2016/12/16/web安全/绕过csp发送cookie/" class="archive-article-date">
+  	<time datetime="2016-12-16T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-16</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>绕过CSP发送cookie</p>
+        
+          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/12/16/web安全/绕过csp发送cookie/">展开全文 >></a>
         </p>
       
 
@@ -508,15 +569,15 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">web安全</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">安全测试</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">移动安全</a>
+                <a href="javascript:void(0)">web安全</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">漏洞记录</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -524,11 +585,15 @@
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)">智能硬件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">智能硬件</a>
+                <a href="javascript:void(0)">移动安全</a>
               </li>
             
             <div class="clearfix"></div>
