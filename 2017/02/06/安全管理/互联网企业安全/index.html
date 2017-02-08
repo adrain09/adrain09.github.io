@@ -24,7 +24,7 @@
 安全是一个保值性的后台职能，不是创造收益的前台职能
 
 企业安全的领域：网络安全、平台和业务安全、广义信息安全、IT风险管理、IT审计和内控、安全品牌营销和渠道管理、其他打杂">
-<meta property="og:updated_time" content="2017-02-08T03:52:55.067Z">
+<meta property="og:updated_time" content="2017-02-08T05:52:13.777Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="互联网企业安全">
 <meta name="twitter:description" content="安全理论一 安全大环境
@@ -270,10 +270,55 @@
 <p>安全域划分、基于数据链路层的隔离、端口状态协议过滤、应用层安全、系统加固、灾难恢复</p>
 <p><em>安全架构设计原则</em></p>
 <p>纵深防御、多维防御、降维防御、实时入侵检测、伸缩性和可拓展性、分布式IDC、自动化运维、低性能损耗、能旁路不串联、业务无感知、去信息孤岛、TCO可控</p>
-<h4 id="安全建设"><a href="#安全建设" class="headerlink" title="安全建设"></a>安全建设</h4><ol>
-<li>基础安全措施</li>
-<li>网络层安全</li>
-<li>入侵感知</li>
+<h4 id="安全建设"><a href="#安全建设" class="headerlink" title="安全建设"></a>安全建设</h4><h5 id="一-基础安全措施"><a href="#一-基础安全措施" class="headerlink" title="一 基础安全措施"></a>一 基础安全措施</h5><p><strong>（一）安全域划分</strong></p>
+<p><strong>（二）生产网络和办公网络</strong></p>
+<p><strong>（三）系统安全加固</strong></p>
+<p><strong>（四）应用配置加固</strong></p>
+<ol>
+<li>目录权限</li>
+<li>web进程非root</li>
+<li>过滤特定文件类型</li>
+<li>远程访问</li>
+<li>帐号密码</li>
+<li>网络访问控制</li>
+<li>补丁管理</li>
+<li>日志审计</li>
+</ol>
+<p><strong>（五）服务器4A</strong></p>
+<p>4A指的是：账户、认证、授权、审计</p>
+<p>SSO统一登入权限管理：LDAP方案和0堡垒机方案</p>
+<h5 id="二-网络层安全"><a href="#二-网络层安全" class="headerlink" title="二 网络层安全"></a>二 网络层安全</h5><p><strong>（一）网络入侵检测</strong></p>
+<ol>
+<li>传统NIDS</li>
+<li>开源SNORT</li>
+<li>大型全流量NIDS</li>
+</ol>
+<p><strong>（二）DDOS防御</strong><br><strong>（三）链路劫持</strong></p>
+<ol>
+<li>全站https</li>
+<li>登入过程加密</li>
+<li>跨IDC传输加密</li>
+</ol>
+<p><strong>（四）应用防火墙waf</strong><br>通过部署方式分为：cname部署、module部署、网络层部署<br>WAF两类规则：通用型主流漏洞检测和防护、0day检测和防护</p>
+<h5 id="三-入侵感知"><a href="#三-入侵感知" class="headerlink" title="三 入侵感知"></a>三 入侵感知</h5><p><strong>（一）主机入侵检测</strong></p>
+<ol>
+<li>OSSEC</li>
+<li>MIG</li>
+<li>OSquery</li>
+<li>自研 采集点：基线安全、日志收集、进程信息、网络连接信息、webshell、DB审计</li>
+</ol>
+<p><strong>（二）检测webshell</strong></p>
+<ol>
+<li>静态检测</li>
+<li>流量检测</li>
+</ol>
+<p><strong>（三）RASP，实时自我保护</strong></p>
+<ol>
+<li>PHP RASP（动态行为分析）</li>
+<li>JAVA RASP</li>
+</ol>
+<p><strong>（四）数据库审计</strong></p>
+<ol>
 <li>漏洞扫描</li>
 <li>移动安全</li>
 <li>代码审计</li>
@@ -452,10 +497,6 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">web安全</a>
               </li>
              
@@ -464,11 +505,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">漏洞记录</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">智能硬件</a>
+                <a href="javascript:void(0)">安全管理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -476,7 +513,15 @@
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)">智能硬件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">移动安全</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">漏洞记录</a>
               </li>
              
               <li class="article-tag-list-item">
