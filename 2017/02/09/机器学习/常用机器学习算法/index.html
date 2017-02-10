@@ -6,18 +6,33 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://adrain09.github.io">
-  <title>H5中的Object URL | NoSec World</title>
+  <title>常见机器学习算法 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中">
+  <meta name="description" content="对机器学习算法的通俗理解
+决策树对已知的feature进行分类，每个节点提一个问题，通过判断将数据分类，再进行提问，再进行分类
+来新的数据后，按照问题逐个按问题分类最终进入到合适的叶子上面
+线性回归给定多个数值，拟合出与各个点的距离最近的一条直线，以直线作为分类标准，来新的数据后，判断数据在坐标系下处于直线的位置来进行分类判断
+逻辑回归更加挑剔的线性回归，对边界更加严格
+支持向量机感觉就是在回归里">
 <meta property="og:type" content="article">
-<meta property="og:title" content="H5中的Object URL">
-<meta property="og:url" content="https://adrain09.github.io/2017/01/17/web安全/Blob_urls/index.html">
+<meta property="og:title" content="常见机器学习算法">
+<meta property="og:url" content="https://adrain09.github.io/2017/02/09/机器学习/常用机器学习算法/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中">
-<meta property="og:updated_time" content="2017-01-23T02:39:53.672Z">
+<meta property="og:description" content="对机器学习算法的通俗理解
+决策树对已知的feature进行分类，每个节点提一个问题，通过判断将数据分类，再进行提问，再进行分类
+来新的数据后，按照问题逐个按问题分类最终进入到合适的叶子上面
+线性回归给定多个数值，拟合出与各个点的距离最近的一条直线，以直线作为分类标准，来新的数据后，判断数据在坐标系下处于直线的位置来进行分类判断
+逻辑回归更加挑剔的线性回归，对边界更加严格
+支持向量机感觉就是在回归里">
+<meta property="og:updated_time" content="2017-02-10T01:41:48.675Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="H5中的Object URL">
-<meta name="twitter:description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中">
+<meta name="twitter:title" content="常见机器学习算法">
+<meta name="twitter:description" content="对机器学习算法的通俗理解
+决策树对已知的feature进行分类，每个节点提一个问题，通过判断将数据分类，再进行提问，再进行分类
+来新的数据后，按照问题逐个按问题分类最终进入到合适的叶子上面
+线性回归给定多个数值，拟合出与各个点的距离最近的一条直线，以直线作为分类标准，来新的数据后，判断数据在坐标系下处于直线的位置来进行分类判断
+逻辑回归更加挑剔的线性回归，对边界更加严格
+支持向量机感觉就是在回归里">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -175,43 +190,32 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-web安全/Blob_urls" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-机器学习/常用机器学习算法" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      H5中的Object URL
+      常见机器学习算法
     </h1>
   
 
-        <a href="/2017/01/17/web安全/Blob_urls/" class="archive-article-date">
-  	<time datetime="2017-01-17T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-17</time>
+        <a href="/2017/02/09/机器学习/常用机器学习算法/" class="archive-article-date">
+  	<time datetime="2017-02-09T07:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-09</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中</p>
-<a id="more"></a>
-<p>Object URL像个号码牌，凭着它可以向浏览器提领内容。</p>
-<p>换个角度，http%3A//www.darkthrad.net/c94d498b-7818-49b3-8e79-d3959938ba0f的形式，有点像是跟http: //www.darkthread.net网站取得名为c94d498b-7818-49b3-8e79-d3959938ba0f的资源，但读取时不需真的发出HTTP Request，直接由浏览器提取即可。</p>
-<p>由于物件内容被储存在浏览器记忆体，注定了Object URL的生命週期得紧紧地跟网页绑在一起，就像JavaScript变数一般，需等到网页载入后，透过URL.createObjectURL()为File或Blob物件建立Object URL，网页结束后自动失效，或是确定不要后呼叫URL.revokeObjectURL()主动将其注销节省记忆体</p>
-<ul>
-<li><p>blob url的内容存储在浏览器内存中.读取时候不发出http请求,直接在内存中进行读取</p>
-</li>
-<li><p>创建方法:</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var aFileParts = [&apos;&lt;script&gt;location.href=&quot;http://xxx.com/277634777&quot;;window.open(&quot;http://xxxx/wblocation.php&quot;, &quot;hello2&quot;);&lt;\/script&gt;&apos;];</div><div class="line"></div><div class="line">var blob=new Blob(aFileParts,&#123;type:&quot;text/html; charset=utf-8&quot;&#125;);</div><div class="line">var url=URL.createObjectURL(blob);</div><div class="line">window.open(url, &apos;hello&apos;);</div></pre></td></tr></table></figure>
-<p>new Blob 方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Blob Blob(</div><div class="line">  [optional] Array parts,</div><div class="line">  [optional] BlobPropertyBag properties</div><div class="line">);</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>parts:<br>一个数组，包含了将要添加到Blob对象中的数据。数组元素可以是任意多个的ArrayBuffer，ArrayBufferView (typed array)， Blob，或者 DOMString对象。</p>
-<p>properties:<br>一个对象，设置Blob对象的一些属性,包括:  type:设置该Blob对象的type属性。</p>
-<p>URL.createObjectURL方法:<br>创建一个本地的objectURL对象</p>
-<p>window.open打开本地的objectURL对象,由于同一个window,直接同源可以进行操作</p>
-</blockquote>
+        <p>对机器学习算法的通俗理解</p>
+<h4 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h4><p>对已知的feature进行分类，每个节点提一个问题，通过判断将数据分类，再进行提问，再进行分类</p>
+<p>来新的数据后，按照问题逐个按问题分类最终进入到合适的叶子上面</p>
+<h4 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h4><p>给定多个数值，拟合出与各个点的距离最近的一条直线，以直线作为分类标准，来新的数据后，判断数据在坐标系下处于直线的位置来进行分类判断</p>
+<h4 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h4><p>更加挑剔的线性回归，对边界更加严格</p>
+<h4 id="支持向量机"><a href="#支持向量机" class="headerlink" title="支持向量机"></a>支持向量机</h4><p>感觉就是在回归里面再去重新选择最优解，所有距离最小，但是距离最小值最大的那个解</p>
+<h4 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h4><p>输入后经过内部函数的处理，基于标签分成不同的区域，在输出层输出单一结果</p>
+<h4 id="核函数"><a href="#核函数" class="headerlink" title="核函数"></a>核函数</h4><p>多维处理，空间划分</p>
 
       
 
@@ -248,7 +252,7 @@
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
 	</div>
 
       
@@ -301,7 +305,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/01/17/web安全/Blob_urls/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/02/09/机器学习/常用机器学习算法/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -315,18 +319,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/01/18/安全测试/facebook命令执行/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          facebook 命令执行
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/01/10/web安全/H5安全策略/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">H5新增安全策略</div>
+    <a href="/2017/02/06/安全管理/互联网企业安全/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">互联网企业安全建设</div>
       <i class="icon-circle-right"></i>
     </a>
   

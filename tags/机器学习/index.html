@@ -6,18 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://adrain09.github.io">
-  <title>H5中的Object URL | NoSec World</title>
+  <title>Tag: 机器学习 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中">
-<meta property="og:type" content="article">
-<meta property="og:title" content="H5中的Object URL">
-<meta property="og:url" content="https://adrain09.github.io/2017/01/17/web安全/Blob_urls/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="NoSec World">
+<meta property="og:url" content="https://adrain09.github.io/tags/机器学习/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中">
-<meta property="og:updated_time" content="2017-01-23T02:39:53.672Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="H5中的Object URL">
-<meta name="twitter:description" content="Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中">
+<meta name="twitter:title" content="NoSec World">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -175,169 +171,54 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-web安全/Blob_urls" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      H5中的Object URL
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2017" class="archive-year">2017</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2017/02/09/机器学习/常用机器学习算法/" class="archive-article-date">
+  	<time datetime="2017-02-09T07:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-09</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2017/02/09/机器学习/常用机器学习算法/">常见机器学习算法</a>
     </h1>
   
 
-        <a href="/2017/01/17/web安全/Blob_urls/" class="archive-article-date">
-  	<time datetime="2017-01-17T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-17</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Object URL不像Data URI包含内容的Base64编码，不管背后代表的File或Blob物件有多大，都只有一个短短的GUID，真正的内容被储存在浏览器记忆体中</p>
-<a id="more"></a>
-<p>Object URL像个号码牌，凭着它可以向浏览器提领内容。</p>
-<p>换个角度，http%3A//www.darkthrad.net/c94d498b-7818-49b3-8e79-d3959938ba0f的形式，有点像是跟http: //www.darkthread.net网站取得名为c94d498b-7818-49b3-8e79-d3959938ba0f的资源，但读取时不需真的发出HTTP Request，直接由浏览器提取即可。</p>
-<p>由于物件内容被储存在浏览器记忆体，注定了Object URL的生命週期得紧紧地跟网页绑在一起，就像JavaScript变数一般，需等到网页载入后，透过URL.createObjectURL()为File或Blob物件建立Object URL，网页结束后自动失效，或是确定不要后呼叫URL.revokeObjectURL()主动将其注销节省记忆体</p>
-<ul>
-<li><p>blob url的内容存储在浏览器内存中.读取时候不发出http请求,直接在内存中进行读取</p>
-</li>
-<li><p>创建方法:</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var aFileParts = [&apos;&lt;script&gt;location.href=&quot;http://xxx.com/277634777&quot;;window.open(&quot;http://xxxx/wblocation.php&quot;, &quot;hello2&quot;);&lt;\/script&gt;&apos;];</div><div class="line"></div><div class="line">var blob=new Blob(aFileParts,&#123;type:&quot;text/html; charset=utf-8&quot;&#125;);</div><div class="line">var url=URL.createObjectURL(blob);</div><div class="line">window.open(url, &apos;hello&apos;);</div></pre></td></tr></table></figure>
-<p>new Blob 方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Blob Blob(</div><div class="line">  [optional] Array parts,</div><div class="line">  [optional] BlobPropertyBag properties</div><div class="line">);</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>parts:<br>一个数组，包含了将要添加到Blob对象中的数据。数组元素可以是任意多个的ArrayBuffer，ArrayBufferView (typed array)， Blob，或者 DOMString对象。</p>
-<p>properties:<br>一个对象，设置Blob对象的一些属性,包括:  type:设置该Blob对象的type属性。</p>
-<p>URL.createObjectURL方法:<br>创建一个本地的objectURL对象</p>
-<p>window.open打开本地的objectURL对象,由于同一个window,直接同源可以进行操作</p>
-</blockquote>
-
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                    <div class="reward-box-item">
-                      <img class="reward-img" src="http://p1.bpimg.com/567571/129b2c8f4c136458.jpg">
-                      <span class="reward-type">微信</span>
-                    </div>
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://adrain09.github.io/2017/01/17/web安全/Blob_urls/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2017/01/18/安全测试/facebook命令执行/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          facebook 命令执行
-        
-      </div>
-    </a>
   
   
-    <a href="/2017/01/10/web安全/H5安全策略/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">H5新增安全策略</div>
-      <i class="icon-circle-right"></i>
-    </a>
+    </div></section>
   
-</nav>
 
-
-
-
-
-
-
+    
 
 
           </div>
@@ -360,9 +241,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		root: "/",
