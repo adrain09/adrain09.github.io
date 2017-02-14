@@ -173,6 +173,132 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-移动安全/微信函数收集" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/20/移动安全/微信函数收集/">微信hook函数收集</a>
+    </h1>
+  
+
+        <a href="/2017/01/20/移动安全/微信函数收集/" class="archive-article-date">
+  	<time datetime="2017-01-20T01:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-20</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>主要搜集网上出现的微信函数，便于frida和exposed的插件编写</p>
+        
+          <a class="article-more-a" href="/2017/01/20/移动安全/微信函数收集/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/20/移动安全/微信函数收集/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-移动安全/android木马" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/20/移动安全/android木马/">android木马分析</a>
+    </h1>
+  
+
+        <a href="/2017/01/20/移动安全/android木马/" class="archive-article-date">
+  	<time datetime="2017-01-20T01:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-20</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>同事发来一封邮件说是朋友收到一条短信，打开后没有任何东西，还好手机是iphone手机，短信内容是个连接地址，地址中点击之后是两个apk</p>
+<p>下载下来，jeb直接打开，看代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> &#123;</div><div class="line">       a.a = <span class="number">0</span>;</div><div class="line">       a.b = <span class="string">"cbb"</span>;</div><div class="line">       a.c = <span class="string">"15640652168"</span>;</div><div class="line">       a.d = <span class="string">"18173516177@189.cn"</span>;</div><div class="line">       a.e = <span class="string">"qqq123412"</span>;</div><div class="line">       a.f = <span class="string">"18173516177@189.cn"</span>;</div><div class="line">       a.g = <span class="string">"smtp.189.cn"</span>;</div><div class="line">       a.h = <span class="string">"25"</span>;</div><div class="line">       a.i = <span class="string">""</span>;</div><div class="line">       a.j = <span class="string">""</span>;</div><div class="line">       a.k = a.c;</div><div class="line">       a.l = <span class="string">""</span>;</div></pre></td></tr></table></figure>
+<p>黑客的邮箱和手机信息</p>
+<p>登入黑客的邮箱：</p>
+<p><img src="/2017/01/20/移动安全/android木马/验证码.png" alt="验证码"></p>
+<p><img src="/2017/01/20/移动安全/android木马/账单.png" alt="账单"></p>
+<p><img src="/2017/01/20/移动安全/android木马/转账.png" alt="转账"></p>
+<p>查找域名：</p>
+<p><code>adadh.com</code> whois信息：</p>
+<blockquote>
+<p>联系人 mayuhai[whois反查]<br>联系方式baiduvrenzheng@163.com [whois反查]<br>手机：15202519032</p>
+</blockquote>
+<p>去微信和支付宝搜索手机均做限制无法查询</p>
+<p>同时该联系人注册多个域名用户发送木马apk</p>
+<p>google搜索mayuhai，查找到马玉海，并且有个人github和一些论坛，都是探讨android的</p>
+<p>搜索邮箱没有发现有用的东西</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/20/移动安全/android木马/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-智能硬件/破解智能灯泡" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -634,122 +760,9 @@
 
 
   
-    <article id="post-web安全/安全编码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/09/web安全/安全编码/">WEB安全基础</a>
-    </h1>
-  
-
-        <a href="/2017/01/09/web安全/安全编码/" class="archive-article-date">
-  	<time datetime="2017-01-09T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。</p>
-        
-          <a class="article-more-a" href="/2017/01/09/web安全/安全编码/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/01/09/web安全/安全编码/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-移动安全/浅谈android hook技术" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/05/移动安全/浅谈android hook技术/">浅谈android hook技术</a>
-    </h1>
-  
-
-        <a href="/2017/01/05/移动安全/浅谈android hook技术/" class="archive-article-date">
-  	<time datetime="2017-01-05T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-05</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="xposed框架"><a href="#xposed框架" class="headerlink" title="xposed框架"></a>xposed框架</h2><p>xposed，主页：<a href="http://repo.xposed.info/module/de.robv.android.xposed.installer">http://repo.xposed.info/module/de.robv.android.xposed.installer</a></p>
-<p>是个开源的框架，在github上有源码的，直接下载apk后安装激活就可以使用，很多地方有这方面的教程，针对不同的手机架构，有大牛做了针对性的修改。可以在论坛中进行搜索</p>
-        
-          <a class="article-more-a" href="/2017/01/05/移动安全/浅谈android hook技术/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动安全/">移动安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/01/05/移动安全/浅谈android hook技术/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 
@@ -809,6 +822,14 @@
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">智能硬件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">安全测试</a>
               </li>
              
@@ -821,11 +842,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">智能硬件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">机器学习</a>
+                <a href="javascript:void(0)">软件</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -834,10 +851,6 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)">移动安全</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">软件</a>
               </li>
             
             <div class="clearfix"></div>
