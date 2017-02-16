@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://adrain09.github.io/2017/02/16/机器学习/线性回归/线性回归_4.png">
 <meta property="og:image" content="https://adrain09.github.io/2017/02/16/机器学习/线性回归/线性回归_5.png">
 <meta property="og:image" content="https://adrain09.github.io/2017/02/16/机器学习/线性回归/线性回归_6.png">
-<meta property="og:updated_time" content="2017-02-16T01:43:11.854Z">
+<meta property="og:updated_time" content="2017-02-16T05:38:50.869Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线性回归">
 <meta name="twitter:description" content="线性回归算法包括几个重要知识点：
@@ -250,12 +250,21 @@
 <p>下降过程中需要加快下降的速度，将对各个训练值进行归一化处理</p>
 <p><img src="/2017/02/16/机器学习/线性回归/线性回归_4.png" alt="归一化"></p>
 <p>其中alefa的值的大小也是需要进行处理，否则可能产生迭代慢或者数字爆炸问题</p>
+<blockquote>
+<p>PS: 进行预测的值也要进行归一化处理，否则会产生很大的误差</p>
+</blockquote>
 <h4 id="多变量线性回归"><a href="#多变量线性回归" class="headerlink" title="多变量线性回归"></a>多变量线性回归</h4><p>当训练值不单单是唯一特征值，在存在多个特征值的基础上产生了多变量的线性回归</p>
 <p>多变量线性回归模型：</p>
 <p><img src="/2017/02/16/机器学习/线性回归/线性回归_5.png" alt="多变量"></p>
 <p>代价函数如上是一样的，只是变量值变为theta0——thetan</p>
 <p>梯度下降算法变为：</p>
 <p><img src="/2017/02/16/机器学习/线性回归/线性回归_6.png" alt="多变量梯度下降"></p>
+<h4 id="Normal-Equation"><a href="#Normal-Equation" class="headerlink" title="Normal Equation"></a>Normal Equation</h4><p>模型：<code>theta=inv(X&#39;*X)*X&#39;*y;</code></p>
+<p>和梯度下降的区别：</p>
+<blockquote>
+<p>优势：<br>Normal Equation可以不在意x特征的scale。比如，有特征向量X={x1, x2}, 其中x1的range为1~2000，而x2的range为1~4，可以看到它们的范围相差了500倍。如果使用Gradient Descent方法的话，会导致椭圆变得很窄很长，而出现梯度下降困难，甚至无法下降梯度（因为导数乘上步长后可能会冲出椭圆的外面）。但是，如果用Normal Equation方法的话，就不用担心这个问题了。因为它是纯粹的矩阵算法。</p>
+<p>劣势：<br>相比于Gradient Descent，Normal Equation需要大量的矩阵运算，特别是求矩阵的逆。在矩阵很大的情况下，会大大增加计算复杂性以及对计算机内存容量的要求。</p>
+</blockquote>
 
       
 
@@ -434,7 +443,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">机器学习</a>
+                <a href="javascript:void(0)">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -442,19 +451,19 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">移动安全</a>
+                <a href="javascript:void(0)">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)">漏洞记录</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">安全管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">移动安全</a>
               </li>
              
               <li class="article-tag-list-item">
