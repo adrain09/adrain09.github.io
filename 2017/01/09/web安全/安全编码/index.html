@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/info1.jpg">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/info2.jpg">
 <meta property="og:image" content="https://adrain09.github.io/2017/01/09/web安全/安全编码/poc.png">
-<meta property="og:updated_time" content="2017-02-22T05:50:26.197Z">
+<meta property="og:updated_time" content="2017-02-22T07:34:19.221Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB安全基础">
 <meta name="twitter:description" content="前言安全事件频发，安全漏洞层出不穷，sql注入、xss跨站攻击等各种漏洞是怎么产生的，怎样从根源上减少这些安全漏洞的出现，本文着重介绍了一些常见的，但是开发又很容易忽视的点。主要包括了跨域漏洞、针对服务器的注入攻击等，配合一些案例对漏洞产生的原因和修复方法进行了介绍。">
@@ -359,7 +359,7 @@
 <h4 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h4><p>文件上传这个很多时候是为了获取服务器操作权限上传php木马文件等，但是现在很多开放都会意识到这个问题，将上传后的目录设置未不可执行，但是会忽略另一个问题，就是html的文件上传</p>
 <p>网易app上传文件，导致存储xss</p>
 <p>还有个经常见到的上传方式如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">POST /v1/soc/post HTTP/1.1</div><div class="line">Host: sport-circle.mi-ae.cn</div><div class="line">image=data%3Atext%2Fhtml%3Bbase64%2CPD9waHAgcGhwaW5mbygpOyA/Pg==&amp;content=&lt;img src=x onerror=alert(21212)&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">POST /v1/soc/post HTTP/1.1</div><div class="line">Host: sport-circle.xxx.cn</div><div class="line">image=data%3Atext%2Fhtml%3Bbase64%2CPD9waHAgcGhwaW5mbygpOyA/Pg==&amp;content=&lt;img src=x onerror=alert(21212)&gt;</div></pre></td></tr></table></figure>
 <p>直接使用的是data伪协议的方式+base64方式上传图片，开发的本意是data:image/jpeg;base64,图片的base64编码，但是这些数据都是可以被控制的，直接修改上传，就会在后端形成html页面，造成xss攻击，若是上传的域又是网站的主域，那么就会威胁到主站的安全</p>
 <p>这个比较保险的做法就是将上传的文件放到一个静态域下面，和主域没有任何联系</p>
 <h4 id="其他漏洞"><a href="#其他漏洞" class="headerlink" title="其他漏洞"></a>其他漏洞</h4><p>这些漏洞都是因为开发没有注意到的一个点导致了很严重的漏洞</p>
@@ -527,18 +527,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/01/10/移动安全/加强版Smali Log注入/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/01/09/软件/kafka命令操作/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          加强版smail注入
+          kafka 常用命令
         
       </div>
     </a>
   
   
-    <a href="/2017/01/09/软件/kafka命令操作/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">kafka 常用命令</div>
+    <a href="/2017/01/05/移动安全/浅谈android hook技术/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">浅谈android hook技术</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -611,19 +611,23 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">漏洞记录</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">安全管理</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">智能硬件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">漏洞记录</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -632,10 +636,6 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)">软件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">机器学习</a>
               </li>
             
             <div class="clearfix"></div>
