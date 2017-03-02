@@ -194,25 +194,9 @@
         <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>价值： $3000</p>
 <p>漏洞原因：postMessage跨域漏洞导致，利用websocket接收用户认证token</p>
 <p><code>https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websocket-reconnect-to-steal-your-precious-token/</code></p>
-<h3 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h3><p>在了解这个漏洞的时候我们需要了解以下基础的知识：PostMessage</p>
-<h4 id="PostMessage"><a href="#PostMessage" class="headerlink" title="PostMessage"></a>PostMessage</h4><p>PostMessage API是一个很简单的实现跨域的方法，最基本的使用方法是：</p>
-<p>B站的data数据，发送数据端</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">parent.postMessage(&apos;I am B data!!&apos;,&apos;*&apos;);</div></pre></td></tr></table></figure>
-<p>获取数据代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">window.addEventListener(&apos;message&apos;,function(e)&#123;</div><div class="line">  alert(e.data);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<h4 id="PostMessage产生的漏洞"><a href="#PostMessage产生的漏洞" class="headerlink" title="PostMessage产生的漏洞"></a>PostMessage产生的漏洞</h4><h5 id="伪造获取数据端"><a href="#伪造获取数据端" class="headerlink" title="伪造获取数据端"></a>伪造获取数据端</h5><p>若是发送数据端的第二个参数使用的是”*” 那么表示的是这个数据可以被任何域获取到，这时候只要构造<code>window.addEventListener</code>来接受数据就可以了</p>
-<h5 id="伪造发送数据端"><a href="#伪造发送数据端" class="headerlink" title="伪造发送数据端"></a>伪造发送数据端</h5><p>来看一段代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">window.addEventListener(&quot;message&quot;, function(message)&#123;</div><div class="line">if(/^http://www.examplesender.com$/.test(message.origin))&#123;</div><div class="line">console.log(message.data);</div><div class="line">&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>可以看到对接收的message.origin进行了判断，但是使用的正则并不标准</p>
-<p>直接利用“wwwaexamplesender.com“, “wwwbexamplesender.com” etc.进行绕过，用postMessage发送数据给他接收</p>
-<p>使用的poc可以参考：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;iframe id=&quot;frame&quot; src=&quot;https://targetpage/using_addthis&quot;&gt;&lt;/iframe&gt;</div><div class="line"></div><div class="line">&lt;script&gt;</div><div class="line"></div><div class="line">document.getElementById(&quot;frame&quot;).postMessage(&apos;hello&apos;, &apos;*&apos;);</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
-<p>测试代码：<code>window.postMessage(&quot;hello&quot;, &quot;*&quot;)</code></p>
-<h5 id="利用xss进行攻击"><a href="#利用xss进行攻击" class="headerlink" title="利用xss进行攻击"></a>利用xss进行攻击</h5><p>先看代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//Listener on http://www.examplereceiver.com/</div><div class="line">window.addEventListener(&quot;message&quot;, function(message)&#123;</div><div class="line">if(/^http://www\.examplesender\.com$/.test(message.origin))&#123;</div><div class="line">document.getElementById(&quot;message&quot;).innerHTML = message.data;</div><div class="line">&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>这个对来源进行了严格的限制，可以通过查找<a href="http://www.examplesender.com/上面的xss进行攻击" target="_blank" rel="external">http://www.examplesender.com/上面的xss进行攻击</a></p>
-<h5 id="查看是否使用PostMessage"><a href="#查看是否使用PostMessage" class="headerlink" title="查看是否使用PostMessage"></a>查看是否使用PostMessage</h5><p>这个可以使用chrome下的开发者工具，在source ——&gt; Global Listeners 下面可以看到</p>
-
+        
+          <a class="article-more-a" href="/2017/03/02/web安全/PostMessage跨域漏洞/#more">more >></a>
+        
       
 
       
