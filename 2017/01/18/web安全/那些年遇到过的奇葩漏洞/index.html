@@ -8,22 +8,16 @@
   <link rel="dns-prefetch" href="https://adrain09.github.io">
   <title>那些年遇到的奇葩漏洞 | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这些年做安全测试，遇到过很多奇葩的漏洞，包括了认证问题、上传漏洞、命令执行的漏洞，看到这些漏洞我只能说句：这还能这样做。。
-认证类漏洞：QQ微博任意账户发微博这个是QQ微博和sina微博在争天下的时候出现的，当时也算是个相当严重的漏洞，想象用马化腾的微博发一个微博内容，这个就是典型的认证漏洞，现在已经修复
-说起这个漏洞首先需要了解下cookie在认证方面的作用，现在大部分的站点都是一次登入在浏览器">
+  <meta name="description" content="这些年做安全测试，遇到过很多奇葩的漏洞，包括了认证问题、上传漏洞、命令执行的漏洞，看到这些漏洞我只能说句：这还能这样做。。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="那些年遇到的奇葩漏洞">
 <meta property="og:url" content="https://adrain09.github.io/2017/01/18/web安全/那些年遇到过的奇葩漏洞/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="这些年做安全测试，遇到过很多奇葩的漏洞，包括了认证问题、上传漏洞、命令执行的漏洞，看到这些漏洞我只能说句：这还能这样做。。
-认证类漏洞：QQ微博任意账户发微博这个是QQ微博和sina微博在争天下的时候出现的，当时也算是个相当严重的漏洞，想象用马化腾的微博发一个微博内容，这个就是典型的认证漏洞，现在已经修复
-说起这个漏洞首先需要了解下cookie在认证方面的作用，现在大部分的站点都是一次登入在浏览器">
-<meta property="og:updated_time" content="2017-02-22T01:46:22.497Z">
+<meta property="og:description" content="这些年做安全测试，遇到过很多奇葩的漏洞，包括了认证问题、上传漏洞、命令执行的漏洞，看到这些漏洞我只能说句：这还能这样做。。">
+<meta property="og:updated_time" content="2017-03-03T10:19:01.555Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="那些年遇到的奇葩漏洞">
-<meta name="twitter:description" content="这些年做安全测试，遇到过很多奇葩的漏洞，包括了认证问题、上传漏洞、命令执行的漏洞，看到这些漏洞我只能说句：这还能这样做。。
-认证类漏洞：QQ微博任意账户发微博这个是QQ微博和sina微博在争天下的时候出现的，当时也算是个相当严重的漏洞，想象用马化腾的微博发一个微博内容，这个就是典型的认证漏洞，现在已经修复
-说起这个漏洞首先需要了解下cookie在认证方面的作用，现在大部分的站点都是一次登入在浏览器">
+<meta name="twitter:description" content="这些年做安全测试，遇到过很多奇葩的漏洞，包括了认证问题、上传漏洞、命令执行的漏洞，看到这些漏洞我只能说句：这还能这样做。。">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -200,6 +194,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>这些年做安全测试，遇到过很多奇葩的漏洞，包括了认证问题、上传漏洞、命令执行的漏洞，看到这些漏洞我只能说句：这还能这样做。。</p>
+<a id="more"></a>
 <h2 id="认证类漏洞："><a href="#认证类漏洞：" class="headerlink" title="认证类漏洞："></a>认证类漏洞：</h2><h3 id="QQ微博任意账户发微博"><a href="#QQ微博任意账户发微博" class="headerlink" title="QQ微博任意账户发微博"></a>QQ微博任意账户发微博</h3><p>这个是QQ微博和sina微博在争天下的时候出现的，当时也算是个相当严重的漏洞，想象用马化腾的微博发一个微博内容，这个就是典型的认证漏洞，现在已经修复</p>
 <p>说起这个漏洞首先需要了解下cookie在认证方面的作用，现在大部分的站点都是一次登入在浏览器下种下认证cookie，很多都会使用到session、uid、…token、…key等cookie的参数名，通过设置这些值上传给服务器，服务器从而对请求的用户做权限控制</p>
 <p>这个漏洞的出现就是服务器端对用户的判断仅仅局限在了判断用户cookie中的某个单一因子，在这个漏洞中，QQ在一些web页面会嵌入一个转发到微博的接口，这个接口就出现了这个问题，仅仅取的值是cookie中传递过来的uid值，也就是QQ号码，后端就认为权限就是这个QQ号对应的微博号，所以只要知道任何一个人的QQ号就能发这个的微博内容。有人问，上面说道可以发马化腾的微博，但是一般大人物的qq号都是保密的，在没有这么多社工库的情况的下，又发现了一个漏洞，可以根据QQ微博名反查出QQ号，QQ存在一个接口用来展示微博的名片信息，我们在访问的时候会返回用户的相关信息，但是这个注意看会有QQ号的返回，这样就能获取到任何人的QQ号了</p>
