@@ -22,7 +22,7 @@ https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websoc
 <meta property="og:image" content="https://adrain09.github.io/2017/03/02/web安全/PostMessage跨域漏洞/cuowu1.png">
 <meta property="og:image" content="https://adrain09.github.io/2017/03/02/web安全/PostMessage跨域漏洞/qqmail2.png">
 <meta property="og:image" content="https://adrain09.github.io/2017/03/02/web安全/PostMessage跨域漏洞/weibo.png">
-<meta property="og:updated_time" content="2017-03-03T02:30:44.390Z">
+<meta property="og:updated_time" content="2017-03-03T02:32:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PostMessage跨域漏洞">
 <meta name="twitter:description" content="背景价值： $3000
@@ -240,9 +240,9 @@ https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websoc
 <p>这时候对代下断点进行调试，可以最终得到：</p>
 <p><code>window.postMessage(&#39;{&quot;action&quot;:&quot;resize&quot;,&quot;width&quot;:&quot;222&quot;,&quot;height&quot;:400}&#39;, &quot;*&quot;)</code></p>
 <p>方法有两个一个是close，一个是resize。</p>
-<p>直接执行的话就可以看到登入框的位置属性产生了变化，构造poc：</p>
+<p>直接执行的话就可以看到登入框的大小属性产生了变化，构造poc：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"frame"</span> <span class="attr">src</span>=<span class="string">"https://mail.qq.com/cgi-bin/loginpage"</span> <span class="attr">height</span>=<span class="string">"1000"</span> <span class="attr">width</span>=<span class="string">"1000"</span> <span class="attr">onload</span>=<span class="string">xss()</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">function xss()&#123;</div><div class="line">	document.getElementById("frame").contentWindow.postMessage('&#123;"action":"resize","width":"10","height":400&#125;', "*");</div><div class="line">&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>构造html页面，访问这个页面，就能看到登入框的位置产生了变化,</p>
+<p>构造html页面，访问这个页面，就能看到登入框的大小产生了变化,</p>
 <p><img src="/2017/03/02/web安全/PostMessage跨域漏洞/qqmail2.png" alt="mail"></p>
 <p>这个只是个案例，要是邮箱中接收的信息做了其他处理，那么就有可能产生其他的问题</p>
 <ol>
@@ -435,15 +435,19 @@ https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websoc
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)">安全管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">智能硬件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -456,10 +460,6 @@ https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websoc
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)">软件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">机器学习</a>
               </li>
             
             <div class="clearfix"></div>
