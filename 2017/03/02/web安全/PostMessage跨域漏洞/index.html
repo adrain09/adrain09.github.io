@@ -10,20 +10,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="背景价值： $3000
 漏洞原因：postMessage跨域漏洞导致，利用websocket接收用户认证token
-https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websocket-reconnect-to-steal-your-precious-token/">
+https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websocket-reconnect-to-steal-your-precious-token/
+为了了解这个漏洞简单学习下postm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PostMessage跨域漏洞">
 <meta property="og:url" content="https://adrain09.github.io/2017/03/02/web安全/PostMessage跨域漏洞/index.html">
 <meta property="og:site_name" content="NoSec World">
 <meta property="og:description" content="背景价值： $3000
 漏洞原因：postMessage跨域漏洞导致，利用websocket接收用户认证token
-https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websocket-reconnect-to-steal-your-precious-token/">
-<meta property="og:updated_time" content="2017-03-02T05:44:19.860Z">
+https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websocket-reconnect-to-steal-your-precious-token/
+为了了解这个漏洞简单学习下postm">
+<meta property="og:image" content="https://adrain09.github.io/2017/03/02/web安全/PostMessage跨域漏洞/qqmail.png">
+<meta property="og:image" content="https://adrain09.github.io/2017/03/02/web安全/PostMessage跨域漏洞/cuowu1.png">
+<meta property="og:image" content="https://adrain09.github.io/2017/03/02/web安全/PostMessage跨域漏洞/weibo.png">
+<meta property="og:updated_time" content="2017-03-03T02:08:33.831Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PostMessage跨域漏洞">
 <meta name="twitter:description" content="背景价值： $3000
 漏洞原因：postMessage跨域漏洞导致，利用websocket接收用户认证token
-https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websocket-reconnect-to-steal-your-precious-token/">
+https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websocket-reconnect-to-steal-your-precious-token/
+为了了解这个漏洞简单学习下postm">
+<meta name="twitter:image" content="https://adrain09.github.io/2017/03/02/web安全/PostMessage跨域漏洞/qqmail.png">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
   
@@ -202,6 +209,7 @@ https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websoc
         <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>价值： $3000</p>
 <p>漏洞原因：postMessage跨域漏洞导致，利用websocket接收用户认证token</p>
 <p><code>https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websocket-reconnect-to-steal-your-precious-token/</code></p>
+<p>为了了解这个漏洞简单学习下postmessage跨域漏洞</p>
 <a id="more"></a>
 <h3 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h3><p>在了解这个漏洞的时候我们需要了解以下基础的知识：PostMessage</p>
 <h4 id="PostMessage"><a href="#PostMessage" class="headerlink" title="PostMessage"></a>PostMessage</h4><p>PostMessage API是一个很简单的实现跨域的方法，最基本的使用方法是：</p>
@@ -215,12 +223,42 @@ https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websoc
 <p>可以看到对接收的message.origin进行了判断，但是使用的正则并不标准</p>
 <p>直接利用“wwwaexamplesender.com“, “wwwbexamplesender.com” etc.进行绕过，用postMessage发送数据给他接收</p>
 <p>使用的poc可以参考：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;iframe id=&quot;frame&quot; src=&quot;https://targetpage/using_addthis&quot;&gt;&lt;/iframe&gt;</div><div class="line"></div><div class="line">&lt;script&gt;</div><div class="line"></div><div class="line">document.getElementById(&quot;frame&quot;).postMessage(&apos;hello&apos;, &apos;*&apos;);</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;iframe id=&quot;frame&quot; src=&quot;https://targetpage/using_addthis&quot;&gt;&lt;/iframe&gt;</div><div class="line"></div><div class="line">&lt;script&gt;</div><div class="line"></div><div class="line">document.getElementById(&quot;frame&quot;).contentWindow.postMessage(&apos;hello&apos;, &apos;*&apos;);</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
 <p>测试代码：<code>window.postMessage(&quot;hello&quot;, &quot;*&quot;)</code></p>
 <h5 id="利用xss进行攻击"><a href="#利用xss进行攻击" class="headerlink" title="利用xss进行攻击"></a>利用xss进行攻击</h5><p>先看代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//Listener on http://www.examplereceiver.com/</div><div class="line">window.addEventListener(&quot;message&quot;, function(message)&#123;</div><div class="line">if(/^http://www\.examplesender\.com$/.test(message.origin))&#123;</div><div class="line">document.getElementById(&quot;message&quot;).innerHTML = message.data;</div><div class="line">&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <p>这个对来源进行了严格的限制，可以通过查找<a href="http://www.examplesender.com/上面的xss进行攻击" target="_blank" rel="external">http://www.examplesender.com/上面的xss进行攻击</a></p>
 <h5 id="查看是否使用PostMessage"><a href="#查看是否使用PostMessage" class="headerlink" title="查看是否使用PostMessage"></a>查看是否使用PostMessage</h5><p>这个可以使用chrome下的开发者工具，在source ——&gt; Global Listeners 下面可以看到</p>
+<h5 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h5><p>上面slack的漏洞是一个案例，总体的思路就是站点监听着一个message，并且没有判断message的来源，导致可以给他发message，message中有websocket的url的话，站点会和发送message的站点建立websocket链接，兵器会把认证后的token传递给发送者站点</p>
+<p>该作者还有个PostMessage的漏洞，会影响到百万网站，是AddThis这个插件导致的，不难理解</p>
+<ol>
+<li>qq邮箱</li>
+</ol>
+<p>再国内的站点了翻了一个下午也没有能找到一个可以利用的漏洞，不过在qq邮箱还是可以找到可以练习的地方</p>
+<p>首先打开mail.qq.com 使用开发者工具打开查看listeners</p>
+<p><img src="/2017/03/02/web安全/PostMessage跨域漏洞/qqmail.png" alt="mail"></p>
+<p>我们构造测试代码：</p>
+<p><code>window.postMessage(&quot;hello&quot;, &quot;*&quot;)</code></p>
+<p><img src="/2017/03/02/web安全/PostMessage跨域漏洞/cuowu1.png" alt="mail"></p>
+<p>这时候对代下断点进行调试，可以最终得到：</p>
+<p><code>window.postMessage(&#39;{&quot;action&quot;:&quot;resize&quot;,&quot;width&quot;:&quot;222&quot;,&quot;height&quot;:400}&#39;, &quot;*&quot;)</code></p>
+<p>方法有两个一个是close，一个是resize。</p>
+<p>直接执行的话就可以看到登入狂的大小属性产生了变化，构造poc：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"frame"</span> <span class="attr">src</span>=<span class="string">"https://mail.qq.com/cgi-bin/loginpage"</span> <span class="attr">height</span>=<span class="string">"1000"</span> <span class="attr">width</span>=<span class="string">"1000"</span> <span class="attr">onload</span>=<span class="string">xss()</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">function xss()&#123;</div><div class="line">	document.getElementById("frame").contentWindow.postMessage('&#123;"action":"resize","width":"10","height":400&#125;', "*");</div><div class="line">&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>构造html页面，访问这个页面，就能看到登入框的位置产生了变化,</p>
+<p>这个只是个案例，要是邮箱中接收的信息做了其他处理，那么就有可能产生其他的问题</p>
+<ol>
+<li>微博</li>
+</ol>
+<p>qq邮箱是伪造发送者，那微博这个就是伪造接收者。同样打开微博查看信息</p>
+<p>可以看到一行代码：</p>
+<p><code>b[c] &amp;&amp; b[c].contentWindow &amp;&amp; b[c].contentWindow.postMessage ? b[c].contentWindow.postMessage(g, &quot;*&quot;)</code></p>
+<p>这个很明显的使用了*的配置</p>
+<p>构造poc：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">http://weibo.com/bjsjtw?refer_flag</span>=<span class="string">0000015010_&amp;from</span>=<span class="string">feed&amp;loc</span>=<span class="string">nickname</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"></div><div class="line">window.addEventListener('message',function(e)&#123;</div><div class="line">	alert(e.data);</div><div class="line">&#125;)</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>访问html页面触发：</p>
+<p><img src="/2017/03/02/web安全/PostMessage跨域漏洞/weibo.png" alt="mail"></p>
+<p>这个里面没有任何可以利用的东西，但是一旦有用户的敏感信息，那么就可以跨域获取这些信息</p>
 
       
 
@@ -399,15 +437,15 @@ https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websoc
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">安全管理</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)">智能硬件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
