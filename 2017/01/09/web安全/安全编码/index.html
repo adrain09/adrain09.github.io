@@ -245,7 +245,7 @@
 <p>返回的页面内容：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">call("data":"I am secret data!!!")</div></pre></td></tr></table></figure>
 <p>A站的get代码：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">hijack</span>(<span class="params">data</span>)</span>&#123;<span class="built_in">console</span>.log(data.data);&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://b.test.com/json/data.php?callback=hijack"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">function hijack(data)&#123;console.log(data.data);&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://b.test.com/json/data.php?callback=hijack"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>这样通过jsonp传递个人敏感信息的话，利用json劫持就能获取到，导致个人敏感信息泄漏</p>
 <ol>
 <li>CORS</li>
@@ -527,18 +527,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/01/09/软件/kafka命令操作/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/01/10/移动安全/mobSF架构分析/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          kafka 常用命令
+          MobSF框架分析
         
       </div>
     </a>
   
   
-    <a href="/2017/01/05/移动安全/浅谈android hook技术/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">浅谈android hook技术</div>
+    <a href="/2017/01/09/软件/kafka命令操作/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">kafka 常用命令</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -623,11 +623,11 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">漏洞记录</a>
+                <a href="javascript:void(0)">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">机器学习</a>
+                <a href="javascript:void(0)">漏洞记录</a>
               </li>
              
               <li class="article-tag-list-item">
