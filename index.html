@@ -173,6 +173,41 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-web安全/test" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">var xmlhttp;</div><div class="line">if (window.XMLHttpRequest)</div><div class="line">  &#123;// code for IE7+, Firefox, Chrome, Opera, Safari</div><div class="line">  xmlhttp=new XMLHttpRequest();</div><div class="line">  &#125;</div><div class="line">else</div><div class="line">  &#123;// code for IE6, IE5</div><div class="line">  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");</div><div class="line">  &#125;</div><div class="line"></div><div class="line">xmlhttp.open("GET","file:///etc/hosts",true);</div><div class="line">xmlhttp.send();</div><div class="line"></div><div class="line">xmlhttp.onreadystatechange=function()</div><div class="line">  &#123;</div><div class="line">  if (xmlhttp.readyState==4 &amp;&amp; xmlhttp.status==200)</div><div class="line">    &#123;</div><div class="line">    console.log(xmlhttp.responseText);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/03/07/web安全/test/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-软件/vscode 命令执行" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -249,7 +284,6 @@
         <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>价值： $3000</p>
 <p>漏洞原因：postMessage跨域漏洞导致，利用websocket接收用户认证token</p>
 <p><code>https://labs.detectify.com/2017/02/28/hacking-slack-using-postmessage-and-websocket-reconnect-to-steal-your-precious-token/</code></p>
-<p><code>&lt;script src=&quot;file:///etc/hosts&quot;&gt;&lt;/script&gt;</code><br><img src="/2017/03/02/web安全/PostMessage跨域漏洞/x" onerror="alert(21212)"></p>
         
           <a class="article-more-a" href="/2017/03/02/web安全/PostMessage跨域漏洞/#more">more >></a>
         
@@ -678,62 +712,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/02/06/漏洞记录/WordPress REST API 内容注入_权限提升漏洞/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-web安全/JAVA1.7+ XXE实体入侵" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/05/web安全/JAVA1.7+ XXE实体入侵/">java 1.7+ xxe入侵</a>
-    </h1>
-  
-
-        <a href="/2017/02/05/web安全/JAVA1.7+ XXE实体入侵/" class="archive-article-date">
-  	<time datetime="2017-02-05T03:12:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-05</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Java 在1.7版本以上对gopher协议进行了修复，在1.7+处理不合法的url时候会爆出：</p>
-        
-          <a class="article-more-a" href="/2017/02/05/web安全/JAVA1.7+ XXE实体入侵/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web安全/">web安全</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/02/05/web安全/JAVA1.7+ XXE实体入侵/">展开全文 >></a>
         </p>
       
 
